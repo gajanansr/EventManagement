@@ -8,6 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 5a52d2940f2d29fc7714e0dfd062b8d684b07c0c
 public class StaffController {
 
 
@@ -20,4 +24,8 @@ public class StaffController {
     public ResponseEntity<Event> updateEventSetup(@PathVariable Long eventId, @RequestBody Event updatedEvent) {
         // update the event setup and return the updated event with status code 200 ok
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 5a52d2940f2d29fc7714e0dfd062b8d684b07c0c
