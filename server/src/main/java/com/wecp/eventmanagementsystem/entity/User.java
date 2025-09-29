@@ -7,4 +7,5 @@ import javax.persistence.*;
 public class User {
     //init
     //check by abhi
+    //check by vam
 }
