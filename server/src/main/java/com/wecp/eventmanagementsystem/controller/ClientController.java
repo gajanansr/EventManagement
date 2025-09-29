@@ -15,6 +15,7 @@ public class ClientController {
 
     @GetMapping("/api/client/booking-details/{eventId}")
     public ResponseEntity<Event> getBookingDetails(@PathVariable Long eventId) {
+        return null;
         // get event details by event id and return with status code 200 OK
     }
 }
