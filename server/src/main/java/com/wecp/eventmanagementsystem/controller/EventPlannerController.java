@@ -19,21 +19,25 @@ public class EventPlannerController {
 
     @PostMapping("/api/planner/event")
     public ResponseEntity<Event> createEvent(@RequestBody Event event) {
+        return null;
         // create event and return created event with status code 201 (CREATED)
     }
 
     @GetMapping("/api/planner/events")
     public ResponseEntity<List<Event>> getAllEvents() {
+        return null;
         // get all events and return the list with status code 200 (OK)
     }
 
     @PostMapping("/api/planner/resource")
     public ResponseEntity<Resource> addResource(@RequestBody Resource resource) {
+        return null;
         // add resource and return added resource with status code 201 (CREATED)
     }
 
     @GetMapping("/api/planner/resources")
     public ResponseEntity<List<Resource>> getAllResources() {
+        return null;
         // get all resources and return the list with status code 200 (OK)
     }
 
