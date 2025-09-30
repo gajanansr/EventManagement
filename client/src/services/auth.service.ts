@@ -1,52 +1,49 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { environment } from '../environments/environment.development';
-
 
 @Injectable({
   providedIn: 'root'
 })
-
 export class AuthService {
-  private loginUrl = `${environment.apiUrl}`;
-  getLoginStatus: any;
-  // getRole!:string | null;
+  private token: string | null = null;
+  private isLoggedIn: boolean = false;
 
-  httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*'
-    })
-  };
+  constructor() { }
 
-  constructor(private http: HttpClient) { }
-
-  login(user: Partial<any>): Observable<{ [key: string]: string }> {//Not sure if it should be Partial<any>
-    return this.http.post<{ token: string }>(
-      `${this.loginUrl}/api/user/login`,
-      user,
-      this.httpOptions
-    );
+  saveToken(token: string): void {
+    this.token = token;
+    this.isLoggedIn = true;
+    localStorage.setItem('token', token);
   }
 
-  getToken() {
-    return localStorage.getItem("token");
+  setRole(role: any): void {
+    localStorage.setItem('role', role);
   }
 
-  getRole() {
-    return localStorage.getItem("role");
+  get getRole(): string | null {
+    return localStorage.getItem('role');
+  }
+
+  SetId(id:any){
+    localStorage.setItem('id', id);
+  }
+
+  get getId(): string | null {
+    return localStorage.getItem('id');
+  }
+
+  get getLoginStatus(): boolean {
+    return !!localStorage.getItem('token');
+  }
+
+  getToken(): string | null {
+    this.token = localStorage.getItem('token');
+    return this.token;
   }
 
   logout(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('role');
-    localStorage.removeItem('user_id');
-    localStorage.removeItem('doctor_id');
-    localStorage.removeItem('patient_id');
-  }
-
-  createUser(user: any): Observable<any> {//Not sure if it should be user: any
-    return this.http.post<any>(`${this.loginUrl}/api/user/register`, user);//Not sure if it should be post<any>
+    this.token = null;
+    this.isLoggedIn = false;
   }
 }
