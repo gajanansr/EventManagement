@@ -12,15 +12,14 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
-
 @Service
 public class EventService {
     @Autowired
     EventRepository eventRepository;
-
     public List<Event> getAllEvents(){
         return eventRepository.findAll();
     }
+
 
     public Event getEventById(Long id){
         Event e = eventRepository.findById(id).orElse(null);

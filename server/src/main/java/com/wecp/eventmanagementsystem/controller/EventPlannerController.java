@@ -13,9 +13,14 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
+@RestController
 public class EventPlannerController {
 
+    @Autowired
+    private EventService eventService;
+
+    @Autowired
+    private ResourceService resourceService;
 
     @PostMapping("/api/planner/event")
     public ResponseEntity<Event> createEvent(@RequestBody Event event) {
