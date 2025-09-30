@@ -10,17 +10,20 @@ import org.springframework.web.bind.annotation.*;
 
 
 public class StaffController {
-
+    @Autowired
+    private EventService eventService;
 
     @GetMapping("/api/staff/event-details/{eventId}")
     public ResponseEntity<Event> getEventDetails(@PathVariable Long eventId) {
-        return null;
+        // return null;
         // get the event details by eventId and return the event with status code 200 ok
+        return ResponseEntity.status(200).body(eventService.getEventById(eventId));
     }
 
     @PutMapping("/api/staff/update-setup/{eventId}")
     public ResponseEntity<Event> updateEventSetup(@PathVariable Long eventId, @RequestBody Event updatedEvent) {
-        return null;
+        // return null;
         // update the event setup and return the updated event with status code 200 ok
+        return ResponseEntity.status(200).body(eventService.updateEvent(eventId, updatedEvent));
     }
 }
