@@ -9,5 +9,7 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './add-resource.component.html',
   styleUrls: ['./add-resource.component.scss']
 })
-export class AddResourceComponent {}
+export class AddResourceComponent {
+  itemForm!: FormGroup
+}
 //todo: complete missing code..
