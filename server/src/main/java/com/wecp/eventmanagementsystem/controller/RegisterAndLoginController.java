@@ -39,7 +39,7 @@ public class RegisterAndLoginController {
         // if authentication fails, return status code 401 unauthorized
         try{
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-        }catch(ArithmeticException e){
+        }catch(Exception e){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"Invalid username or password",e);
         }
         final UserDetails userDetails = userService.loadUserByUsername(loginRequest.getUsername());
