@@ -6,7 +6,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            // background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             position: relative;
             overflow-x: hidden;
@@ -59,7 +59,7 @@
         }
 
         h1 {
-            color: #ffffff;
+            color: rgb(44, 44, 44);
             font-weight: 700;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
             font-size: 2.5rem;
@@ -76,6 +76,7 @@
             overflow: hidden;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             margin-bottom: 2rem;
+            margin-right: 30px;
         }
 
         .card:hover {
@@ -84,8 +85,8 @@
         }
 
         .card-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: linear-gradient(135deg, #c9c9c9 0%, #e0e0e0 100%);
+            color: rgb(30, 30, 30);
             border: none;
             padding: 1.5rem;
             font-weight: 600;
@@ -126,6 +127,7 @@
             height: 1.3em;
             border: 2px solid #667eea;
             cursor: pointer;
+            margin-left: 0px;
         }
 
         .form-check-input:checked {
@@ -134,9 +136,10 @@
         }
 
         .form-check-label {
-            margin-left: 0.5rem;
+            margin-left: 2px;
             cursor: pointer;
             color: #555;
+            margin-right: 40px;
         }
 
         /* Validation message */
