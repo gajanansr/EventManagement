@@ -9,22 +9,25 @@ public class Resource {
     // implement entity
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long resourceId;
+    private Long resourceID;
     private String name;
     private String type;
     private boolean availability;
     
-    public Resource(long resourceId, String name, String type, boolean availability) {
-        this.resourceId = resourceId;
+    public Resource() {
+    }
+
+    public Resource(Long resourceID, String name, String type, boolean availability) {
+        this.resourceID = resourceID;
         this.name = name;
         this.type = type;
         this.availability = availability;
     }
-    public long getResourceId() {
-        return resourceId;
+    public long getResourceID() {
+        return resourceID;
     }
-    public void setResourceId(long resourceId) {
-        this.resourceId = resourceId;
+    public void setResourceID(long resourceID) {
+        this.resourceID = resourceID;
     }
     public String getName() {
         return name;

@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
  
 @Table(name = "events") // do not change table name
- 
 @Entity
 public class Event {
  

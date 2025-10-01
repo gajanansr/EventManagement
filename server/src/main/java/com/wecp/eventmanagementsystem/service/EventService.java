@@ -1,14 +1,8 @@
 package com.wecp.eventmanagementsystem.service;
-
-
 import com.wecp.eventmanagementsystem.entity.Event;
 import com.wecp.eventmanagementsystem.repository.EventRepository;
-
-import ch.qos.logback.core.encoder.EchoEncoder;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
@@ -21,7 +15,7 @@ public class EventService {
     }
 
 
-    public Event getEventById(Long id){
+    public Event getEventsById(Long id){
         Event e = eventRepository.findById(id).orElse(null);
         if(e==null){
             throw new EntityNotFoundException("Event Not Found!");
@@ -50,7 +44,7 @@ public class EventService {
         eventRepository.deleteById(eventID);
     }
 
-    public List<Event> getAllEventsByTitle(String title){
+    public List<Event> getAllEventByTitle(String title){
         return eventRepository.findByTitle(title);
     }
 

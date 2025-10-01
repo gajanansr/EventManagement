@@ -1,6 +1,5 @@
 package com.wecp.eventmanagementsystem.controller;
 
-
 import com.wecp.eventmanagementsystem.entity.Allocation;
 import com.wecp.eventmanagementsystem.entity.Event;
 import com.wecp.eventmanagementsystem.entity.Resource;
@@ -24,34 +23,61 @@ public class EventPlannerController {
 
     @PostMapping("/api/planner/event")
     public ResponseEntity<Event> createEvent(@RequestBody Event event) {
-        return null;
         // create event and return created event with status code 201 (CREATED)
+        return new ResponseEntity<>(eventService.createEvent(event), HttpStatus.CREATED);
     }
 
     @GetMapping("/api/planner/events")
     public ResponseEntity<List<Event>> getAllEvents() {
-        return null;
         // get all events and return the list with status code 200 (OK)
+        return new ResponseEntity<List<Event>>(eventService.getAllEvents(), HttpStatus.OK);
+    }
+
+    @GetMapping("/api/staff/allEvents")
+    public ResponseEntity<List<Event>> getEvents() {
+        // get all events and return the list with status code 200 (OK)
+        return new ResponseEntity<List<Event>>(eventService.getAllEvents(), HttpStatus.OK);
     }
 
     @PostMapping("/api/planner/resource")
     public ResponseEntity<Resource> addResource(@RequestBody Resource resource) {
-        return null;
         // add resource and return added resource with status code 201 (CREATED)
+        return new ResponseEntity<Resource>(resourceService.addResource(resource), HttpStatus.CREATED);
     }
 
     @GetMapping("/api/planner/resources")
     public ResponseEntity<List<Resource>> getAllResources() {
-        return null;
         // get all resources and return the list with status code 200 (OK)
+        return new ResponseEntity<List<Resource>>(resourceService.getAllResources(), HttpStatus.OK);
+    }
+
+    @GetMapping("/api/planner/event-details/{eventId}")
+    public ResponseEntity<Event> getEventById(@PathVariable Long eventId) {
+        System.out.println("Fetching event with ID: " + eventId);
+        return new ResponseEntity<>(eventService.getEventsById(eventId), HttpStatus.OK);
+    }
+
+    @GetMapping("/api/planner/event-detail/{title}")
+    public ResponseEntity<List<Event>> getAllEventByTitle(@PathVariable String title) {
+        System.out.println("Fetching events with title: " + title);
+        return new ResponseEntity<>(eventService.getAllEventByTitle(title), HttpStatus.OK);
     }
 
     @PostMapping("/api/planner/allocate-resources")
-    public ResponseEntity<String> allocateResources(@RequestParam Long eventId, @RequestParam Long resourceId,
+    public ResponseEntity<String> allocateResources(@RequestParam long eventId, @RequestParam long resourceId,
             @RequestBody Allocation allocation) {
 
-        // allocate resources for the event and return a success message with status code 201 (CREATED)
-
-        return new ResponseEntity<>("{\"message\": \"Resource allocated successfully for Event ID: " + eventId + "\"}", HttpStatus.CREATED);
+        // allocate resources for the event and return a success message with status
+        // code 201 (CREATED)
+        resourceService.allocateResources(eventId, resourceId, allocation);
+        return new ResponseEntity<>("{\"message\": \"Resource allocated successfully for Event ID: " + eventId + "\"}",
+                HttpStatus.CREATED);
     }
+
+    @DeleteMapping("/api/planner/event/{eventId}")
+    public ResponseEntity<String> deleteEventById(@PathVariable Long eventId) {
+        eventService.deleteEvent(eventId);
+        return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+    }
+
 }
