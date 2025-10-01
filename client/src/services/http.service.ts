@@ -158,6 +158,14 @@ export class HttpService {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.post(url, details, { headers });
   }
+  getStatename(): Observable<any> {
+
+      const authToken = this.authService.getToken();
+      let headers = new HttpHeaders();
+      headers = headers.set('Content-Type', 'application/json');
+      headers = headers.set('Authorization', `Bearer ${authToken}`)
+      return this.http.get(this.serverName + `/api/state/`, { headers: headers });
+    }
 
   GetAllUsers(): Observable<any> {
     return this.http.get(`${this.serverName}/api/user/users`, { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) });
