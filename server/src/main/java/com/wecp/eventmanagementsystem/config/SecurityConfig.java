@@ -60,31 +60,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
-    // @Override
-    // protected void configure(HttpSecurity http) throws Exception {
-    //     http.cors().and().csrf().disable()
-    //             .authorizeRequests()
-    //             .antMatchers(HttpMethod.POST, "/api/user/register").permitAll()
-    //             .antMatchers(HttpMethod.POST, "/api/user/login").permitAll()
-    //             .antMatchers(HttpMethod.POST, "/api/planner/event").permitAll()
-    //             .antMatchers(HttpMethod.GET, "/api/planner/events").permitAll()
-    //             .antMatchers(HttpMethod.POST, "/api/planner/resource").permitAll()
-    //             .antMatchers(HttpMethod.GET, "/api/planner/resources").permitAll()
-    //             .antMatchers(HttpMethod.POST, "/api/planner/allocate-resources").permitAll()
-    //             .antMatchers(HttpMethod.GET, "/api/staff/event-details/{eventId}").permitAll()
-    //             .antMatchers(HttpMethod.PUT, "/api/staff/update-setup/{eventId}").permitAll()
-    //             .antMatchers(HttpMethod.GET, "/api/client/booking-details/{eventId}").permitAll()
-    //             .anyRequest().authenticated()
-    //             .and()
-    //             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
-    //     http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-    // }
-
-
-
-
-
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
