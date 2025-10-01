@@ -22,10 +22,10 @@ public class Resource {
         this.type = type;
         this.availability = availability;
     }
-    public long getResourceID() {
+    public Long getResourceID() {
         return resourceID;
     }
-    public void setResourceID(long resourceID) {
+    public void setResourceID(Long resourceID) {
         this.resourceID = resourceID;
     }
     public String getName() {
