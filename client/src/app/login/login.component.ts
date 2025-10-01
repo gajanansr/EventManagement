@@ -16,7 +16,7 @@ export class LoginComponent implements OnInit {
   responseMessage: string = '';
 
   usernamePattern = '^[a-z]+$';
-  passwordPattern = '^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,64}$';
+  // passwordPattern = '^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,64}$';
 
   constructor(
     private router: Router,
@@ -28,7 +28,7 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.itemForm = this.formBuilder.group({
       username: ['', [Validators.required, Validators.pattern(this.usernamePattern)]],
-      password: ['', [Validators.required, Validators.pattern(this.passwordPattern)]]
+      password: ['', [Validators.required]]
     });
   }
 
