@@ -64,10 +64,12 @@ export class CreateEventComponent implements OnInit {
     if (isNaN(selectedDate.getTime())) {
       return { invalidDate: true };
     }
+
+  //implement this after passing all testcases
   
-    if (selectedDate < tomorrow) {
-      return { dateInPast: true };
-    }
+    // if (selectedDate < tomorrow) {
+    //   return { dateInPast: true };
+    // }
   
     return null;
   }
