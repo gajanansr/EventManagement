@@ -16,7 +16,7 @@ export class LoginComponent implements OnInit {
   responseMessage: string = '';
 
   usernamePattern = '^[a-z]+$';
-  // passwordPattern = '^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,64}$';
+  passwordPattern = '^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,64}$';
 
   constructor(
     private router: Router,
