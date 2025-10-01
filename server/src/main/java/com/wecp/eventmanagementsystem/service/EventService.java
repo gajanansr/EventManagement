@@ -28,12 +28,11 @@ public class EventService {
         return eventRepository.save(event);
     }
 
-    public Event updateEvent(Long eventID, Event event){
+    public Event updateEvent(Event event, Long eventID){
         Event e = eventRepository.findById(eventID).orElseThrow(EntityNotFoundException::new);
         e.setAllocations(event.getAllocations());
         e.setDateTime(event.getDateTime());
         e.setDescription(event.getDescription());
-        e.setEventID(event.getEventID());
         e.setLocation(event.getLocation());
         e.setStatus(event.getStatus());
         e.setTitle(event.getTitle());
