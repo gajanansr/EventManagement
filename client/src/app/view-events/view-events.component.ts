@@ -10,6 +10,7 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './view-events.component.html',
   styleUrls: ['./view-events.component.scss']
 })
+
 export class ViewEventsComponent  implements OnInit{
   itemForm!: FormGroup;
   showError : boolean = false;
