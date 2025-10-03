@@ -1,0 +1,133 @@
+# EventManagement
+A full·stack **Event Management** application (work·in·progress) organized as a monorepo with a 
+**client** (TypeScript) front end and a **server** (Java) back end.
+> **Folders:** 
+> - `client/` · Frontend code (TypeScript + web stack) 
+> - `server/` · Backend code (Java) 
+> - `HELP.md` · Additional framework/tooling references
+---
+## Tech Snapshot
+- **Languages:** Java, TypeScript, JavaScript, HTML, SCSS 
+- **Repo layout:** `client/` and `server/` (monorepo)
+> _Tip:_ Check each folder·s manifest (e.g., `package.json` in `client/`, `pom.xml`/`build.gradle` 
+in `server/`) for exact frameworks and scripts.
+---
+## Getting Started
+### 1) Prerequisites
+- **Node.js** (LTS recommended) & **npm**/**yarn** for the frontend 
+- **Java JDK** (11+ or as required by the server) 
+- A database (if the backend uses one)·configure connection details via environment or 
+`application.properties`/`application.yml`.
+> If the repo provides a `.env.example` or similar, copy it and fill in values:
+```bash
+cp client/.env.example client/.env # if present
+cp server/.env.example server/.env # if present
+```
+---
+## Running the Frontend (`client/`)
+1. Install dependencies:
+ ```bash
+ cd client
+ npm install
+ ```
+2. Start the dev server (check `package.json` · `scripts` for the exact command):
+ ```bash
+ npm run dev # common for Vite/Next.js
+ # or
+ npm start # common for CRA/React
+ # or
+ ng serve # if it's Angular
+ ```
+3. Open the URL the dev server prints (often `http://localhost:3000/` or `5173/`).
+---
+## Running the Backend (`server/`)
+> The backend is Java; the build tool is typically **Maven** or **Gradle**. Use the one present in 
+`server/` (look for `pom.xml` or `build.gradle`/`gradlew`).
+### If Maven
+```bash
+cd server
+# run tests (optional)
+mvn clean test
+# run the app (Spring Boot example)
+mvn spring-boot:run
+```
+### If Gradle
+```bash
+cd server
+# run tests (optional)
+./gradlew test
+# run the app (Spring Boot example)
+./gradlew bootRun
+```
+The service usually starts on `http://localhost:8080` (adjust based on configuration).
+---
+## Environment & Configuration
+Typical backend settings (adjust to your stack):
+```properties
+# application.properties (example)
+server.port=8080
+spring.datasource.url=jdbc:postgresql://localhost:5432/eventdb
+spring.datasource.username=postgres
+spring.datasource.password=postgres
+spring.jpa.hibernate.ddl-auto=update
+```
+Typical frontend settings (only if the app uses env variables):
+```bash
+# client/.env (example)
+VITE_API_BASE_URL=http://localhost:8080/api
+# or
+NEXT_PUBLIC_API_BASE_URL=http://localhost:8080/api
+```
+---
+## Project Scripts (Examples)
+> Check and tailor to what·s actually in your `package.json` / build files.
+**Frontend (client)**
+- `npm run dev` · start development server
+- `npm run build` · production build
+- `npm run lint` · lint code (if configured)
+**Backend (server)**
+- `mvn test` / `./gradlew test` · run tests
+- `mvn spring-boot:run` / `./gradlew bootRun` · start server
+**Optional root-level convenience:** 
+Create a root `package.json` with `concurrently` to run both apps:
+```json
+{
+ "scripts": {
+ "dev": "concurrently \"npm:dev:client\" \"npm:dev:server\"",
+ "dev:client": "npm --prefix client run dev",
+ "dev:server": "mvn -f server/pom.xml spring-boot:run"
+ },
+ "devDependencies": {
+ "concurrently": "^9.0.0"
+ }
+}
+```
+---
+## API (To Be Documented)
+Add your endpoints here as they stabilize:
+| Method | Path | Description |
+|-------:|-------------------|------------------------|
+| GET | `/api/health` | Health check |
+| GET | `/api/events` | List events |
+| POST | `/api/events` | Create event (admin) |
+| ... | ... | ... |
+> Consider generating OpenAPI/Swagger docs in the backend for live API documentation.
+---
+## Architecture Notes
+- **Monorepo:** separates `client` and `server` for clear ownership and deployment paths. 
+- **Local Dev:** run both locally; set `API_BASE_URL` in the client to point at the server. 
+- **Production:** build client to static assets and deploy behind a reverse proxy or CDN; deploy 
+server to your preferred runtime (VM, container, PaaS).
+---
+## Contributing
+1. Create a feature branch: `git checkout -b feature/<name>`
+2. Commit changes: `git commit -m "feat: ..."`
+3. Push branch: `git push origin feature/<name>`
+4. Open a Pull Request
+Please run formatters/lint/tests before submitting.
+---
+## Troubleshooting
+- **Port conflicts:** change `server.port` or the client dev port.
+- **CORS issues:** enable CORS on the backend for the client·s origin(s).
+- **Env not loading:** ensure `.env` file names/paths match the framework·s conventions.
+--
