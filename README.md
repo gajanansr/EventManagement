@@ -1,133 +1,171 @@
-# EventManagement
-A full·stack **Event Management** application (work·in·progress) organized as a monorepo with a 
-**client** (TypeScript) front end and a **server** (Java) back end.
-> **Folders:** 
-> - `client/` · Frontend code (TypeScript + web stack) 
-> - `server/` · Backend code (Java) 
-> - `HELP.md` · Additional framework/tooling references
----
-## Tech Snapshot
-- **Languages:** Java, TypeScript, JavaScript, HTML, SCSS 
-- **Repo layout:** `client/` and `server/` (monorepo)
-> _Tip:_ Check each folder·s manifest (e.g., `package.json` in `client/`, `pom.xml`/`build.gradle` 
-in `server/`) for exact frameworks and scripts.
----
-## Getting Started
-### 1) Prerequisites
-- **Node.js** (LTS recommended) & **npm**/**yarn** for the frontend 
-- **Java JDK** (11+ or as required by the server) 
-- A database (if the backend uses one)·configure connection details via environment or 
-`application.properties`/`application.yml`.
-> If the repo provides a `.env.example` or similar, copy it and fill in values:
-```bash
-cp client/.env.example client/.env # if present
-cp server/.env.example server/.env # if present
-```
----
-## Running the Frontend (`client/`)
-1. Install dependencies:
- ```bash
- cd client
- npm install
- ```
-2. Start the dev server (check `package.json` · `scripts` for the exact command):
- ```bash
- npm run dev # common for Vite/Next.js
- # or
- npm start # common for CRA/React
- # or
- ng serve # if it's Angular
- ```
-3. Open the URL the dev server prints (often `http://localhost:3000/` or `5173/`).
----
-## Running the Backend (`server/`)
-> The backend is Java; the build tool is typically **Maven** or **Gradle**. Use the one present in 
-`server/` (look for `pom.xml` or `build.gradle`/`gradlew`).
-### If Maven
-```bash
-cd server
-# run tests (optional)
-mvn clean test
-# run the app (Spring Boot example)
-mvn spring-boot:run
-```
-### If Gradle
-```bash
-cd server
-# run tests (optional)
-./gradlew test
-# run the app (Spring Boot example)
-./gradlew bootRun
-```
-The service usually starts on `http://localhost:8080` (adjust based on configuration).
----
-## Environment & Configuration
-Typical backend settings (adjust to your stack):
-```properties
-# application.properties (example)
-server.port=8080
-spring.datasource.url=jdbc:postgresql://localhost:5432/eventdb
-spring.datasource.username=postgres
-spring.datasource.password=postgres
-spring.jpa.hibernate.ddl-auto=update
-```
-Typical frontend settings (only if the app uses env variables):
-```bash
-# client/.env (example)
-VITE_API_BASE_URL=http://localhost:8080/api
-# or
-NEXT_PUBLIC_API_BASE_URL=http://localhost:8080/api
-```
----
-## Project Scripts (Examples)
-> Check and tailor to what·s actually in your `package.json` / build files.
-**Frontend (client)**
-- `npm run dev` · start development server
-- `npm run build` · production build
-- `npm run lint` · lint code (if configured)
-**Backend (server)**
-- `mvn test` / `./gradlew test` · run tests
-- `mvn spring-boot:run` / `./gradlew bootRun` · start server
-**Optional root-level convenience:** 
-Create a root `package.json` with `concurrently` to run both apps:
-```json
-{
- "scripts": {
- "dev": "concurrently \"npm:dev:client\" \"npm:dev:server\"",
- "dev:client": "npm --prefix client run dev",
- "dev:server": "mvn -f server/pom.xml spring-boot:run"
- },
- "devDependencies": {
- "concurrently": "^9.0.0"
- }
-}
-```
----
-## API (To Be Documented)
-Add your endpoints here as they stabilize:
-| Method | Path | Description |
-|-------:|-------------------|------------------------|
-| GET | `/api/health` | Health check |
-| GET | `/api/events` | List events |
-| POST | `/api/events` | Create event (admin) |
-| ... | ... | ... |
-> Consider generating OpenAPI/Swagger docs in the backend for live API documentation.
----
-## Architecture Notes
-- **Monorepo:** separates `client` and `server` for clear ownership and deployment paths. 
-- **Local Dev:** run both locally; set `API_BASE_URL` in the client to point at the server. 
-- **Production:** build client to static assets and deploy behind a reverse proxy or CDN; deploy 
-server to your preferred runtime (VM, container, PaaS).
----
-## Contributing
-1. Create a feature branch: `git checkout -b feature/<name>`
-2. Commit changes: `git commit -m "feat: ..."`
-3. Push branch: `git push origin feature/<name>`
-4. Open a Pull Request
-Please run formatters/lint/tests before submitting.
----
-## Troubleshooting
-- **Port conflicts:** change `server.port` or the client dev port.
-- **CORS issues:** enable CORS on the backend for the client·s origin(s).
-- **Env not loading:** ensure `.env` file names/paths match the framework·s conventions.
---
+# Event Management and Resource Allocation Platform
+
+## Overview
+
+A comprehensive system for organizing and streamlining event planning activities, including event task assignment, resource allocation, and client interaction, ensuring a seamless execution of events.
+
+## Users of the System
+
+- **Event Planners**: Organize events, manage resources, and communicate with clients.
+- **Venue Staff**: Oversee venue preparation, maintenance, and scheduling.
+- **Clients**: Book events, provide specifications, and receive updates.
+
+## Functional Requirements
+
+- **User Registration & Profile Management**: Users sign up, log in, and manage profiles with data validation and secure handling of information.
+- **Event Scheduling & Management**: Planners create, update, and manage event details, with authorization for modifications.
+- **Resource Allocation to Events**: Allocate resources like staff, equipment, and venues to specific events.
+- **Client Interaction Interface**: Clients can view event progress and communicate with planners.
+- **User Role-Based Authentication**: System identifies user roles to provide role-specific interfaces and functionalities.
+- **JWT Authorization**: Manages user sessions and secures API calls.
+- **RESTful API & Angular Service Layer**: Angular services interact with backend RESTful APIs for data exchange and UI updates.
+
+## Technology Stack
+
+- **Backend**: Spring Boot, JPA, MySQL
+- **Frontend**: Angular
+- **Security**: Spring Security, JWT
+
+## Key Points to Note
+
+- **Security**: Ensure data and API access are secured, especially personal client information.
+- **Scalability**: Capable of scaling for large events and increasing user base.
+- **User Interface Consistency**: Consistent UI/UX across various modules.
+- **Best Practices**: Adhere to coding best practices and ensure code maintainability.
+
+## Backend Functionalities to be Built
+
+- **User Management**: Build endpoints for user registration, login, and profile management.
+- **Event Management**: CRUD operations for event details, ensuring data integrity.
+- **Resource Management**: Track and assign resources to events, manage inventory.
+- **Role-Based Authentication**: Define access levels for planners, staff, and clients.
+- **JWT Token Management**: Handle token generation, validation, and expiration.
+- Angular: Use Reactive form and declare form with name itemForm
+- Angular: Create a service with name AuthService and add these functions saveToken,SetRole,getRole,getLoginStatus,getToken,logout
+- Angular: Create a service with name HttpService and add these functions getOrderStatus ,updateCargoStatus,assignDriver,getAssignOrders,getCargo,getDrivers,addCargo,Login,registerUser
+
+
+ Backend files:
+
+- `./src/main/java/com/wecp/eventmanagementsystem/config/SecurityConfig.java`
+- `./src/main/java/com/wecp/eventmanagementsystem/controller/ClientController.java`
+- `./src/main/java/com/wecp/eventmanagementsystem/controller/EventPlannerController.java`
+- `./src/main/java/com/wecp/eventmanagementsystem/controller/RegisterAndLoginController.java`
+- `./src/main/java/com/wecp/eventmanagementsystem/controller/StaffController.java`
+- `./src/main/java/com/wecp/eventmanagementsystem/entity/Allocation.java`
+- `./src/main/java/com/wecp/eventmanagementsystem/entity/Event.java`
+- `./src/main/java/com/wecp/eventmanagementsystem/entity/Resource.java`
+- `./src/main/java/com/wecp/eventmanagementsystem/entity/User.java`
+- `./src/main/java/com/wecp/eventmanagementsystem/jwt/JwtRequestFilter.java`
+- `./src/main/java/com/wecp/eventmanagementsystem/jwt/JwtUtil.java`
+- `./src/main/java/com/wecp/eventmanagementsystem/repository/AllocationRepository.java`
+- `./src/main/java/com/wecp/eventmanagementsystem/repository/EventRepository.java`
+- `./src/main/java/com/wecp/eventmanagementsystem/repository/ResourceRepository.java`
+- `./src/main/java/com/wecp/eventmanagementsystem/repository/UserRepository.java`
+- `./src/main/java/com/wecp/eventmanagementsystem/service/EventService.java`
+- `./src/main/java/com/wecp/eventmanagementsystem/service/ResourceService.java`
+- `./src/main/java/com/wecp/eventmanagementsystem/service/UserService.java`
+
+## Entity Classes and their properties
+1. User
+   - Long userID (should be auto-generated and primary key)
+   - String username
+   - String password
+   - String email
+   - String role // role should be either "PLANNER", "STAFF" or "CLIENT"
+
+2. Event
+   - Long eventID (should be auto-generated and primary key)
+   - String title
+   - String description
+   - Date dateTime
+   - String location
+   - String status
+   - List<Allocation> allocations
+
+3. Allocation
+   - Long allocationID (should be auto-generated and primary key)
+   - Event event
+   - Resource resource
+   - int quantity
+   
+4. Resource
+   - Long resourceID (should be auto-generated and primary key)
+   - String name
+   - String type
+   - boolean availability
+
+-> Manage the relationships between entities using appropriate annotations.
+-> generate constructors, getters, and setters for the Property class as per standard Java conventions.
+-> For example: getUserID(), setUserID(Long userID) etc.
+
+
+
+## API Endpoints
+
+For Event Planners (Admin Side):
+
+- Register Planner: `POST /api/user/register`
+- Login Planner: `POST /api/user/login`: 
+- Create Event: `POST /api/planner/event`
+- View Events: `GET /api/planner/events`
+- Add Resource: `POST:/api/planner/resource`
+- Get Resources: `Get:/api/planner/resources`
+- Allocate Resources: `POST api/planner/allocate-resources?eventId=&resourceId=`
+
+
+For Venue Staff and Clients (User Side):
+
+- Register User: `POST /api/user/register`
+- Login User: `POST /api/user/login`
+- View Event Details: `GET /api/staff/event-details/{eventId}`
+- Update Event Setup: `PUT /api/staff/update-setup/{eventId}`
+- View Booking Details: `GET/api/client/booking-details/{eventId}`
+
+## Security Configurations to be Implemented
+Set the following security configurations in the `SecurityConfig.java` file:
+- /api/user/register: accessible to everyone
+- /api/user/login: accessible to everyone
+- /api/planner/event: accessible to PLANNER authority
+- /api/planner/events: accessible to PLANNER authority
+- /api/planner/resource: accessible to PLANNER authority
+- /api/planner/resources: accessible to PLANNER authority
+- /api/planner/allocate-resources: accessible to PLANNER authority
+- /api/staff/event-details/{eventId}: accessible to STAFF authority
+- /api/staff/update-setup/{eventId}: accessible to STAFF authority
+- /api/client/booking-details/{eventId}: accessible to CLIENT authority
+- any other route: accessible to authenticated users
+
+Check the permissions with respect to authority such as hasAuthority("PLANNER") or hasAuthority("STAFF") or hasAuthority("CLIENT").
+If a user tries to access a route without the required authority, return a 403 Forbidden status.
+
+
+## Frontend Functionalities to be Built
+
+- **Registration and Profile Management**: User-friendly registration and profile management for all user types.
+- **Event Dashboard**: Tools for planners to manage events and resources.
+- **Resource Allocation Interface**: Interface for planners to allocate resources to different events.
+- **Client Communication Interface**: Portal for clients to interact and get updates.
+- **Role-Specific UI Elements**: Tailor the UI to display options relevant to each role.
+- **Session Management with JWT**: Implement JWT token handling for session management.
+- **Rating System**: low clients to rate staff after event completion, display average ratings on staff profiles, and provide optional feedback comments.
+
+Frontend files:
+
+- `./src/app/add-resource/add-resource.component.ts`
+- `./src/app/add-resource/add-resource.component.html`
+- `./src/app/booking-details/booking-details.component.ts`
+- `./src/app/booking-details/booking-details.component.html`
+- `./src/app/create-event/create-event.component.ts`
+- `./src/app/create-event/create-event.component.html`
+- `./src/app/resource-allocate/resource-allocate.component.ts`
+- `./src/app/resource-allocate/resource-allocate.component.html`
+- `./src/app/view-events/view-events.component.ts`
+- `./src/app/view-events/view-events.component.html`
+- `./src/app/login/login.component.ts`
+- `./src/app/login/login.component.html`
+- `./src/services/http.service.ts`
+- `./src/services/auth.service.ts`
+- `./src/app/app.component.html`
+- `./src/app/registration/registration.component.ts`
+- `./src/app/registration/registration.component.html`
