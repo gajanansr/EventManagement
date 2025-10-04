@@ -1,1 +1,133 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global styles for Event Management System */
+
+// Base styles
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  color: #2c3e50;
+}
+
+// Typography
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+// Shadow utilities
+.shadow-sm {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+}
+
+.shadow {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12) !important;
+}
+
+.shadow-lg {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16) !important;
+}
+
+// Card improvements
+.card {
+  background-color: #ffffff;
+  backdrop-filter: blur(10px);
+  border: none;
+}
+
+// Button improvements  
+.btn-primary {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+  
+  &:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+  }
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  border-color: #6c757d;
+  
+  &:hover {
+    background-color: #5c636a;
+    border-color: #565e64;
+  }
+}
+
+// Table improvements
+.table-hover tbody tr:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+  cursor: pointer;
+}
+
+// Form improvements
+.form-control:focus,
+.form-select:focus {
+  border-color: #80bdff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  outline: none;
+}
+
+// Badge improvements
+.badge {
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+// Animation for smooth transitions
+.fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Responsive utilities
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+  
+  h1 {
+    font-size: 1.75rem;
+  }
+  
+  .card {
+    margin-bottom: 1rem;
+  }
+}
+
+// Scrollbar styling
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 5px;
+  
+  &:hover {
+    background: #555;
+  }
+}
