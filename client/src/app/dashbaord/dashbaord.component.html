@@ -1,22 +1,12 @@
-<div class="container mt-4">
-  <mat-toolbar color="000000" class="mb-4">
-    <span class="mat-h3">Event Management System</span>
-    <span class="spacer"></span>
-    <button mat-button [routerLink]="['/profile']">
-      <mat-icon>person</mat-icon> My Profile
-    </button>
-    <button mat-button (click)="logout()">
-      <mat-icon>exit_to_app</mat-icon> Logout
-    </button>
-  </mat-toolbar>
+<div>
 
   <div *ngIf="roleName === 'PLANNER'">
     <mat-card class="mb-4">
       <mat-card-content>
-        <app-add-resource></app-add-resource>
+        <app-view-events></app-view-events>
       </mat-card-content>
     </mat-card>
-    <mat-card class="mb-4">
+    <!-- <mat-card class="mb-4">
       <mat-card-content>
         <app-create-event></app-create-event>
       </mat-card-content>
@@ -25,7 +15,7 @@
       <mat-card-content>
         <app-resource-allocate></app-resource-allocate>
       </mat-card-content>
-    </mat-card>
+    </mat-card> -->
   </div>
 
   <div *ngIf="roleName === 'STAFF'">
