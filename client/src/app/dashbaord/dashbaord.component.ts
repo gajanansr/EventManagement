@@ -24,21 +24,24 @@ export class DashbaordComponent implements OnInit {
     this.dashboardView();
   }
 
+
   dashboardView() {
     console.log(this.stateIdMd);
     debugger;
-
     console.log("stateMd Call");
     this.statename = {};
     this.httpService.getStatename().subscribe((data: any) => {
       this.statename = data;
       console.log(this.statename);
     }, error => {
-      // Handle error
       this.showError = true;
       this.errorMessage = "An error occurred while searching in. Please try again later or no record found";
       console.error('Login error:', error);
-    });;
+    });
   }
-  
+
+  logout() {
+    this.authService.logout();
+    this.router.navigateByUrl('/login');
+  }
 }
