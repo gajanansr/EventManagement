@@ -1,43 +1,57 @@
-<mat-toolbar color="primary" class="mat-elevation-z6 glossy-toolbar">
-  <span class="mat-h3">Event Management System</span>
+<nav class="modern-navbar">
+  <div class="navbar-container">
+    <div class="navbar-brand">
+      <span class="brand-icon">🎉</span>
+      <span class="brand-text">Event Management System</span>
+    </div>
 
-  <span class="spacer"></span>
-  <div>
-    <!-- Role-based navigation -->
-    <ng-container *ngIf="roleName === 'PLANNER'">
-      <button mat-link routerLink="/create-event">Create Event</button>
-      <span class="spacer"></span>
-      <button mat-button routerLink="/add-resource">Add Resource</button>
-      <span class="spacer"></span>
+    <div class="navbar-menu">
+      <!-- Role-based navigation -->
+      <ng-container *ngIf="roleName === 'PLANNER'">
+        <button class="nav-btn" routerLink="/create-event" routerLinkActive="active">
+          <span class="btn-icon">📅</span>
+          <span class="btn-text">Create Event</span>
+        </button>
+        <button class="nav-btn" routerLink="/add-resource" routerLinkActive="active">
+          <span class="btn-icon">📦</span>
+          <span class="btn-text">Add Resource</span>
+        </button>
+        <button class="nav-btn" routerLink="/resource-allocate" routerLinkActive="active">
+          <span class="btn-icon">🎯</span>
+          <span class="btn-text">Allocate Resource</span>
+        </button>
+      </ng-container>
 
-      <button mat-button routerLink="/resource-allocate">Allocate Resource</button>
-      <span class="spacer"></span>
+      <ng-container *ngIf="roleName === 'STAFF'">
+        <button class="nav-btn" routerLink="/view-events" routerLinkActive="active">
+          <span class="btn-icon">👁️</span>
+          <span class="btn-text">View Events</span>
+        </button>
+      </ng-container>
 
-    </ng-container>
+      <ng-container *ngIf="roleName === 'CLIENT'">
+        <button class="nav-btn" routerLink="/booking-details" routerLinkActive="active">
+          <span class="btn-icon">📋</span>
+          <span class="btn-text">My Bookings</span>
+        </button>
+      </ng-container>
+    </div>
 
-    <ng-container *ngIf="roleName === 'STAFF'">
-      <button mat-button routerLink="/view-events">View Events</button>
-    </ng-container>
-
-    <ng-container *ngIf="roleName === 'CLIENT'">
-      <button mat-button routerLink="/booking-details">Booking Details</button>
-    </ng-container>
-
-    <!-- Profile & Logout -->
-    <button mat-button [routerLink]="['/profile']">
-
-      <mat-icon>person</mat-icon> My Profile
-    </button>
-    <span class="spacer"></span>
-
-    <button mat-button (click)="logout()">
-      <mat-icon>logout</mat-icon> Logout
-    </button>
+    <div class="navbar-actions">
+      <!-- Profile & Logout -->
+      <button class="nav-btn nav-btn-profile" [routerLink]="['/profile']" routerLinkActive="active">
+        <span class="btn-icon">👤</span>
+        <span class="btn-text">Profile</span>
+      </button>
+      <button class="nav-btn nav-btn-logout" (click)="logout()">
+        <span class="btn-icon">🚪</span>
+        <span class="btn-text">Logout</span>
+      </button>
+    </div>
   </div>
-</mat-toolbar>
+</nav>
 
-<body>
-    <router-outlet>    
-    </router-outlet>
-</body>
+<main class="main-content">
+  <router-outlet></router-outlet>
+</main>
 
