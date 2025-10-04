@@ -23,6 +23,7 @@ export class ResourceAllocateComponent implements OnInit {
   totalPages: number = 1;
   isSuccess: boolean = false;
   showPopup: boolean = false;
+  selectedResourceUnavailable: boolean = false;
 
   constructor(
     private router: Router,
@@ -46,12 +47,12 @@ export class ResourceAllocateComponent implements OnInit {
 
   getResources() {
     this.httpService.GetAllResources().subscribe(
-      (data) => {
+      (data: any) => {
         this.resourceList = data;
         this.totalPages = Math.ceil(this.resourceList.length / this.itemsPerPage);
         this.setPaginatedResources();
       },
-      (error) => {
+      (error: any) => {
         this.showErrorMessage(error.message || 'Failed to load resources');
       }
     );
@@ -79,10 +80,10 @@ export class ResourceAllocateComponent implements OnInit {
 
   getEvent() {
     this.httpService.GetAllevents().subscribe(
-      data => {
+      (data: any) => {
         this.eventList = data;
       },
-      error => {
+      (error: any) => {
         this.showErrorMessage(error.message || 'Failed to load events');
       }
     );
@@ -106,15 +107,28 @@ export class ResourceAllocateComponent implements OnInit {
     }, 3000); 
   }
 
+  onResourceSelect(event: any) {
+    const resourceId = event.target.value;
+    const selectedResource = this.resourceList.find(r => r.resourceID == resourceId);
+    this.selectedResourceUnavailable = selectedResource ? !selectedResource.availability : false;
+  }
 
   onSubmit() {
+    if (this.selectedResourceUnavailable) {
+      this.showErrorMessage('Cannot allocate an unavailable resource. Please select an available resource.');
+      return;
+    }
+
     if (this.itemForm.valid) {
       this.httpService.allocateResources(this.itemForm.value.eventId, this.itemForm.value.resourceId, this.itemForm.value).subscribe(
-        data => {
+        (data: any) => {
           this.showSuccessMessage(data.message);
           this.itemForm.reset();
+          this.selectedResourceUnavailable = false;
+          // Refresh resources list to update availability
+          this.getResources();
         },
-        error => {
+        (error: any) => {
           if (error.status === 409) {
             this.showErrorMessage(error.error.message);
           } else {
@@ -129,7 +143,7 @@ export class ResourceAllocateComponent implements OnInit {
   }
 
   markFormGroupTouched(formGroup: FormGroup) {
-    Object.values(formGroup.controls).forEach((control) => {
+    Object.values(formGroup.controls).forEach((control: any) => {
       control.markAsTouched();
 
       if (control instanceof FormGroup) {
