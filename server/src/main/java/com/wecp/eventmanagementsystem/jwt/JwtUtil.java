@@ -58,7 +58,7 @@ public class JwtUtil {
         Claims claims;
         try {
             claims = Jwts.parserBuilder()
-                    .setSigningKey(secret)
+                    .setSigningKey(getSigningKey())
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
@@ -70,7 +70,7 @@ public class JwtUtil {
 
     public String extractUsername(String token) {
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(secret)
+                .setSigningKey(getSigningKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
@@ -79,7 +79,7 @@ public class JwtUtil {
 
     public boolean isTokenExpired(String token) {
         Date expirationDate = Jwts.parserBuilder()
-                .setSigningKey(secret)
+                .setSigningKey(getSigningKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
