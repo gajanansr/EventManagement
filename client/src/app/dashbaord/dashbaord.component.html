@@ -1,46 +1,63 @@
 
-
-<div class="dashboard-bg coolvetica">
-    <div class="dashboard-header">
-        <h2>Welcome to Your Dashboard</h2>
-        <p class="subtitle">Manage your events and resources with ease</p>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
+    <a class="navbar-brand" href="#">Dashboard</a>
+    <div class="collapse navbar-collapse">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item" *ngIf="roleName === 'PLANNER'">
+                <a class="nav-link" routerLink="/create-event">Create Event</a>
+            </li>
+            <li class="nav-item" *ngIf="roleName === 'PLANNER'">
+                <a class="nav-link" routerLink="/add-resource">Add Resource</a>
+            </li>
+            <li class="nav-item" *ngIf="roleName === 'PLANNER'">
+                <a class="nav-link" routerLink="/resource-allocate">Allocate Resource</a>
+            </li>
+            <li class="nav-item" *ngIf="roleName === 'STAFF'">
+                <a class="nav-link" routerLink="/view-events">View Events</a>
+            </li>
+            <li class="nav-item" *ngIf="roleName === 'CLIENT'">
+                <a class="nav-link" routerLink="/booking-details">Booking Details</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <button class="btn btn-outline-light" (click)="logout()">Logout</button>
+            </li>
+        </ul>
     </div>
-    <div class="dashboard-content">
-        <div *ngIf="roleName === 'PLANNER'">
-            <mat-card class="dashboard-card">
-                <mat-card-title>Add Resource</mat-card-title>
-                <mat-card-content>
-                    <app-add-resource></app-add-resource>
-                </mat-card-content>
-            </mat-card>
-            <mat-card class="dashboard-card">
-                <mat-card-title>Create Event</mat-card-title>
-                <mat-card-content>
-                    <app-create-event></app-create-event>
-                </mat-card-content>
-            </mat-card>
-            <mat-card class="dashboard-card">
-                <mat-card-title>Allocate Resource</mat-card-title>
-                <mat-card-content>
-                    <app-resource-allocate></app-resource-allocate>
-                </mat-card-content>
-            </mat-card>
+</nav>
+
+<div class="container mt-4">
+    <h3 class="display-4 text-center text-capitalize mb-4">Event Management System</h3>
+    <div *ngIf="roleName === 'PLANNER'">
+        <div class="card mb-4">
+            <div class="card-body">
+                <app-add-resource></app-add-resource>
+            </div>
         </div>
-        <div *ngIf="roleName === 'STAFF'">
-            <mat-card class="dashboard-card">
-                <mat-card-title>View Events</mat-card-title>
-                <mat-card-content>
-                    <app-view-events></app-view-events>
-                </mat-card-content>
-            </mat-card>
+        <div class="card mb-4">
+            <div class="card-body">
+                <app-create-event></app-create-event>
+            </div>
         </div>
-        <div *ngIf="roleName === 'CLIENT'">
-            <mat-card class="dashboard-card">
-                <mat-card-title>Booking Details</mat-card-title>
-                <mat-card-content>
-                    <app-booking-details></app-booking-details>
-                </mat-card-content>
-            </mat-card>
+        <div class="card mb-4">
+            <div class="card-body">
+                <app-resource-allocate></app-resource-allocate>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="roleName === 'STAFF'">
+        <div class="card mb-4">
+            <div class="card-body">
+                <app-view-events></app-view-events>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="roleName === 'CLIENT'">
+        <div class="card mb-4">
+            <div class="card-body">
+                <app-booking-details></app-booking-details>
+            </div>
         </div>
     </div>
 </div>
