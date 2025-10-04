@@ -65,11 +65,11 @@ export class CreateEventComponent implements OnInit {
       return { invalidDate: true };
     }
 
-  //implement this after passing all testcases
+  // implement this after passing all testcases
   
-    // if (selectedDate < tomorrow) {
-    //   return { dateInPast: true };
-    // }
+    if (selectedDate < tomorrow) {
+      return { dateInPast: true };
+    }
   
     return null;
   }
