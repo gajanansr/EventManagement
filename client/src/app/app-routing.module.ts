@@ -11,11 +11,13 @@ import { AddResourceComponent } from './add-resource/add-resource.component';
 import { ResourceAllocateComponent } from './resource-allocate/resource-allocate.component';
 import { ViewEventsComponent } from './view-events/view-events.component';
 import { BookingDetailsComponent } from './booking-details/booking-details.component';
+import { ProfileComponent } from './profile/profile.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'registration', component: RegistrationComponent },
   { path: 'dashboard', component: DashbaordComponent },
+  { path: 'profile', component: ProfileComponent },
   { path: 'create-event', component: CreateEventComponent },  
   { path: 'add-resource', component: AddResourceComponent }, 
   { path: 'resource-allocate', component: ResourceAllocateComponent },  

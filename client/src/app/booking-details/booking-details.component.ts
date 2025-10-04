@@ -11,9 +11,11 @@ import { AuthService } from '../../services/auth.service';
 export class BookingDetailsComponent implements OnInit {
  
   itemForm: FormGroup;
+  myBookings: any[] = [];
   eventObj: any[] = [];
   message: { type: 'success' | 'error', text: string } | null = null;
   searchPerformed: boolean = false;
+  loadingBookings: boolean = false;
  
   tooltipVisible: boolean = false;
   tooltipContent: any[] = [];
@@ -30,7 +32,24 @@ export class BookingDetailsComponent implements OnInit {
     });
   }
  
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.loadMyBookings();
+  }
+
+  loadMyBookings(): void {
+    this.loadingBookings = true;
+    this.httpService.getMyBookings().subscribe(
+      (bookings: any) => {
+        this.myBookings = bookings;
+        this.loadingBookings = false;
+      },
+      (error: any) => {
+        console.error('Error loading bookings:', error);
+        this.showTemporaryMessage('error', 'Failed to load your bookings');
+        this.loadingBookings = false;
+      }
+    );
+  }
  
   searchEvent(): void {
     if (this.itemForm.valid) {

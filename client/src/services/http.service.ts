@@ -170,4 +170,51 @@ export class HttpService {
   GetAllUsers(): Observable<any> {
     return this.http.get(`${this.serverName}/api/user/users`, { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) });
   }
+
+  // Profile Management
+  getUserProfile(): Observable<any> {
+    const url = `${this.serverName}/api/profile`;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+    return this.http.get(url, { headers });
+  }
+
+  updateUserProfile(profileData: any): Observable<any> {
+    const url = `${this.serverName}/api/profile`;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+    return this.http.put(url, profileData, { headers });
+  }
+
+  // Client Bookings
+  getMyBookings(): Observable<any> {
+    const url = `${this.serverName}/api/client/my-bookings`;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+    return this.http.get(url, { headers });
+  }
+
+  getMyBooking(bookingId: number): Observable<any> {
+    const url = `${this.serverName}/api/client/my-booking/${bookingId}`;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+    return this.http.get(url, { headers });
+  }
+
+  createBooking(bookingData: any): Observable<any> {
+    const url = `${this.serverName}/api/client/create-booking`;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+    return this.http.post(url, bookingData, { headers });
+  }
 }

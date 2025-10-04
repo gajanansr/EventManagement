@@ -15,6 +15,7 @@ import { AddResourceComponent } from './add-resource/add-resource.component';
 import { ResourceAllocateComponent } from './resource-allocate/resource-allocate.component';
 import { ViewEventsComponent } from './view-events/view-events.component';
 import { BookingDetailsComponent } from './booking-details/booking-details.component';
+import { ProfileComponent } from './profile/profile.component';
 
 // Angular Material modules
 import { MatCardModule } from '@angular/material/card';
@@ -40,7 +41,8 @@ import {MatRadioModule} from '@angular/material/radio'
       AddResourceComponent,
       ResourceAllocateComponent,
       ViewEventsComponent,
-      BookingDetailsComponent
+      BookingDetailsComponent,
+      ProfileComponent
   ],
   imports: [
     BrowserModule,
