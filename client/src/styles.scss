@@ -1,1 +1,49 @@
-/* You can add global styles to this file, and also import other style files */
+
+@import 'assets/brand-colors.scss';
+@import 'assets/fonts/coolvetica.css';
+
+body {
+	font-family: 'Coolvetica', Arial, sans-serif;
+	background: $background;
+	color: $text-primary;
+}
+
+// Material theme overrides
+$mat-primary: (
+	500: $primary,
+	contrast: (
+		500: $surface,
+	)
+);
+$mat-accent: (
+	500: $accent,
+	contrast: (
+		500: $surface,
+	)
+);
+$mat-warn: (
+	500: $error,
+	contrast: (
+		500: $surface,
+	)
+);
+
+// Example: style Material buttons
+.mat-mdc-raised-button, .mat-mdc-button {
+	font-family: 'Coolvetica', Arial, sans-serif;
+	background-color: $primary;
+	color: $surface;
+	border-radius: 8px;
+	box-shadow: none;
+	&:hover {
+		background-color: $accent;
+		color: $surface;
+	}
+}
+
+// Example: style Material toolbar
+.mat-mdc-toolbar {
+	background: $primary;
+	color: $surface;
+	font-family: 'Coolvetica', Arial, sans-serif;
+}

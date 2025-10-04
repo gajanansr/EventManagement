@@ -1,6 +1,3 @@
-html,
-body,
-section {
   height: 100%;
   margin-top: -80px;
   margin-left: -60px;
@@ -23,9 +20,6 @@ section {
 }
 
 
-.badge {
-  font-size: 0.9em;
-  padding: 0.4em 0.6em;
   color: black;
 }
 
@@ -33,6 +27,7 @@ h1 {
   position: relative;
   color: #422482;
   text-align: center;
+
   margin-top: -40px;
   margin-bottom: 40px;
   font-weight: bold;
@@ -201,22 +196,96 @@ select {
 }
 
 .bubble-2 {
-  width: 250px;
-  height: 250px;
-  top: 60%;
-  left: 70%;
-  background-color: #ffdd59;
-}
 
-.bubble-3 {
-  width: 250px;
-  height: 250px;
-  top: 60%;
-  left: 70%;
-  background-color: #48105f;
-}
+  @import '../../assets/brand-colors.scss';
+  @import '../../assets/fonts/coolvetica.css';
 
-.bubble-4 {
+  .booking-details-bg {
+    min-height: 100vh;
+    background: linear-gradient(120deg, $background 60%, $surface 100%);
+    padding: 32px 0;
+  }
+
+  .booking-details-card {
+    max-width: 900px;
+    margin: 0 auto;
+    background: $surface;
+    border-radius: 18px;
+    box-shadow: 0 4px 24px rgba($primary, 0.08);
+    font-family: 'Coolvetica', Arial, sans-serif;
+    padding: 32px 24px;
+  }
+
+  .booking-details-form {
+    display: flex;
+    gap: 16px;
+    align-items: flex-end;
+    margin-bottom: 24px;
+  }
+
+  .booking-details-field {
+    flex: 1;
+  }
+
+  .booking-details-alert {
+    margin-bottom: 16px;
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: 'Coolvetica', Arial, sans-serif;
+    &.success {
+      background: #e6ffe6;
+      color: #2d7a2d;
+    }
+    &.error {
+      background: #ffe6e6;
+      color: #a12d2d;
+    }
+  }
+
+  .booking-details-table-wrapper {
+    margin-top: 16px;
+    overflow-x: auto;
+  }
+  .booking-details-table {
+    width: 100%;
+    border-radius: 10px;
+    background: $surface;
+    font-family: 'Coolvetica', Arial, sans-serif;
+  }
+  .booking-details-badge {
+    font-size: 0.9em;
+    padding: 0.4em 0.6em;
+    border-radius: 6px;
+    background: $accent;
+    color: $surface;
+  }
+  .allocation-info {
+    cursor: pointer;
+    color: $primary;
+    font-weight: 500;
+    &:hover {
+      color: $accent;
+    }
+  }
+  .booking-details-no-results {
+    color: $error;
+    text-align: center;
+    padding: 2rem;
+    font-weight: 500;
+    font-size: 1.1rem;
+  }
+  .booking-details-tooltip {
+    position: absolute;
+    background: $surface;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba($primary, 0.1);
+    z-index: 1000;
+    max-width: 600px;
+    font-size: 14px;
+    font-family: 'Coolvetica', Arial, sans-serif;
+  }
   width: 250px;
   height: 250px;
   top: 60%;
@@ -399,4 +468,94 @@ select {
   z-index: 1000;
   max-width: 600px;
   font-size: 14px;
+}
+
+@import '../../assets/brand-colors.scss';
+@import '../../assets/fonts/coolvetica.css';
+
+.booking-details-bg {
+  min-height: 100vh;
+  background: linear-gradient(120deg, $background 60%, $surface 100%);
+  padding: 32px 0;
+}
+
+.booking-details-card {
+  max-width: 900px;
+  margin: 0 auto;
+  background: $surface;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba($primary, 0.08);
+  font-family: 'Coolvetica', Arial, sans-serif;
+  padding: 32px 24px;
+}
+
+.booking-details-form {
+  display: flex;
+  gap: 16px;
+  align-items: flex-end;
+  margin-bottom: 24px;
+}
+
+.booking-details-field {
+  flex: 1;
+}
+
+.booking-details-alert {
+  margin-bottom: 16px;
+  padding: 12px 18px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: 'Coolvetica', Arial, sans-serif;
+  &.success {
+    background: #e6ffe6;
+    color: #2d7a2d;
+  }
+  &.error {
+    background: #ffe6e6;
+    color: #a12d2d;
+  }
+}
+
+.booking-details-table-wrapper {
+  margin-top: 16px;
+  overflow-x: auto;
+}
+.booking-details-table {
+  width: 100%;
+  border-radius: 10px;
+  background: $surface;
+  font-family: 'Coolvetica', Arial, sans-serif;
+}
+.booking-details-badge {
+  font-size: 0.9em;
+  padding: 0.4em 0.6em;
+  border-radius: 6px;
+  background: $accent;
+  color: $surface;
+}
+.allocation-info {
+  cursor: pointer;
+  color: $primary;
+  font-weight: 500;
+  &:hover {
+    color: $accent;
+  }
+}
+.booking-details-no-results {
+  color: $error;
+  text-align: center;
+  padding: 2rem;
+  font-weight: 500;
+  font-size: 1.1rem;
+}
+.booking-details-tooltip {
+  position: absolute;
+  background: $surface;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 4px 8px rgba($primary, 0.1);
+  z-index: 1000;
+  max-width: 600px;
+  font-size: 14px;
+  font-family: 'Coolvetica', Arial, sans-serif;
 }

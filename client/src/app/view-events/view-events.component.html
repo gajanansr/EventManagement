@@ -1,186 +1,129 @@
-<!DOCTYPE html>
-<html lang="en">
- 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Events</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-    <link rel="stylesheet" href="view-events.component.scss">
-</head>
 
-<body>
-    <section class="background-radial-gradient overflow-hidden">
-        <div class="bubble bubble-1"></div>
-        <div class="bubble bubble-2"></div>
-        <div class="bubble bubble-3"></div>
-        <div class="bubble bubble-4"></div>
-        <div class="bubble bubble-5"></div>
-        <div class="bubble bubble-6"></div>
-        <div class="bubble bubble-7"></div>
-        <div class="bubble bubble-8"></div>
-        <div class="bubble bubble-9"></div>
-        <div class="bubble bubble-10"></div>
- 
-       <div class="container px-4 py-5 px-md-5 my-5">
-    <h1 class="display-4 fw-bold text-center mb-4 animate__animated animate__fadeInDown">Manage Events</h1>
- 
-            <!-- Search Form -->
-            <div class="card bg-glass mx-auto mb-4">
-                <div class="card-body">
-                    <form [formGroup]="itemForm" (ngSubmit)="searchEvent()" class="mb-4">
-                        <div class="input-group">
-                            <input type="text" formControlName="searchTerm" class="form-control" placeholder="Search With ID or Title">
-                            <button type="submit" class="btn btn-primary animate__animated animate__fadeIn">Search</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-           
-
-            <div *ngIf="message" class="alert mt-3 animate__animated animate__fadeInDown animate__delay-1s"
-                [ngClass]="{'alert-success': message.type === 'success', 'alert-danger': message.type === 'error'}"
-                role="alert">
-                {{ message.text }}
-            </div>
- 
-            <!-- Events Table -->
-            <div class="card bg-glass mx-auto animate__animated animate__fadeInUp">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between mb-3">
-                        <h4 class="card-title">Events</h4>
-                        <div>
-                            <label for="sort" class="me-2">Sort By:</label>
-                            <select id="sort" (change)="onSortChange($event)" class="form-select d-inline-block w-auto">
-                                <option value="id">ID</option>
-                                <option value="title">Title</option>
-                                <option value="date">Date</option>
-                                <option value="location">Location</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label for="filter" class="me-2">Filter Events:</label>
-                            <select id="filter" (change)="onFilterChange($event)" class="form-select d-inline-block w-auto">
-                                <option value="all">All Events</option>
-                                <option value="past">Past Events</option>
-                                <option value="today">Today's Events</option>
-                                <option value="future">Future Events</option>
-                            </select>
-                        </div>
-                    </div>
-           
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th scope="col">ID</th>
-                                <th scope="col">Title</th>
-                                <th scope="col">Description</th>
-                                <th scope="col">Date</th>
-                                <th scope="col">Location</th>
-                                <th scope="col">Status</th>
-                                <th scope="col">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let event of paginatedEvents">
-                                <td>{{ event.eventID }}</td>
-                                <td>{{ event.title }}</td>
-                                <td>{{ event.description }}</td>
-                                <td>{{ event.dateTime | date:'medium' }}</td>
-                                <td>{{ event.location }}</td>
-                                <td>{{ event.status }}</td>
-                                <td>
-                                    <button class="btn btn-sm btn-primary" (click)="edit(event)" data-bs-toggle="modal"
-                                        data-bs-target="#updateModal">Update</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
- 
-                    <div class="pagination-controls d-flex justify-content-between">
-                        <button class="btn btn-outline-primary" (click)="previousPage()" [disabled]="currentPage === 1">Previous</button>
-                        <span>Page {{ currentPage }} of {{ totalPages }}</span>
-                        <button class="btn btn-outline-primary" (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
- 
-    <!-- Update Modal -->
-    <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content bg-glass">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="updateModalLabel">{{ isUpdate ? 'Update Event' : 'Create Event' }}</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
-                       
-                        <div class="mb-3">
-                            <label for="title" class="form-label">Title:</label>
-                            <input type="text" id="title" formControlName="title"
-                                class="form-control animate__animated animate__fadeInLeft" />
-                            <div *ngIf="itemForm.get('title')?.hasError('required') && itemForm.get('title')?.touched"
-                                class="text-danger">
-                                Title is required.
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="description" class="form-label">Description:</label>
-                            <input type="text" id="description" formControlName="description"
-                                class="form-control animate__animated animate__fadeInRight" />
-                            <div *ngIf="itemForm.get('description')?.hasError('required') && itemForm.get('description')?.touched"
-                                class="text-danger">
-                                Description is required.
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="dateTime" class="form-label">Date Time:</label>
-                            <input type="datetime-local" id="dateTime" formControlName="dateTime"
-                                class="form-control animate__animated animate__fadeInUp" />
-                            <div *ngIf="itemForm.get('dateTime')?.hasError('required') && itemForm.get('dateTime')?.touched"
-                                class="text-danger">
-                                Date and Time are required.
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="location" class="form-label">Location:</label>
-                            <input type="text" id="location" formControlName="location"
-                                class="form-control animate__animated animate__fadeInUp" />
-                            <div *ngIf="itemForm.get('location')?.hasError('required') && itemForm.get('location')?.touched"
-                                class="text-danger">
-                                Location is required.
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="status" class="form-label">Status:</label>
-                            <select id="status" class="form-select animate__animated animate__fadeInUp"
-                                formControlName="status">
-                                <option value="" disabled selected>Select status</option>
-                                <option value="Scheduled">Scheduled</option>
-                                <option value="Cancelled">Cancelled</option>
-                                <option value="Completed">Completed</option>
-                            </select>
-                            <div *ngIf="itemForm.get('status')?.hasError('required') && itemForm.get('status')?.touched"
-                                class="text-danger">
-                                Status is required.
-                            </div>
-                        </div>
-                        <button type="submit" class="btn btn-primary animate__animated animate__pulse animate__infinite">
-                            {{ isUpdate ? 'Update Event' : 'Create Event' }}
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
+<div class="view-events-bg coolvetica">
+    <div class="view-events-header">
+        <h2>Manage Events</h2>
     </div>
- 
-    <!-- Bootstrap JS and dependencies -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
- 
-</html>
+    <div class="view-events-content">
+        <mat-card class="view-events-card">
+            <mat-card-content>
+                <form [formGroup]="itemForm" (ngSubmit)="searchEvent()" class="view-events-search-form">
+                    <mat-form-field appearance="outline" class="view-events-search-field">
+                        <mat-label>Search With ID or Title</mat-label>
+                        <input matInput type="text" formControlName="searchTerm" placeholder="Search With ID or Title">
+                    </mat-form-field>
+                    <button mat-raised-button color="primary" type="submit">Search</button>
+                </form>
+                <div *ngIf="message" class="view-events-alert" [ngClass]="{'success': message.type === 'success', 'error': message.type === 'error'}">
+                    {{ message.text }}
+                </div>
+            </mat-card-content>
+        </mat-card>
+        <mat-card class="view-events-card">
+            <mat-card-content>
+                <div class="view-events-controls">
+                    <mat-form-field appearance="outline" class="view-events-control-field">
+                        <mat-label>Sort By</mat-label>
+                        <mat-select id="sort" (selectionChange)="onSortChange($event)">
+                            <mat-option value="id">ID</mat-option>
+                            <mat-option value="title">Title</mat-option>
+                            <mat-option value="date">Date</mat-option>
+                            <mat-option value="location">Location</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="view-events-control-field">
+                        <mat-label>Filter Events</mat-label>
+                        <mat-select id="filter" (selectionChange)="onFilterChange($event)">
+                            <mat-option value="all">All Events</mat-option>
+                            <mat-option value="past">Past Events</mat-option>
+                            <mat-option value="today">Today's Events</mat-option>
+                            <mat-option value="future">Future Events</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="view-events-table-wrapper">
+                    <table mat-table [dataSource]="paginatedEvents" class="view-events-table">
+                        <ng-container matColumnDef="eventID">
+                            <th mat-header-cell *matHeaderCellDef>ID</th>
+                            <td mat-cell *matCellDef="let event">{{ event.eventID }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="title">
+                            <th mat-header-cell *matHeaderCellDef>Title</th>
+                            <td mat-cell *matCellDef="let event">{{ event.title }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="description">
+                            <th mat-header-cell *matHeaderCellDef>Description</th>
+                            <td mat-cell *matCellDef="let event">{{ event.description }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="dateTime">
+                            <th mat-header-cell *matHeaderCellDef>Date</th>
+                            <td mat-cell *matCellDef="let event">{{ event.dateTime | date:'medium' }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="location">
+                            <th mat-header-cell *matHeaderCellDef>Location</th>
+                            <td mat-cell *matCellDef="let event">{{ event.location }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="status">
+                            <th mat-header-cell *matHeaderCellDef>Status</th>
+                            <td mat-cell *matCellDef="let event">{{ event.status }}</td>
+                        </ng-container>
+                        <ng-container matColumnDef="action">
+                            <th mat-header-cell *matHeaderCellDef>Action</th>
+                            <td mat-cell *matCellDef="let event">
+                                <button mat-stroked-button color="accent" (click)="edit(event)">Update</button>
+                            </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="['eventID', 'title', 'description', 'dateTime', 'location', 'status', 'action']"></tr>
+                        <tr mat-row *matRowDef="let row; columns: ['eventID', 'title', 'description', 'dateTime', 'location', 'status', 'action'];"></tr>
+                    </table>
+                </div>
+                <div class="view-events-pagination">
+                    <button mat-stroked-button color="accent" (click)="previousPage()" [disabled]="currentPage === 1">Previous</button>
+                    <span>Page {{ currentPage }} of {{ totalPages }}</span>
+                    <button mat-stroked-button color="accent" (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
+                </div>
+            </mat-card-content>
+        </mat-card>
+        <mat-dialog-container *ngIf="isUpdate" class="view-events-dialog">
+            <mat-card class="view-events-dialog-card">
+                <mat-card-header>
+                    <mat-card-title>Update Event</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
+                        <mat-form-field appearance="outline" class="view-events-dialog-field">
+                            <mat-label>Title</mat-label>
+                            <input matInput type="text" id="title" formControlName="title">
+                            <mat-error *ngIf="itemForm.get('title')?.hasError('required') && itemForm.get('title')?.touched">Title is required.</mat-error>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" class="view-events-dialog-field">
+                            <mat-label>Description</mat-label>
+                            <input matInput type="text" id="description" formControlName="description">
+                            <mat-error *ngIf="itemForm.get('description')?.hasError('required') && itemForm.get('description')?.touched">Description is required.</mat-error>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" class="view-events-dialog-field">
+                            <mat-label>Date Time</mat-label>
+                            <input matInput type="datetime-local" id="dateTime" formControlName="dateTime">
+                            <mat-error *ngIf="itemForm.get('dateTime')?.hasError('required') && itemForm.get('dateTime')?.touched">Date and Time are required.</mat-error>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" class="view-events-dialog-field">
+                            <mat-label>Location</mat-label>
+                            <input matInput type="text" id="location" formControlName="location">
+                            <mat-error *ngIf="itemForm.get('location')?.hasError('required') && itemForm.get('location')?.touched">Location is required.</mat-error>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" class="view-events-dialog-field">
+                            <mat-label>Status</mat-label>
+                            <mat-select id="status" formControlName="status" required>
+                                <mat-option value="">Select status</mat-option>
+                                <mat-option value="Scheduled">Scheduled</mat-option>
+                                <mat-option value="Cancelled">Cancelled</mat-option>
+                                <mat-option value="Completed">Completed</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="itemForm.get('status')?.hasError('required') && itemForm.get('status')?.touched">Status is required.</mat-error>
+                        </mat-form-field>
+                        <button mat-raised-button color="primary" type="submit">Update Event</button>
+                    </form>
+                </mat-card-content>
+            </mat-card>
+        </mat-dialog-container>
+    </div>
+</div>

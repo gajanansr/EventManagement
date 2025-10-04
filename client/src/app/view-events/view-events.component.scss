@@ -1,0 +1,138 @@
+@import '../../assets/brand-colors.scss';
+@import '../../assets/fonts/coolvetica.css';
+
+.view-events-bg {
+	min-height: 100vh;
+	background: $brand-bg-gradient;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	font-family: 'Coolvetica', Arial, sans-serif;
+}
+
+.view-events-header {
+	margin-top: 2rem;
+	margin-bottom: 1.5rem;
+	text-align: center;
+	color: $brand-primary;
+	font-size: 2.5rem;
+	font-family: 'Coolvetica', Arial, sans-serif;
+	letter-spacing: 1px;
+}
+
+.view-events-content {
+	width: 100%;
+	max-width: 1200px;
+	display: flex;
+	flex-direction: column;
+	gap: 2.5rem;
+}
+
+.view-events-card {
+	background: $brand-card-bg;
+	box-shadow: 0 2px 16px rgba($brand-primary, 0.08);
+	border-radius: 18px;
+	padding: 2rem 2.5rem;
+	font-family: 'Coolvetica', Arial, sans-serif;
+}
+
+.view-events-search-form {
+	display: flex;
+	gap: 1.2rem;
+	align-items: flex-end;
+	margin-bottom: 1.5rem;
+}
+
+.view-events-search-field {
+	flex: 1;
+}
+
+.view-events-alert {
+	margin-top: 1rem;
+	font-size: 1.1rem;
+	font-family: 'Coolvetica', Arial, sans-serif;
+	padding: 0.7rem 1.2rem;
+	border-radius: 8px;
+	&.success {
+		background: $brand-success-bg;
+		color: $brand-success-text;
+	}
+	&.error {
+		background: $brand-error-bg;
+		color: $brand-error-text;
+	}
+}
+
+.view-events-controls {
+	display: flex;
+	gap: 2rem;
+	margin-bottom: 1.5rem;
+}
+
+.view-events-control-field {
+	min-width: 180px;
+}
+
+.view-events-table-wrapper {
+	overflow-x: auto;
+	margin-top: 1.5rem;
+	margin-bottom: 1.5rem;
+}
+
+.view-events-table {
+	width: 100%;
+	font-family: 'Coolvetica', Arial, sans-serif;
+	th {
+		background: $brand-table-header-bg;
+		color: $brand-primary;
+		font-weight: 600;
+		font-size: 1.1rem;
+		border-bottom: 2px solid $brand-primary-light;
+	}
+	td {
+		font-size: 1rem;
+		color: $brand-text;
+		border-bottom: 1px solid $brand-table-row-border;
+	}
+}
+
+.view-events-pagination {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 1.2rem;
+	margin-top: 1.2rem;
+	font-family: 'Coolvetica', Arial, sans-serif;
+	span {
+		color: $brand-primary;
+		font-size: 1.1rem;
+		font-weight: 500;
+	}
+}
+
+.view-events-dialog {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background: rgba(0,0,0,0.18);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 1000;
+}
+
+.view-events-dialog-card {
+	background: $brand-card-bg;
+	border-radius: 18px;
+	box-shadow: 0 2px 16px rgba($brand-primary, 0.12);
+	padding: 2rem 2.5rem;
+	min-width: 400px;
+	font-family: 'Coolvetica', Arial, sans-serif;
+}
+
+.view-events-dialog-field {
+	width: 100%;
+	margin-bottom: 1.2rem;
+}

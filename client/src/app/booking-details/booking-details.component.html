@@ -1,91 +1,74 @@
- <section class="background-radial-gradient overflow-hidden">
-    <div class="bubble bubble-1"></div>
-    <div class="bubble bubble-2"></div>
-    <div class="bubble bubble-3"></div>
-    <div class="bubble bubble-4"></div>
-    <div class="bubble bubble-5"></div>
-    <div class="bubble bubble-6"></div>
-    <div class="bubble bubble-7"></div>
-    <div class="bubble bubble-8"></div>
-    <div class="bubble bubble-9"></div>
-    <div class="bubble bubble-10"></div>
-  
-    <div class="container px-4 py-5 px-md-5 my-5">
-      <h1 class="display-4 fw-bold text-center mb-4 animate__animated animate__fadeInDown">Event Management Search</h1>
-  
-      <!-- Search Form -->
-      <div class="card bg-glass mx-auto mb-4">
-        <div class="card-body">
-          <form [formGroup]="itemForm" (ngSubmit)="searchEvent()" class="mb-4">
-            <div class="input-group">
-              <input type="text" formControlName="searchTerm" class="form-control" placeholder="Enter event ID or Title">
-              <button type="submit" class="btn btn-primary animate__animated animate__fadeIn" [disabled]="!itemForm.valid">
-                <i class="fas fa-search"></i> Search
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-  
-      <!-- Alert Messages -->
-      <div *ngIf="message" class="alert mt-3 animate__animated animate__fadeInDown animate__delay-1s"
-           [ngClass]="{'alert-success': message.type === 'success', 'alert-danger': message.type === 'error'}" role="alert">
+
+<div class="booking-details-bg coolvetica">
+  <mat-card class="booking-details-card">
+    <mat-card-header>
+      <mat-card-title>Event Management Search</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="itemForm" (ngSubmit)="searchEvent()" class="booking-details-form">
+        <mat-form-field appearance="outline" class="booking-details-field">
+          <mat-label>Enter event ID or Title</mat-label>
+          <input matInput type="text" formControlName="searchTerm">
+        </mat-form-field>
+        <button mat-raised-button color="primary" type="submit" [disabled]="!itemForm.valid">Search</button>
+      </form>
+      <div *ngIf="message" class="booking-details-alert" [ngClass]="{'success': message.type === 'success', 'error': message.type === 'error'}">
         {{ message.text }}
       </div>
-  
-      <!-- Events Table -->
-      <div *ngIf="searchPerformed" class="card bg-glass mx-auto animate__animated animate__fadeInUp">
-        <div class="card-body">
-          <h3 class="mb-3">Search Results</h3>
-          <div class="table-responsive">
-            <table class="table table-hover table-striped">
-              <thead class="thead-dark">
-                <tr>
-                  <th>ID</th>
-                  <th>Title</th>
-                  <th>Description</th>
-                  <th>Date</th>
-                  <th>Location</th>
-                  <th>Status</th>
-                  <th>Allocations</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let event of eventObj">
-                  <td>{{ event.eventID }}</td>
-                  <td>{{ event.title }}</td>
-                  <td>{{ event.description | slice:0:50 }}...</td>
-                  <td>{{ event.dateTime | date:'medium' }}</td>
-                  <td>{{ event.location }}</td>
-                  <td><span class="badge" [ngClass]="getStatusClass(event.status)" >{{ event.status }}</span></td>
-                  <td>
-                    <span class="allocation-info"
-                          (mouseenter)="showTooltip($event, event.allocations)"
-                          (mouseleave)="hideTooltip()">
-                      <!-- {{ event.allocations.length }}  -->
-                      Allocation(s)
-                    </span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+      <mat-card *ngIf="searchPerformed">
+        <mat-card-title>Search Results</mat-card-title>
+        <div class="booking-details-table-wrapper">
+          <table mat-table [dataSource]="eventObj" class="booking-details-table">
+            <ng-container matColumnDef="eventID">
+              <th mat-header-cell *matHeaderCellDef>ID</th>
+              <td mat-cell *matCellDef="let event">{{ event.eventID }}</td>
+            </ng-container>
+            <ng-container matColumnDef="title">
+              <th mat-header-cell *matHeaderCellDef>Title</th>
+              <td mat-cell *matCellDef="let event">{{ event.title }}</td>
+            </ng-container>
+            <ng-container matColumnDef="description">
+              <th mat-header-cell *matHeaderCellDef>Description</th>
+              <td mat-cell *matCellDef="let event">{{ event.description | slice:0:50 }}...</td>
+            </ng-container>
+            <ng-container matColumnDef="dateTime">
+              <th mat-header-cell *matHeaderCellDef>Date</th>
+              <td mat-cell *matCellDef="let event">{{ event.dateTime | date:'medium' }}</td>
+            </ng-container>
+            <ng-container matColumnDef="location">
+              <th mat-header-cell *matHeaderCellDef>Location</th>
+              <td mat-cell *matCellDef="let event">{{ event.location }}</td>
+            </ng-container>
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef>Status</th>
+              <td mat-cell *matCellDef="let event">
+                <span class="booking-details-badge" [ngClass]="getStatusClass(event.status)">{{ event.status }}</span>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="allocations">
+              <th mat-header-cell *matHeaderCellDef>Allocations</th>
+              <td mat-cell *matCellDef="let event">
+                <span class="allocation-info" (mouseenter)="showTooltip($event, event.allocations)" (mouseleave)="hideTooltip()">
+                  Allocation(s)
+                </span>
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="['eventID', 'title', 'description', 'dateTime', 'location', 'status', 'allocations']"></tr>
+            <tr mat-row *matRowDef="let row; columns: ['eventID', 'title', 'description', 'dateTime', 'location', 'status', 'allocations'];"></tr>
+          </table>
         </div>
-      </div>
-  
-      <div *ngIf="searchPerformed && eventObj.length === 0" class="mt-4 alert alert-info">
+      </mat-card>
+      <div *ngIf="searchPerformed && eventObj.length === 0" class="booking-details-no-results">
         No events found matching your search criteria.
       </div>
-    </div>
-  
-    <!-- Tooltip -->
-    <div *ngIf="tooltipVisible" class="custom-tooltip bg-glass" [style.left.px]="tooltipX" [style.top.px]="tooltipY">
-      <div *ngFor="let allocation of tooltipContent; let last = last">
-        <p><strong>Quantity:</strong> {{allocation.quantity}}</p>
-        <p><strong>Resource Name:</strong> {{allocation.resource.name}}</p>
-        <p><strong>Resource Type:</strong> {{allocation.resource.type}}</p>
-        <!-- <p><strong>Resource Availability:</strong> {{allocation.resource.availability}}</p> -->
-        <hr *ngIf="!last">
+      <div *ngIf="tooltipVisible" class="booking-details-tooltip" [style.left.px]="tooltipX" [style.top.px]="tooltipY">
+        <div *ngFor="let allocation of tooltipContent; let last = last">
+          <p><strong>Quantity:</strong> {{allocation.quantity}}</p>
+          <p><strong>Resource Name:</strong> {{allocation.resource.name}}</p>
+          <p><strong>Resource Type:</strong> {{allocation.resource.type}}</p>
+          <hr *ngIf="!last">
+        </div>
       </div>
-    </div>
-  </section>
+    </mat-card-content>
+  </mat-card>
+</div>

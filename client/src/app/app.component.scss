@@ -1,0 +1,23 @@
+@import '../../assets/brand-colors.scss';
+@import '../../assets/fonts/coolvetica.css';
+
+.mat-mdc-toolbar {
+	background: $primary;
+	color: $surface;
+	font-family: 'Coolvetica', Arial, sans-serif;
+	box-shadow: 0 2px 12px rgba($primary, 0.08);
+	border-bottom: 1px solid $accent;
+}
+
+button[mat-button], button[mat-raised-button] {
+	font-family: 'Coolvetica', Arial, sans-serif;
+	font-size: 1rem;
+	border-radius: 8px;
+	margin: 0 4px;
+	transition: background 0.2s, color 0.2s;
+}
+
+button[mat-button]:hover, button[mat-raised-button]:hover {
+	background: $accent;
+	color: $surface;
+}
