@@ -1,37 +1,40 @@
 
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
+  <a class="navbar-brand" href="#">Event Managment And Resource Allocation Platform</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        //add nav link here
 
-<mat-toolbar color="primary" class="mat-mdc-toolbar coolvetica" style="border-radius: 0 0 16px 16px;">
-  <span style="font-size: 1.5rem; font-weight: bold;">Event Management And Resource Allocation Platform</span>
-  <span class="spacer"></span>
-  <ng-container *ngIf="roleName === 'PLANNER'">
-    <button mat-button routerLink="/create-event">Create Event</button>
-    <button mat-button routerLink="/add-resource">Add Resource</button>
-    <button mat-button routerLink="/resource-allocate">Allocate Resource</button>
-  </ng-container>
-  <ng-container *ngIf="roleName === 'STAFF'">
-    <button mat-button routerLink="/view-events">View Events</button>
-  </ng-container>
-  <ng-container *ngIf="roleName === 'CLIENT'">
-    <button mat-button routerLink="/booking-details">Booking Details</button>
-  </ng-container>
-  <span class="spacer"></span>
-  <ng-container *ngIf="IsLoggin">
-    <button mat-raised-button color="accent" (click)="logout()">Logout</button>
-  </ng-container>
-  <ng-container *ngIf="!IsLoggin">
-    <button mat-raised-button color="accent" routerLink="/login">Login</button>
-  </ng-container>
-</mat-toolbar>
-
-<style>
-  .spacer {
-    flex: 1 1 auto;
-  }
-</style>
-
-<body>
-  <div class="container mt-4 mx-5">
-    <router-outlet></router-outlet>
+      </li>
+      <li class="nav-item">
+        //add nav link here
+      </li>
+      <li class="nav-item">
+       //add nav link here
+      </li>
+    </ul>
+ 
+    <!-- Login/Logout buttons -->
+    <ul class="navbar-nav">
+      <li  class="nav-item">
+        //add nav link here
+      </li>
+      <li class="nav-item">
+        //add nav link here
+      </li>
+    </ul>
   </div>
+</nav>
+
+<body  >
+  <div class="container mt-4 mx-5">
+    <router-outlet>    
+    </router-outlet>
+  </div>
+
 </body>
 
