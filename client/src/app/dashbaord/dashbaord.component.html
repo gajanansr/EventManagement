@@ -1,6 +1,13 @@
 <div class="container mt-4">
   <mat-toolbar color="000000" class="mb-4">
     <span class="mat-h3">Event Management System</span>
+    <span class="spacer"></span>
+    <button mat-button [routerLink]="['/profile']">
+      <mat-icon>person</mat-icon> My Profile
+    </button>
+    <button mat-button (click)="logout()">
+      <mat-icon>exit_to_app</mat-icon> Logout
+    </button>
   </mat-toolbar>
 
   <div *ngIf="roleName === 'PLANNER'">
