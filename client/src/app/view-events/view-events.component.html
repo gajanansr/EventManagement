@@ -56,7 +56,8 @@
                             <th scope="col">Location</th>
                             <th scope="col">Status</th>
                             <th scope="col">Allocated Resources</th>
-                            <th scope="col">Action</th>
+                            <th scope="col" *ngIf="roleName === 'PLANNER'">Assigned Staff</th>
+                            <th scope="col" *ngIf="roleName === 'PLANNER' || roleName === 'CLIENT'">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -90,9 +91,36 @@
                                     <small class="text-muted fst-italic">No resources allocated</small>
                                 </ng-template>
                             </td>
-                            <td>
-                                <button class="btn btn-sm btn-primary" (click)="edit(event)" data-bs-toggle="modal"
-                                    data-bs-target="#updateModal">Update</button>
+                            <td *ngIf="roleName === 'PLANNER'">
+                                <span *ngIf="event.assignedStaff; else noStaff" class="badge bg-primary">
+                                    {{ event.assignedStaff.fullName || event.assignedStaff.username }}
+                                </span>
+                                <ng-template #noStaff>
+                                    <button class="btn btn-sm btn-secondary" (click)="openStaffAssignment(event)" 
+                                            data-bs-toggle="modal" data-bs-target="#staffAssignModal">
+                                        Assign Staff
+                                    </button>
+                                </ng-template>
+                            </td>
+                            <td *ngIf="roleName === 'PLANNER'">
+                                <button class="btn btn-sm btn-primary me-1" (click)="edit(event)" 
+                                        data-bs-toggle="modal" data-bs-target="#updateModal">
+                                    Update
+                                </button>
+                                <button class="btn btn-sm btn-info" (click)="openMessaging(event)" 
+                                        data-bs-toggle="modal" data-bs-target="#messagingModal">
+                                    Messages
+                                </button>
+                            </td>
+                            <td *ngIf="roleName === 'CLIENT'">
+                                <button class="btn btn-sm btn-success me-1" (click)="openBookingForm(event)" 
+                                        data-bs-toggle="modal" data-bs-target="#bookingModal">
+                                    Book Event
+                                </button>
+                                <button class="btn btn-sm btn-info" (click)="openMessaging(event)" 
+                                        data-bs-toggle="modal" data-bs-target="#messagingModal">
+                                    Messages
+                                </button>
                             </td>
                         </tr>
                     </tbody>
@@ -169,6 +197,138 @@
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary" (click)="onSubmit()">
                     {{ isUpdate ? 'Update Event' : 'Create Event' }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Staff Assignment Modal -->
+<div class="modal fade" id="staffAssignModal" tabindex="-1" aria-labelledby="staffAssignModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staffAssignModalLabel">Assign Staff to Event</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div *ngIf="selectedEventForStaff">
+                    <h6>Event: {{ selectedEventForStaff.title }}</h6>
+                    <p class="text-muted small">{{ selectedEventForStaff.location }} - {{ selectedEventForStaff.dateTime | date:'medium' }}</p>
+                    
+                    <div class="mb-3">
+                        <label for="staffSelect" class="form-label">Select Staff Member:</label>
+                        <select id="staffSelect" class="form-select" [(ngModel)]="selectedStaffId">
+                            <option value="" disabled selected>Choose staff...</option>
+                            <option *ngFor="let staff of staffList" [value]="staff.userId">
+                                {{ staff.fullName || staff.username }} ({{ staff.email }})
+                            </option>
+                        </select>
+                    </div>
+                    
+                    <div *ngIf="staffAssignMessage" class="alert" 
+                         [ngClass]="{'alert-success': staffAssignSuccess, 'alert-danger': !staffAssignSuccess}">
+                        {{ staffAssignMessage }}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" (click)="assignStaff()" [disabled]="!selectedStaffId">
+                    Assign Staff
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Messaging Modal -->
+<div class="modal fade" id="messagingModal" tabindex="-1" aria-labelledby="messagingModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="messagingModalLabel">Event Messages</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div *ngIf="selectedEventForMessaging">
+                    <h6>Event: {{ selectedEventForMessaging.title }}</h6>
+                    <hr>
+                    
+                    <!-- Messages Display -->
+                    <div class="messages-container" style="max-height: 400px; overflow-y: auto;">
+                        <div *ngIf="messages.length === 0" class="text-center text-muted py-4">
+                            <p>No messages yet. Start the conversation!</p>
+                        </div>
+                        <div *ngFor="let msg of messages" class="message mb-3">
+                            <div class="d-flex" [ngClass]="{'justify-content-end': msg.senderRole === roleName}">
+                                <div class="message-bubble p-3 rounded" 
+                                     [ngClass]="{'bg-primary text-white': msg.senderRole === roleName, 'bg-light': msg.senderRole !== roleName}"
+                                     style="max-width: 70%;">
+                                    <strong>{{ msg.sender.fullName || msg.sender.username }}</strong>
+                                    <small class="d-block text-muted" [ngClass]="{'text-white-50': msg.senderRole === roleName}">
+                                        {{ msg.senderRole }}
+                                    </small>
+                                    <p class="mb-1 mt-2">{{ msg.content }}</p>
+                                    <small class="text-muted" [ngClass]="{'text-white-50': msg.senderRole === roleName}">
+                                        {{ msg.sentAt | date:'short' }}
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Message Input -->
+                    <div class="mt-3">
+                        <div class="input-group">
+                            <input type="text" class="form-control" [(ngModel)]="newMessage" 
+                                   placeholder="Type your message..." (keyup.enter)="sendMessage()">
+                            <button class="btn btn-primary" (click)="sendMessage()" [disabled]="!newMessage">
+                                Send
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Booking Modal (for CLIENT) -->
+<div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="bookingModalLabel">Book Event</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div *ngIf="selectedEventForBooking">
+                    <h6>{{ selectedEventForBooking.title }}</h6>
+                    <p class="text-muted small">
+                        <i class="bi bi-calendar"></i> {{ selectedEventForBooking.dateTime | date:'medium' }}<br>
+                        <i class="bi bi-geo-alt"></i> {{ selectedEventForBooking.location }}
+                    </p>
+                    <p class="mb-3">{{ selectedEventForBooking.description }}</p>
+                    
+                    <div class="mb-3">
+                        <label for="clientRequirements" class="form-label">Your Requirements:</label>
+                        <textarea id="clientRequirements" class="form-control" rows="4" 
+                                  [(ngModel)]="bookingRequirements" 
+                                  placeholder="Please describe your specific requirements or preferences for this event..."></textarea>
+                        <small class="text-muted">Optional: Add any special requests or requirements</small>
+                    </div>
+                    
+                    <div *ngIf="bookingMessage" class="alert" 
+                         [ngClass]="{'alert-success': bookingSuccess, 'alert-danger': !bookingSuccess}">
+                        {{ bookingMessage }}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" (click)="submitBooking()">
+                    Confirm Booking
                 </button>
             </div>
         </div>

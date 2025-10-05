@@ -217,4 +217,47 @@ export class HttpService {
     });
     return this.http.post(url, bookingData, { headers });
   }
+
+  // Staff Assignment (PLANNER)
+  getAllStaff(): Observable<any> {
+    const url = `${this.serverName}/api/planner/staff`;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+    return this.http.get(url, { headers });
+  }
+
+  assignStaffToEvent(eventId: number, staffId: number): Observable<any> {
+    const url = `${this.serverName}/api/planner/assign-staff?eventId=${eventId}&staffId=${staffId}`;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+    return this.http.post(url, {}, { headers });
+  }
+
+  // Messaging (CLIENT and PLANNER)
+  sendMessage(messageData: any): Observable<any> {
+    const role = this.authService.getRole;
+    const endpoint = role === 'PLANNER' ? 'planner' : 'client';
+    const url = `${this.serverName}/api/${endpoint}/send-message`;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+    return this.http.post(url, messageData, { headers });
+  }
+
+  getEventMessages(eventId: number): Observable<any> {
+    const role = this.authService.getRole;
+    const endpoint = role === 'PLANNER' ? 'planner' : 'client';
+    const url = `${this.serverName}/api/${endpoint}/messages/${eventId}`;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+    return this.http.get(url, { headers });
+  }
 }
+

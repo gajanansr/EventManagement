@@ -29,15 +29,39 @@ export class ViewEventsComponent  implements OnInit{
   itemsPerPage: number = 3;
   totalPages: number = 1;
 
+  // New properties for staff assignment and messaging
+  roleName: string = '';
+  staffList: any[] = [];
+  selectedEventForStaff: any = null;
+  selectedStaffId: string = '';
+  staffAssignMessage: string = '';
+  staffAssignSuccess: boolean = false;
+  
+  selectedEventForMessaging: any = null;
+  messages: any[] = [];
+  newMessage: string = '';
+
+  // Booking properties
+  selectedEventForBooking: any = null;
+  bookingRequirements: string = '';
+  bookingMessage: string = '';
+  bookingSuccess: boolean = false;
+
   constructor(private httpService: HttpService,
     private formBuilder: FormBuilder,private router: Router,
     private authService: AuthService){
       this.minDate = this.getTomorrowDate();
+      this.roleName = this.authService.getRole || '';
     }
 
   ngOnInit(): void {
     this.initForm();
     this.getEvents();
+    
+    // Load staff list if user is a planner
+    if (this.roleName === 'PLANNER') {
+      this.loadStaffList();
+    }
   }
   initForm() {
     this.itemForm = this.formBuilder.group({
@@ -350,5 +374,168 @@ export class ViewEventsComponent  implements OnInit{
           this.sortById();
           break;
       }
+    }
+
+    // Staff Assignment Methods
+    loadStaffList(): void {
+      this.httpService.getAllStaff().subscribe({
+        next: (response: any) => {
+          this.staffList = response;
+        },
+        error: (error) => {
+          console.error('Error loading staff list:', error);
+        }
+      });
+    }
+
+    openStaffAssignment(event: any): void {
+      this.selectedEventForStaff = event;
+      this.selectedStaffId = '';
+      this.staffAssignMessage = '';
+      this.staffAssignSuccess = false;
+      
+      const modalElement = document.getElementById('staffAssignModal');
+      if (modalElement) {
+        const modal = new (window as any).bootstrap.Modal(modalElement);
+        modal.show();
+      }
+    }
+
+    assignStaff(): void {
+      if (!this.selectedEventForStaff || !this.selectedStaffId) {
+        return;
+      }
+
+      this.httpService.assignStaffToEvent(this.selectedEventForStaff.eventID, Number(this.selectedStaffId)).subscribe({
+        next: (response: any) => {
+          this.staffAssignMessage = 'Staff assigned successfully!';
+          this.staffAssignSuccess = true;
+          
+          // Update the event in the list
+          const eventIndex = this.eventList.findIndex(e => e.eventID === this.selectedEventForStaff.eventID);
+          if (eventIndex !== -1) {
+            const assignedStaff = this.staffList.find(s => s.userId == this.selectedStaffId);
+            this.eventList[eventIndex].assignedStaff = assignedStaff;
+            this.updatePaginatedEvents();
+          }
+          
+          setTimeout(() => {
+            const modalElement = document.getElementById('staffAssignModal');
+            if (modalElement) {
+              const modal = (window as any).bootstrap.Modal.getInstance(modalElement);
+              if (modal) {
+                modal.hide();
+              }
+            }
+          }, 1500);
+        },
+        error: (error) => {
+          this.staffAssignMessage = error.error?.message || 'Failed to assign staff';
+          this.staffAssignSuccess = false;
+        }
+      });
+    }
+
+    // Messaging Methods
+    openMessaging(event: any): void {
+      this.selectedEventForMessaging = event;
+      this.messages = [];
+      this.newMessage = '';
+      this.loadMessages(event.eventID);
+      
+      const modalElement = document.getElementById('messagingModal');
+      if (modalElement) {
+        const modal = new (window as any).bootstrap.Modal(modalElement);
+        modal.show();
+      }
+    }
+
+    loadMessages(eventId: number): void {
+      this.httpService.getEventMessages(eventId).subscribe({
+        next: (response: any) => {
+          this.messages = response;
+        },
+        error: (error) => {
+          console.error('Error loading messages:', error);
+          this.messages = [];
+        }
+      });
+    }
+
+    sendMessage(): void {
+      if (!this.newMessage || !this.selectedEventForMessaging) {
+        return;
+      }
+
+      const messageData = {
+        eventId: this.selectedEventForMessaging.eventID,
+        content: this.newMessage
+      };
+
+      this.httpService.sendMessage(messageData).subscribe({
+        next: (response: any) => {
+          this.messages.push(response);
+          this.newMessage = '';
+          
+          // Scroll to bottom of messages
+          setTimeout(() => {
+            const messagesContainer = document.querySelector('.messages-container');
+            if (messagesContainer) {
+              messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+          }, 100);
+        },
+        error: (error) => {
+          console.error('Error sending message:', error);
+          alert('Failed to send message');
+        }
+      });
+    }
+
+    // Booking Methods (for CLIENT)
+    openBookingForm(event: any): void {
+      this.selectedEventForBooking = event;
+      this.bookingRequirements = '';
+      this.bookingMessage = '';
+      this.bookingSuccess = false;
+      
+      const modalElement = document.getElementById('bookingModal');
+      if (modalElement) {
+        const modal = new (window as any).bootstrap.Modal(modalElement);
+        modal.show();
+      }
+    }
+
+    submitBooking(): void {
+      if (!this.selectedEventForBooking) {
+        return;
+      }
+
+      const bookingData = {
+        eventId: this.selectedEventForBooking.eventID,
+        clientRequirements: this.bookingRequirements || 'No specific requirements'
+      };
+
+      this.httpService.createBooking(bookingData).subscribe({
+        next: (response: any) => {
+          this.bookingMessage = response.message || 'Booking created successfully!';
+          this.bookingSuccess = true;
+          
+          setTimeout(() => {
+            const modalElement = document.getElementById('bookingModal');
+            if (modalElement) {
+              const modal = (window as any).bootstrap.Modal.getInstance(modalElement);
+              if (modal) {
+                modal.hide();
+              }
+            }
+            // Optionally refresh the events list or navigate to bookings page
+          }, 2000);
+        },
+        error: (error) => {
+          this.bookingMessage = error.error?.message || 'Failed to create booking';
+          this.bookingSuccess = false;
+        }
+      });
     }
 }
