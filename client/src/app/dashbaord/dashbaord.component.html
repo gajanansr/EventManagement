@@ -169,11 +169,22 @@
       <div class="welcome-content">
         <h3>👋 Welcome Back!</h3>
         <p>You can search for events, view your bookings, and manage your event requests. We're here to make your event experience unforgettable!</p>
-        <button class="btn btn-primary" (click)="scrollToBookings()">
-          <span class="icon">👁️</span> View My Bookings
+        <button class="btn btn-primary" (click)="scrollToEvents()">
+          <span class="icon">🎉</span> Browse Available Events
         </button>
       </div>
       <div class="welcome-illustration">🎊</div>
+    </div>
+
+    <!-- Available Events Section -->
+    <div class="card" id="events-section">
+      <div class="card-header">
+        <h3>🎉 Available Events to Book</h3>
+        <p class="text-muted">Browse and book events that interest you</p>
+      </div>
+      <div class="card-body">
+        <app-view-events></app-view-events>
+      </div>
     </div>
 
     <!-- Bookings List -->

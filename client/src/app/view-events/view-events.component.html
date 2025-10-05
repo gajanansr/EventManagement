@@ -24,6 +24,10 @@
             <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
                 <h4 class="card-title mb-0">Events</h4>
                 <div class="d-flex flex-wrap gap-2 align-items-center">
+                    <!-- Bookings button for PLANNER -->
+                    <button *ngIf="roleName === 'PLANNER'" class="btn btn-info" (click)="viewAllBookings()">
+                        <i class="bi bi-calendar-check"></i> View Bookings
+                    </button>
                     <div>
                         <label for="sort" class="me-2 mb-0">Sort By:</label>
                         <select id="sort" (change)="onSortChange($event)" class="form-select d-inline-block w-auto">
@@ -96,7 +100,8 @@
                                     {{ event.assignedStaff.fullName || event.assignedStaff.username }}
                                 </span>
                                 <ng-template #noStaff>
-                                    <button class="btn btn-sm btn-secondary" (click)="openStaffAssignment(event)">
+                                    <button class="btn btn-sm btn-secondary" 
+                                            (click)="openStaffAssignment(event)">
                                         Assign Staff
                                     </button>
                                 </ng-template>
@@ -106,20 +111,24 @@
                                         data-bs-toggle="modal" data-bs-target="#updateModal">
                                     Update
                                 </button>
-                                <button class="btn btn-sm btn-info" (click)="openMessaging(event)">
+                                <button class="btn btn-sm btn-info" 
+                                        (click)="openMessaging(event)">
                                     Messages
                                 </button>
                             </td>
                             <td *ngIf="roleName === 'CLIENT'">
-                                <button class="btn btn-sm btn-success me-1" (click)="openBookingForm(event)">
+                                <button class="btn btn-sm btn-success me-1" 
+                                        (click)="openBookingForm(event)">
                                     Book Event
                                 </button>
-                                <button class="btn btn-sm btn-info" (click)="openMessaging(event)">
+                                <button class="btn btn-sm btn-info" 
+                                        (click)="openMessaging(event)">
                                     Messages
                                 </button>
                             </td>
                             <td *ngIf="roleName === 'STAFF'">
-                                <button class="btn btn-sm btn-info" (click)="openMessaging(event)">
+                                <button class="btn btn-sm btn-info" 
+                                        (click)="openMessaging(event)">
                                     Messages
                                 </button>
                             </td>
@@ -205,14 +214,15 @@
 </div>
 
 <!-- Staff Assignment Modal -->
-<div class="modal fade" id="staffAssignModal" tabindex="-1" aria-labelledby="staffAssignModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="staffAssignModalLabel">Assign Staff to Event</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<!-- Staff Assignment Modal -->
+<div class="custom-modal" *ngIf="showStaffAssignModal" (click)="closeStaffAssignModal()">
+    <div class="custom-modal-dialog" (click)="$event.stopPropagation()">
+        <div class="custom-modal-content">
+            <div class="custom-modal-header">
+                <h5>Assign Staff to Event</h5>
+                <button type="button" class="btn-close" (click)="closeStaffAssignModal()"></button>
             </div>
-            <div class="modal-body">
+            <div class="custom-modal-body">
                 <div *ngIf="selectedEventForStaff">
                     <h6>Event: {{ selectedEventForStaff.title }}</h6>
                     <p class="text-muted small">{{ selectedEventForStaff.location }} - {{ selectedEventForStaff.dateTime | date:'medium' }}</p>
@@ -233,8 +243,8 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <div class="custom-modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="closeStaffAssignModal()">Close</button>
                 <button type="button" class="btn btn-primary" (click)="assignStaff()" [disabled]="!selectedStaffId">
                     Assign Staff
                 </button>
@@ -244,14 +254,14 @@
 </div>
 
 <!-- Messaging Modal -->
-<div class="modal fade" id="messagingModal" tabindex="-1" aria-labelledby="messagingModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="messagingModalLabel">Event Messages</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<div class="custom-modal" *ngIf="showMessagingModal" (click)="closeMessagingModal()">
+    <div class="custom-modal-dialog custom-modal-lg" (click)="$event.stopPropagation()">
+        <div class="custom-modal-content">
+            <div class="custom-modal-header">
+                <h5>Event Messages</h5>
+                <button type="button" class="btn-close" (click)="closeMessagingModal()"></button>
             </div>
-            <div class="modal-body">
+            <div class="custom-modal-body">
                 <div *ngIf="selectedEventForMessaging">
                     <h6>Event: {{ selectedEventForMessaging.title }}</h6>
                     <hr>
@@ -296,14 +306,14 @@
 </div>
 
 <!-- Booking Modal (for CLIENT) -->
-<div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="bookingModalLabel">Book Event</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<div class="custom-modal" *ngIf="showBookingModal" (click)="closeBookingModal()">
+    <div class="custom-modal-dialog" (click)="$event.stopPropagation()">
+        <div class="custom-modal-content">
+            <div class="custom-modal-header">
+                <h5>Book Event</h5>
+                <button type="button" class="btn-close" (click)="closeBookingModal()"></button>
             </div>
-            <div class="modal-body">
+            <div class="custom-modal-body">
                 <div *ngIf="selectedEventForBooking">
                     <h6>{{ selectedEventForBooking.title }}</h6>
                     <p class="text-muted small">
@@ -326,12 +336,110 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <div class="custom-modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="closeBookingModal()">Cancel</button>
                 <button type="button" class="btn btn-success" (click)="submitBooking()">
                     Confirm Booking
                 </button>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bookings List Modal (for PLANNER) -->
+<div *ngIf="showBookingsListModal" class="custom-modal-overlay" (click)="closeBookingsListModal()">
+    <div class="custom-modal-content" (click)="$event.stopPropagation()" style="max-width: 900px;">
+        <div class="custom-modal-header">
+            <h5>All Booking Requests</h5>
+            <button type="button" class="btn-close" (click)="closeBookingsListModal()"></button>
+        </div>
+        <div class="custom-modal-body">
+            <div *ngIf="allBookings.length === 0" class="text-center py-4">
+                <p class="text-muted">No bookings found.</p>
+            </div>
+            <div *ngIf="allBookings.length > 0" class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Booking ID</th>
+                            <th>Event Title</th>
+                            <th>Client</th>
+                            <th>Booking Date</th>
+                            <th>Status</th>
+                            <th>Requirements</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let booking of allBookings">
+                            <td>{{ booking.bookingId }}</td>
+                            <td>{{ booking.event?.title || 'N/A' }}</td>
+                            <td>{{ booking.user?.username || 'N/A' }}</td>
+                            <td>{{ booking.bookingDate | date:'short' }}</td>
+                            <td>
+                                <span [ngClass]="getBookingStatusClass(booking.status)">
+                                    {{ booking.status }}
+                                </span>
+                            </td>
+                            <td>
+                                <small>{{ booking.clientRequirements || 'None' }}</small>
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-primary" (click)="openBookingStatusUpdate(booking)">
+                                    Update Status
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="custom-modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeBookingsListModal()">Close</button>
+        </div>
+    </div>
+</div>
+
+<!-- Booking Status Update Modal (for PLANNER) -->
+<div *ngIf="showBookingStatusModal" class="custom-modal-overlay" (click)="closeBookingStatusModal()">
+    <div class="custom-modal-content" (click)="$event.stopPropagation()">
+        <div class="custom-modal-header">
+            <h5>Update Booking Status</h5>
+            <button type="button" class="btn-close" (click)="closeBookingStatusModal()"></button>
+        </div>
+        <div class="custom-modal-body">
+            <div *ngIf="selectedBooking">
+                <div class="mb-3">
+                    <strong>Booking ID:</strong> {{ selectedBooking.bookingId }}<br>
+                    <strong>Event:</strong> {{ selectedBooking.event?.title }}<br>
+                    <strong>Client:</strong> {{ selectedBooking.user?.username }}<br>
+                    <strong>Requirements:</strong> {{ selectedBooking.clientRequirements || 'None' }}
+                </div>
+                
+                <div class="mb-3">
+                    <label for="bookingStatus" class="form-label">Status</label>
+                    <select id="bookingStatus" [(ngModel)]="bookingStatusUpdate" class="form-select">
+                        <option value="PENDING">Pending</option>
+                        <option value="CONFIRMED">Confirmed</option>
+                        <option value="APPROVED">Approved</option>
+                        <option value="REJECTED">Rejected</option>
+                        <option value="CANCELLED">Cancelled</option>
+                    </select>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="bookingNotes" class="form-label">Notes (Optional)</label>
+                    <textarea id="bookingNotes" [(ngModel)]="bookingNotes" 
+                              class="form-control" rows="3"
+                              placeholder="Add any notes for the client..."></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="custom-modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeBookingStatusModal()">Cancel</button>
+            <button type="button" class="btn btn-primary" (click)="updateBookingStatus()">
+                Update Status
+            </button>
         </div>
     </div>
 </div>

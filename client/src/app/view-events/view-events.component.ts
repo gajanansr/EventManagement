@@ -47,6 +47,19 @@ export class ViewEventsComponent  implements OnInit{
   bookingMessage: string = '';
   bookingSuccess: boolean = false;
 
+  // Planner booking management
+  allBookings: any[] = [];
+  selectedBooking: any = null;
+  bookingStatusUpdate: string = '';
+  bookingNotes: string = '';
+
+  // Modal visibility flags
+  showStaffAssignModal: boolean = false;
+  showMessagingModal: boolean = false;
+  showBookingModal: boolean = false;
+  showBookingsListModal: boolean = false;
+  showBookingStatusModal: boolean = false;
+
   constructor(private httpService: HttpService,
     private formBuilder: FormBuilder,private router: Router,
     private authService: AuthService){
@@ -73,6 +86,28 @@ export class ViewEventsComponent  implements OnInit{
       status:['',[Validators.required]]
     })
   }
+
+  // Modal close methods
+  closeStaffAssignModal(): void {
+    this.showStaffAssignModal = false;
+  }
+
+  closeMessagingModal(): void {
+    this.showMessagingModal = false;
+  }
+
+  closeBookingModal(): void {
+    this.showBookingModal = false;
+  }
+
+  closeBookingsListModal(): void {
+    this.showBookingsListModal = false;
+  }
+
+  closeBookingStatusModal(): void {
+    this.showBookingStatusModal = false;
+  }
+
   dateTimeValidator(control: AbstractControl): ValidationErrors | null{
     const selectedDate = new Date(control.value);
     const tomorrow = new Date(this.minDate);
@@ -393,12 +428,7 @@ export class ViewEventsComponent  implements OnInit{
       this.selectedStaffId = '';
       this.staffAssignMessage = '';
       this.staffAssignSuccess = false;
-      
-      const modalElement = document.getElementById('staffAssignModal');
-      if (modalElement) {
-        const modal = new (window as any).bootstrap.Modal(modalElement);
-        modal.show();
-      }
+      this.showStaffAssignModal = true;
     }
 
     assignStaff(): void {
@@ -420,13 +450,7 @@ export class ViewEventsComponent  implements OnInit{
           }
           
           setTimeout(() => {
-            const modalElement = document.getElementById('staffAssignModal');
-            if (modalElement) {
-              const modal = (window as any).bootstrap.Modal.getInstance(modalElement);
-              if (modal) {
-                modal.hide();
-              }
-            }
+            this.closeStaffAssignModal();
           }, 1500);
         },
         error: (error) => {
@@ -442,12 +466,7 @@ export class ViewEventsComponent  implements OnInit{
       this.messages = [];
       this.newMessage = '';
       this.loadMessages(event.eventID);
-      
-      const modalElement = document.getElementById('messagingModal');
-      if (modalElement) {
-        const modal = new (window as any).bootstrap.Modal(modalElement);
-        modal.show();
-      }
+      this.showMessagingModal = true;
     }
 
     loadMessages(eventId: number): void {
@@ -498,12 +517,7 @@ export class ViewEventsComponent  implements OnInit{
       this.bookingRequirements = '';
       this.bookingMessage = '';
       this.bookingSuccess = false;
-      
-      const modalElement = document.getElementById('bookingModal');
-      if (modalElement) {
-        const modal = new (window as any).bootstrap.Modal(modalElement);
-        modal.show();
-      }
+      this.showBookingModal = true;
     }
 
     submitBooking(): void {
@@ -522,13 +536,7 @@ export class ViewEventsComponent  implements OnInit{
           this.bookingSuccess = true;
           
           setTimeout(() => {
-            const modalElement = document.getElementById('bookingModal');
-            if (modalElement) {
-              const modal = (window as any).bootstrap.Modal.getInstance(modalElement);
-              if (modal) {
-                modal.hide();
-              }
-            }
+            this.closeBookingModal();
             // Optionally refresh the events list or navigate to bookings page
           }, 2000);
         },
@@ -537,5 +545,70 @@ export class ViewEventsComponent  implements OnInit{
           this.bookingSuccess = false;
         }
       });
+    }
+
+    // Booking Management Methods (for PLANNER)
+    viewAllBookings(): void {
+      this.httpService.getAllBookings().subscribe({
+        next: (response: any) => {
+          this.allBookings = response;
+          this.showBookingsListModal = true;
+        },
+        error: (error) => {
+          console.error('Error loading bookings:', error);
+          alert('Failed to load bookings');
+        }
+      });
+    }
+
+    openBookingStatusUpdate(booking: any): void {
+      this.selectedBooking = booking;
+      this.bookingStatusUpdate = booking.status || 'PENDING';
+      this.bookingNotes = booking.notes || '';
+      this.showBookingStatusModal = true;
+    }
+
+    updateBookingStatus(): void {
+      if (!this.selectedBooking) {
+        return;
+      }
+
+      this.httpService.updateBookingStatus(
+        this.selectedBooking.bookingId,
+        this.bookingStatusUpdate,
+        this.bookingNotes
+      ).subscribe({
+        next: (response: any) => {
+          alert('Booking status updated successfully!');
+          
+          // Update the booking in the list
+          const bookingIndex = this.allBookings.findIndex(b => b.bookingId === this.selectedBooking.bookingId);
+          if (bookingIndex !== -1) {
+            this.allBookings[bookingIndex].status = this.bookingStatusUpdate;
+            this.allBookings[bookingIndex].notes = this.bookingNotes;
+          }
+          
+          this.closeBookingStatusModal();
+        },
+        error: (error) => {
+          console.error('Error updating booking status:', error);
+          alert('Failed to update booking status');
+        }
+      });
+    }
+
+    getBookingStatusClass(status: string): string {
+      switch (status?.toUpperCase()) {
+        case 'CONFIRMED':
+        case 'APPROVED':
+          return 'badge bg-success';
+        case 'PENDING':
+          return 'badge bg-warning';
+        case 'CANCELLED':
+        case 'REJECTED':
+          return 'badge bg-danger';
+        default:
+          return 'badge bg-secondary';
+      }
     }
 }

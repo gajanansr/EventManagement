@@ -159,6 +159,13 @@ export class DashbaordComponent implements OnInit {
     }
   }
 
+  scrollToEvents() {
+    const element = document.getElementById('events-section');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
   logout() {
     this.authService.logout();
     this.router.navigateByUrl('/login');
