@@ -3,7 +3,6 @@ import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators }
 import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { HttpService } from '../../services/http.service';
-declare var bootstrap: any;
 
 @Component({
   selector: 'app-registration',
@@ -83,11 +82,4 @@ export class RegistrationComponent implements OnInit {
     }
   }
 
-  openModal() {
-    const modalElement = document.getElementById('loginModal');
-    if (modalElement) {
-      const modal = new bootstrap.Modal(modalElement);
-      modal.show();
-    }
-  }
 }
