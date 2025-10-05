@@ -71,13 +71,25 @@ export class ViewEventsComponent  implements OnInit{
   }
 
   getEvents() {
-    this.httpService.GetEvents().subscribe(
+    // Use appropriate endpoint based on user role
+    const role = this.authService.getRole;
+    let eventsObservable;
+    
+    if (role === 'PLANNER') {
+      eventsObservable = this.httpService.GetAllevents();
+    } else if (role === 'CLIENT') {
+      eventsObservable = this.httpService.GetAlleventsForClient();
+    } else {
+      eventsObservable = this.httpService.GetEvents(); // STAFF
+    }
+    
+    eventsObservable.subscribe(
       (data) => {
         this.eventList = data;
         this.totalPages = Math.ceil(this.eventList.length / this.itemsPerPage);
         this.setPaginatedEvents();
       },
-      error => {
+      (error: any) => {
         this.showError = true;
         this.errorMessage = error.message || 'Failed to load events';
       }
@@ -103,13 +115,26 @@ export class ViewEventsComponent  implements OnInit{
   searchEvent(): void{
     if(this.itemForm.get('searchTerm')?.valid){
       const searchTerm = this.itemForm.get('searchTerm')?.value;
+      const role = this.authService.getRole;
+      
       if(isNaN(searchTerm)){
-        this.httpService.GetEventdetailsbyTitle(searchTerm).subscribe(
+        // Search by title based on role
+        let searchObservable;
+        if (role === 'PLANNER') {
+          searchObservable = this.httpService.getEventsByTitle(searchTerm);
+        } else if (role === 'CLIENT') {
+          searchObservable = this.httpService.GetEventdetailsbyTitleforClient(searchTerm);
+        } else {
+          searchObservable = this.httpService.GetEventdetailsbyTitle(searchTerm);
+        }
+        
+        searchObservable.subscribe(
           (response) => {
             this.handleSearchResponse(response);
             if(response && Object.keys(response).length !== 0){
-              this.eventList = [response];
-              this.totalPages =1;
+              // Handle array or single object response
+              this.eventList = Array.isArray(response) ? response : [response];
+              this.totalPages = 1;
               this.currentPage = 1;
               this.setPaginatedEvents();
             }else{
@@ -128,12 +153,22 @@ export class ViewEventsComponent  implements OnInit{
           }
         );
       }else{
-        this.httpService.GetEventdetails(Number(searchTerm)).subscribe(
+        // Search by ID based on role
+        let searchObservable;
+        if (role === 'PLANNER') {
+          searchObservable = this.httpService.getEventById(Number(searchTerm));
+        } else if (role === 'CLIENT') {
+          searchObservable = this.httpService.getBookingDetails(Number(searchTerm));
+        } else {
+          searchObservable = this.httpService.GetEventdetails(Number(searchTerm));
+        }
+        
+        searchObservable.subscribe(
           (response) =>{
             this.handleSearchResponse(response);
             if(response && Object.keys(response).length !== 0){
               this.eventList = [response];
-              this.totalPages =1;
+              this.totalPages = 1;
               this.currentPage = 1;
               this.setPaginatedEvents();
             }else{
