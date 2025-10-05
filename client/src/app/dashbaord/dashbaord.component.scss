@@ -1,13 +1,331 @@
-.mat-toolbar {
-  background-color: #0d6efd !important;
-  color: white !important;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+/* Modern Dashboard Styles */
+
+.dashboard-container {
+  min-height: 100vh;
+  padding: 2rem;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
 }
 
-.spacer {
-  flex: 1 1 auto;
+// Dashboard Header
+.dashboard-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  animation: fadeInDown 0.6s ease-out;
+  
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    
+    @media (max-width: 768px) {
+      font-size: 1.75rem;
+    }
+  }
+  
+  .subtitle {
+    font-size: 1.1rem;
+    color: #6c757d;
+    font-weight: 400;
+  }
 }
 
-button mat-icon {
-  margin-right: 0.5rem;
+// Statistics Grid
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  animation: fadeInUp 0.6s ease-out 0.2s both;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.stat-card {
+  display: flex;
+  align-items: center;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.15);
+  }
+  
+  .stat-icon {
+    font-size: 3rem;
+    margin-right: 1.25rem;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  
+  .stat-content {
+    flex: 1;
+    
+    h3 {
+      font-size: 2.25rem;
+      font-weight: 700;
+      margin: 0;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    p {
+      margin: 0.25rem 0 0 0;
+      color: #6c757d;
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+  }
+}
+
+// Quick Actions
+.quick-actions {
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  animation: fadeInUp 0.6s ease-out 0.3s both;
+  
+  h3 {
+    margin-bottom: 1.25rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+  
+  .action-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    
+    button {
+      flex: 1;
+      min-width: 200px;
+      padding: 0.875rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 500;
+      border-radius: 12px;
+      border: none;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      
+      .icon {
+        font-size: 1.25rem;
+      }
+      
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      }
+      
+      &.btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        
+        &:hover {
+          background: linear-gradient(135deg, #7690ff 0%, #8659b8 100%);
+          box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+      }
+      
+      &.btn-success {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        
+        &:hover {
+          background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+        }
+      }
+      
+      &.btn-secondary {
+        background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+        
+        &:hover {
+          background: linear-gradient(135deg, #7d8591 0%, #5a6268 100%);
+        }
+      }
+      
+      @media (max-width: 768px) {
+        min-width: 100%;
+      }
+    }
+  }
+}
+
+// Info Card (for Staff)
+.info-card {
+  display: flex;
+  align-items: center;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.1) 100%);
+  border-left: 4px solid #3b82f6;
+  animation: fadeInUp 0.6s ease-out 0.3s both;
+  
+  .info-icon {
+    font-size: 2.5rem;
+    margin-right: 1.25rem;
+  }
+  
+  .info-content {
+    flex: 1;
+    
+    h4 {
+      margin: 0 0 0.5rem 0;
+      color: #2563eb;
+      font-weight: 600;
+    }
+    
+    p {
+      margin: 0;
+      color: #4b5563;
+      line-height: 1.6;
+    }
+  }
+}
+
+// Welcome Card (for Client)
+.welcome-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  border: 2px solid rgba(102, 126, 234, 0.2);
+  animation: fadeInUp 0.6s ease-out 0.3s both;
+  
+  .welcome-content {
+    flex: 1;
+    
+    h3 {
+      font-size: 1.75rem;
+      margin-bottom: 0.75rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    p {
+      color: #4b5563;
+      margin-bottom: 1.25rem;
+      line-height: 1.6;
+    }
+    
+    button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      font-weight: 500;
+      
+      .icon {
+        font-size: 1.25rem;
+      }
+    }
+  }
+  
+  .welcome-illustration {
+    font-size: 5rem;
+    margin-left: 2rem;
+    animation: bounce 2s ease-in-out infinite;
+    
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+}
+
+// Card Enhancements
+.card {
+  margin-bottom: 2rem;
+  animation: fadeInUp 0.6s ease-out 0.4s both;
+  
+  .card-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1.25rem 1.5rem;
+    border-radius: 16px 16px 0 0;
+    border: none;
+    
+    h3 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: white;
+    }
+  }
+  
+  .card-body {
+    padding: 1.5rem;
+  }
+}
+
+// Animations
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+// Role-specific containers
+.planner-dashboard,
+.staff-dashboard,
+.client-dashboard {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+// Smooth scroll behavior
+html {
+  scroll-behavior: smooth;
 }
