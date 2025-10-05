@@ -11,4 +11,5 @@ import org.springframework.stereotype.Repository;
 public interface EventRepository extends JpaRepository<Event, Long>{
     List<Event> findByTitle(String title);
     public Event findEventByTitle(String title);
+    List<Event> findByAssignedStaffUserId(Long staffId);
 }

@@ -1,6 +1,8 @@
 package com.wecp.eventmanagementsystem.controller;
 import com.wecp.eventmanagementsystem.entity.Event;
 import com.wecp.eventmanagementsystem.entity.Message;
+import com.wecp.eventmanagementsystem.entity.User;
+import com.wecp.eventmanagementsystem.repository.UserRepository;
 import com.wecp.eventmanagementsystem.service.EventService;
 import com.wecp.eventmanagementsystem.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,23 @@ public class StaffController {
     
     @Autowired
     private MessageService messageService;
+    
+    @Autowired
+    private UserRepository userRepository;
+
+    @GetMapping("/api/staff/allEvents")
+    public ResponseEntity<List<Event>> getAssignedEvents(Authentication authentication) {
+        // Get only events assigned to this staff member
+        String username = authentication.getName();
+        User staff = userRepository.findByUsername(username);
+        
+        if (staff == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        
+        List<Event> assignedEvents = eventService.getEventsForStaff(staff.getUserId());
+        return ResponseEntity.ok(assignedEvents);
+    }
 
     @GetMapping("/api/staff/event-details/{eventId}")
     public ResponseEntity<Event> getEventDetails(@PathVariable Long eventId) {
