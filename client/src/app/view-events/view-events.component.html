@@ -57,7 +57,7 @@
                             <th scope="col">Status</th>
                             <th scope="col">Allocated Resources</th>
                             <th scope="col" *ngIf="roleName === 'PLANNER'">Assigned Staff</th>
-                            <th scope="col" *ngIf="roleName === 'PLANNER' || roleName === 'CLIENT'">Action</th>
+                            <th scope="col" *ngIf="roleName === 'PLANNER' || roleName === 'CLIENT' || roleName === 'STAFF'">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -96,8 +96,7 @@
                                     {{ event.assignedStaff.fullName || event.assignedStaff.username }}
                                 </span>
                                 <ng-template #noStaff>
-                                    <button class="btn btn-sm btn-secondary" (click)="openStaffAssignment(event)" 
-                                            data-bs-toggle="modal" data-bs-target="#staffAssignModal">
+                                    <button class="btn btn-sm btn-secondary" (click)="openStaffAssignment(event)">
                                         Assign Staff
                                     </button>
                                 </ng-template>
@@ -107,18 +106,20 @@
                                         data-bs-toggle="modal" data-bs-target="#updateModal">
                                     Update
                                 </button>
-                                <button class="btn btn-sm btn-info" (click)="openMessaging(event)" 
-                                        data-bs-toggle="modal" data-bs-target="#messagingModal">
+                                <button class="btn btn-sm btn-info" (click)="openMessaging(event)">
                                     Messages
                                 </button>
                             </td>
                             <td *ngIf="roleName === 'CLIENT'">
-                                <button class="btn btn-sm btn-success me-1" (click)="openBookingForm(event)" 
-                                        data-bs-toggle="modal" data-bs-target="#bookingModal">
+                                <button class="btn btn-sm btn-success me-1" (click)="openBookingForm(event)">
                                     Book Event
                                 </button>
-                                <button class="btn btn-sm btn-info" (click)="openMessaging(event)" 
-                                        data-bs-toggle="modal" data-bs-target="#messagingModal">
+                                <button class="btn btn-sm btn-info" (click)="openMessaging(event)">
+                                    Messages
+                                </button>
+                            </td>
+                            <td *ngIf="roleName === 'STAFF'">
+                                <button class="btn btn-sm btn-info" (click)="openMessaging(event)">
                                     Messages
                                 </button>
                             </td>
