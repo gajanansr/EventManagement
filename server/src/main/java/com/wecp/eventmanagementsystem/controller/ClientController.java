@@ -2,8 +2,10 @@ package com.wecp.eventmanagementsystem.controller;
 
 import com.wecp.eventmanagementsystem.entity.Booking;
 import com.wecp.eventmanagementsystem.entity.Event;
+import com.wecp.eventmanagementsystem.entity.Message;
 import com.wecp.eventmanagementsystem.service.BookingService;
 import com.wecp.eventmanagementsystem.service.EventService;
+import com.wecp.eventmanagementsystem.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,9 @@ public class ClientController {
     
     @Autowired
     private BookingService bookingService;
+    
+    @Autowired
+    private MessageService messageService;
 
     @GetMapping("/api/client/booking-details/{eventId}")
     public ResponseEntity<Event> getBookingDetails(@PathVariable Long eventId) {
@@ -68,4 +73,49 @@ public class ClientController {
             return ResponseEntity.badRequest().body(response);
         }
     }
+    
+    @GetMapping("/api/client/allEvents")
+    public ResponseEntity<List<Event>> getAllEventsForClient() {
+        List<Event> events = eventservice.getAllEvents();
+        return ResponseEntity.ok(events);
+    }
+    
+    @GetMapping("/api/client/event-detailsbyTitleforClient/{title}")
+    public ResponseEntity<List<Event>> getEventsByTitleForClient(@PathVariable String title) {
+        List<Event> events = eventservice.getAllEventByTitle(title);
+        return ResponseEntity.ok(events);
+    }
+    
+    // Messaging endpoints
+    @PostMapping("/api/client/send-message")
+    public ResponseEntity<Map<String, Object>> sendMessage(
+            @RequestBody Map<String, Object> messageRequest,
+            Authentication authentication) {
+        try {
+            String username = authentication.getName();
+            Long eventId = Long.valueOf(messageRequest.get("eventId").toString());
+            String content = (String) messageRequest.get("content");
+            
+            Message message = messageService.sendMessage(eventId, username, content);
+            
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "Message sent successfully");
+            response.put("data", message);
+            
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (Exception e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+    
+    @GetMapping("/api/client/messages/{eventId}")
+    public ResponseEntity<List<Message>> getEventMessages(@PathVariable Long eventId) {
+        List<Message> messages = messageService.getEventMessages(eventId);
+        return ResponseEntity.ok(messages);
+    }
 }
+

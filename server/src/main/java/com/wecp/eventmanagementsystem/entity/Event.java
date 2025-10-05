@@ -18,6 +18,10 @@ public class Event {
     private String location;
     private String status;
  
+    @ManyToOne
+    @JoinColumn(name = "assignedStaffId", referencedColumnName = "userId")
+    private User assignedStaff;
+ 
     @OneToMany(mappedBy = "event")
     private List<Allocation> allocations;
  
@@ -88,6 +92,14 @@ public class Event {
  
     public void setAllocations(List<Allocation> allocations) {
         this.allocations = allocations;
+    }
+    
+    public User getAssignedStaff() {
+        return assignedStaff;
+    }
+    
+    public void setAssignedStaff(User assignedStaff) {
+        this.assignedStaff = assignedStaff;
     }
    
 }

@@ -1,6 +1,8 @@
 package com.wecp.eventmanagementsystem.service;
 import com.wecp.eventmanagementsystem.entity.Event;
+import com.wecp.eventmanagementsystem.entity.User;
 import com.wecp.eventmanagementsystem.repository.EventRepository;
+import com.wecp.eventmanagementsystem.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
@@ -10,6 +12,9 @@ import java.util.List;
 public class EventService {
     @Autowired
     EventRepository eventRepository;
+    
+    @Autowired
+    UserRepository userRepository;
     public List<Event> getAllEvents(){
         return eventRepository.findAll();
     }
@@ -50,4 +55,24 @@ public class EventService {
     public Event findEventByTitle(String title){
         return eventRepository.findEventByTitle(title);
     }
+    
+    public Event assignStaffToEvent(Long eventId, Long staffId) {
+        Event event = eventRepository.findById(eventId)
+            .orElseThrow(() -> new EntityNotFoundException("Event not found"));
+        
+        User staff = userRepository.findById(staffId)
+            .orElseThrow(() -> new EntityNotFoundException("Staff not found"));
+        
+        if (!"STAFF".equals(staff.getRole())) {
+            throw new IllegalArgumentException("User is not a staff member");
+        }
+        
+        event.setAssignedStaff(staff);
+        return eventRepository.save(event);
+    }
+    
+    public List<User> getAllStaff() {
+        return userRepository.findByRole("STAFF");
+    }
 }
+
