@@ -78,6 +78,20 @@ export class ViewEventsComponent  implements OnInit{
       status:['',[Validators.required]]
     })
   }
+
+  // Modal close methods
+  closeStaffAssignModal(): void {
+    this.showStaffAssignModal = false;
+  }
+
+  closeMessagingModal(): void {
+    this.showMessagingModal = false;
+  }
+
+  closeBookingModal(): void {
+    this.showBookingModal = false;
+  }
+
   dateTimeValidator(control: AbstractControl): ValidationErrors | null{
     const selectedDate = new Date(control.value);
     const tomorrow = new Date(this.minDate);
@@ -398,6 +412,7 @@ export class ViewEventsComponent  implements OnInit{
       this.selectedStaffId = '';
       this.staffAssignMessage = '';
       this.staffAssignSuccess = false;
+      this.showStaffAssignModal = true;
     }
 
     assignStaff(): void {
@@ -419,13 +434,7 @@ export class ViewEventsComponent  implements OnInit{
           }
           
           setTimeout(() => {
-            const modalElement = document.getElementById('staffAssignModal');
-            if (modalElement) {
-              const modal = (window as any).bootstrap.Modal.getInstance(modalElement);
-              if (modal) {
-                modal.hide();
-              }
-            }
+            this.closeStaffAssignModal();
           }, 1500);
         },
         error: (error) => {
@@ -441,6 +450,7 @@ export class ViewEventsComponent  implements OnInit{
       this.messages = [];
       this.newMessage = '';
       this.loadMessages(event.eventID);
+      this.showMessagingModal = true;
     }
 
     loadMessages(eventId: number): void {
@@ -491,6 +501,7 @@ export class ViewEventsComponent  implements OnInit{
       this.bookingRequirements = '';
       this.bookingMessage = '';
       this.bookingSuccess = false;
+      this.showBookingModal = true;
     }
 
     submitBooking(): void {
@@ -509,13 +520,7 @@ export class ViewEventsComponent  implements OnInit{
           this.bookingSuccess = true;
           
           setTimeout(() => {
-            const modalElement = document.getElementById('bookingModal');
-            if (modalElement) {
-              const modal = (window as any).bootstrap.Modal.getInstance(modalElement);
-              if (modal) {
-                modal.hide();
-              }
-            }
+            this.closeBookingModal();
             // Optionally refresh the events list or navigate to bookings page
           }, 2000);
         },
