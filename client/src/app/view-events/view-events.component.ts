@@ -396,7 +396,16 @@ export class ViewEventsComponent  implements OnInit{
       
       const modalElement = document.getElementById('staffAssignModal');
       if (modalElement) {
-        const modal = new (window as any).bootstrap.Modal(modalElement);
+        // Remove any existing backdrop
+        const existingBackdrop = document.querySelector('.modal-backdrop');
+        if (existingBackdrop) {
+          existingBackdrop.remove();
+        }
+        
+        const modal = new (window as any).bootstrap.Modal(modalElement, {
+          backdrop: true,
+          keyboard: true
+        });
         modal.show();
       }
     }
@@ -445,7 +454,16 @@ export class ViewEventsComponent  implements OnInit{
       
       const modalElement = document.getElementById('messagingModal');
       if (modalElement) {
-        const modal = new (window as any).bootstrap.Modal(modalElement);
+        // Remove any existing backdrop
+        const existingBackdrop = document.querySelector('.modal-backdrop');
+        if (existingBackdrop) {
+          existingBackdrop.remove();
+        }
+        
+        const modal = new (window as any).bootstrap.Modal(modalElement, {
+          backdrop: true,
+          keyboard: true
+        });
         modal.show();
       }
     }
@@ -501,7 +519,16 @@ export class ViewEventsComponent  implements OnInit{
       
       const modalElement = document.getElementById('bookingModal');
       if (modalElement) {
-        const modal = new (window as any).bootstrap.Modal(modalElement);
+        // Remove any existing backdrop
+        const existingBackdrop = document.querySelector('.modal-backdrop');
+        if (existingBackdrop) {
+          existingBackdrop.remove();
+        }
+        
+        const modal = new (window as any).bootstrap.Modal(modalElement, {
+          backdrop: true,
+          keyboard: true
+        });
         modal.show();
       }
     }
