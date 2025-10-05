@@ -96,7 +96,8 @@
                                     {{ event.assignedStaff.fullName || event.assignedStaff.username }}
                                 </span>
                                 <ng-template #noStaff>
-                                    <button class="btn btn-sm btn-secondary" (click)="openStaffAssignment(event)">
+                                    <button class="btn btn-sm btn-secondary" 
+                                            (click)="openStaffAssignment(event)">
                                         Assign Staff
                                     </button>
                                 </ng-template>
@@ -106,20 +107,24 @@
                                         data-bs-toggle="modal" data-bs-target="#updateModal">
                                     Update
                                 </button>
-                                <button class="btn btn-sm btn-info" (click)="openMessaging(event)">
+                                <button class="btn btn-sm btn-info" 
+                                        (click)="openMessaging(event)">
                                     Messages
                                 </button>
                             </td>
                             <td *ngIf="roleName === 'CLIENT'">
-                                <button class="btn btn-sm btn-success me-1" (click)="openBookingForm(event)">
+                                <button class="btn btn-sm btn-success me-1" 
+                                        (click)="openBookingForm(event)">
                                     Book Event
                                 </button>
-                                <button class="btn btn-sm btn-info" (click)="openMessaging(event)">
+                                <button class="btn btn-sm btn-info" 
+                                        (click)="openMessaging(event)">
                                     Messages
                                 </button>
                             </td>
                             <td *ngIf="roleName === 'STAFF'">
-                                <button class="btn btn-sm btn-info" (click)="openMessaging(event)">
+                                <button class="btn btn-sm btn-info" 
+                                        (click)="openMessaging(event)">
                                     Messages
                                 </button>
                             </td>
@@ -205,14 +210,15 @@
 </div>
 
 <!-- Staff Assignment Modal -->
-<div class="modal fade" id="staffAssignModal" tabindex="-1" aria-labelledby="staffAssignModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="staffAssignModalLabel">Assign Staff to Event</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<!-- Staff Assignment Modal -->
+<div class="custom-modal" *ngIf="showStaffAssignModal" (click)="closeStaffAssignModal()">
+    <div class="custom-modal-dialog" (click)="$event.stopPropagation()">
+        <div class="custom-modal-content">
+            <div class="custom-modal-header">
+                <h5>Assign Staff to Event</h5>
+                <button type="button" class="btn-close" (click)="closeStaffAssignModal()"></button>
             </div>
-            <div class="modal-body">
+            <div class="custom-modal-body">
                 <div *ngIf="selectedEventForStaff">
                     <h6>Event: {{ selectedEventForStaff.title }}</h6>
                     <p class="text-muted small">{{ selectedEventForStaff.location }} - {{ selectedEventForStaff.dateTime | date:'medium' }}</p>
@@ -233,8 +239,8 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <div class="custom-modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="closeStaffAssignModal()">Close</button>
                 <button type="button" class="btn btn-primary" (click)="assignStaff()" [disabled]="!selectedStaffId">
                     Assign Staff
                 </button>
@@ -244,14 +250,14 @@
 </div>
 
 <!-- Messaging Modal -->
-<div class="modal fade" id="messagingModal" tabindex="-1" aria-labelledby="messagingModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="messagingModalLabel">Event Messages</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<div class="custom-modal" *ngIf="showMessagingModal" (click)="closeMessagingModal()">
+    <div class="custom-modal-dialog custom-modal-lg" (click)="$event.stopPropagation()">
+        <div class="custom-modal-content">
+            <div class="custom-modal-header">
+                <h5>Event Messages</h5>
+                <button type="button" class="btn-close" (click)="closeMessagingModal()"></button>
             </div>
-            <div class="modal-body">
+            <div class="custom-modal-body">
                 <div *ngIf="selectedEventForMessaging">
                     <h6>Event: {{ selectedEventForMessaging.title }}</h6>
                     <hr>
@@ -296,14 +302,14 @@
 </div>
 
 <!-- Booking Modal (for CLIENT) -->
-<div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="bookingModalLabel">Book Event</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<div class="custom-modal" *ngIf="showBookingModal" (click)="closeBookingModal()">
+    <div class="custom-modal-dialog" (click)="$event.stopPropagation()">
+        <div class="custom-modal-content">
+            <div class="custom-modal-header">
+                <h5>Book Event</h5>
+                <button type="button" class="btn-close" (click)="closeBookingModal()"></button>
             </div>
-            <div class="modal-body">
+            <div class="custom-modal-body">
                 <div *ngIf="selectedEventForBooking">
                     <h6>{{ selectedEventForBooking.title }}</h6>
                     <p class="text-muted small">
@@ -326,8 +332,8 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <div class="custom-modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="closeBookingModal()">Cancel</button>
                 <button type="button" class="btn btn-success" (click)="submitBooking()">
                     Confirm Booking
                 </button>

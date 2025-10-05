@@ -47,6 +47,11 @@ export class ViewEventsComponent  implements OnInit{
   bookingMessage: string = '';
   bookingSuccess: boolean = false;
 
+  // Modal visibility flags
+  showStaffAssignModal: boolean = false;
+  showMessagingModal: boolean = false;
+  showBookingModal: boolean = false;
+
   constructor(private httpService: HttpService,
     private formBuilder: FormBuilder,private router: Router,
     private authService: AuthService){
@@ -393,21 +398,6 @@ export class ViewEventsComponent  implements OnInit{
       this.selectedStaffId = '';
       this.staffAssignMessage = '';
       this.staffAssignSuccess = false;
-      
-      const modalElement = document.getElementById('staffAssignModal');
-      if (modalElement) {
-        // Remove any existing backdrop
-        const existingBackdrop = document.querySelector('.modal-backdrop');
-        if (existingBackdrop) {
-          existingBackdrop.remove();
-        }
-        
-        const modal = new (window as any).bootstrap.Modal(modalElement, {
-          backdrop: true,
-          keyboard: true
-        });
-        modal.show();
-      }
     }
 
     assignStaff(): void {
@@ -451,21 +441,6 @@ export class ViewEventsComponent  implements OnInit{
       this.messages = [];
       this.newMessage = '';
       this.loadMessages(event.eventID);
-      
-      const modalElement = document.getElementById('messagingModal');
-      if (modalElement) {
-        // Remove any existing backdrop
-        const existingBackdrop = document.querySelector('.modal-backdrop');
-        if (existingBackdrop) {
-          existingBackdrop.remove();
-        }
-        
-        const modal = new (window as any).bootstrap.Modal(modalElement, {
-          backdrop: true,
-          keyboard: true
-        });
-        modal.show();
-      }
     }
 
     loadMessages(eventId: number): void {
@@ -516,21 +491,6 @@ export class ViewEventsComponent  implements OnInit{
       this.bookingRequirements = '';
       this.bookingMessage = '';
       this.bookingSuccess = false;
-      
-      const modalElement = document.getElementById('bookingModal');
-      if (modalElement) {
-        // Remove any existing backdrop
-        const existingBackdrop = document.querySelector('.modal-backdrop');
-        if (existingBackdrop) {
-          existingBackdrop.remove();
-        }
-        
-        const modal = new (window as any).bootstrap.Modal(modalElement, {
-          backdrop: true,
-          keyboard: true
-        });
-        modal.show();
-      }
     }
 
     submitBooking(): void {
