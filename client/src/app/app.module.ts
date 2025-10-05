@@ -30,7 +30,8 @@ import { MatListModule } from '@angular/material/list';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
-import {MatRadioModule} from '@angular/material/radio'
+import {MatRadioModule} from '@angular/material/radio';
+import { LandingComponent } from './landing/landing.component'
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import {MatRadioModule} from '@angular/material/radio'
       ResourceAllocateComponent,
       ViewEventsComponent,
       BookingDetailsComponent,
-      ProfileComponent
+      ProfileComponent,
+      LandingComponent
   ],
   imports: [
     BrowserModule,
