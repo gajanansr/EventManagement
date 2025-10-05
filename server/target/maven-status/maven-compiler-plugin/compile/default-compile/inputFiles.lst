@@ -1,10 +1,12 @@
 /workspaces/EventManagement/server/src/main/java/com/wecp/eventmanagementsystem/service/EventService.java
 /workspaces/EventManagement/server/src/main/java/com/wecp/eventmanagementsystem/controller/RegisterAndLoginController.java
+/workspaces/EventManagement/server/src/main/java/com/wecp/eventmanagementsystem/repository/MessageRepository.java
 /workspaces/EventManagement/server/src/main/java/com/wecp/eventmanagementsystem/repository/BookingRepository.java
 /workspaces/EventManagement/server/src/main/java/com/wecp/eventmanagementsystem/repository/UserRepository.java
 /workspaces/EventManagement/server/src/main/java/com/wecp/eventmanagementsystem/dto/LoginRequest.java
 /workspaces/EventManagement/server/src/main/java/com/wecp/eventmanagementsystem/config/SecurityConfig.java
 /workspaces/EventManagement/server/src/main/java/com/wecp/eventmanagementsystem/service/UserService.java
+/workspaces/EventManagement/server/src/main/java/com/wecp/eventmanagementsystem/entity/Message.java
 /workspaces/EventManagement/server/src/main/java/com/wecp/eventmanagementsystem/config/Configurations.java
 /workspaces/EventManagement/server/src/main/java/com/wecp/eventmanagementsystem/entity/Event.java
 /workspaces/EventManagement/server/src/main/java/com/wecp/eventmanagementsystem/dto/LoginResponse.java
@@ -20,6 +22,7 @@
 /workspaces/EventManagement/server/src/main/java/com/wecp/eventmanagementsystem/controller/EventPlannerController.java
 /workspaces/EventManagement/server/src/main/java/com/wecp/eventmanagementsystem/service/ResourceService.java
 /workspaces/EventManagement/server/src/main/java/com/wecp/eventmanagementsystem/EventManagementSystemApplication.java
+/workspaces/EventManagement/server/src/main/java/com/wecp/eventmanagementsystem/service/MessageService.java
 /workspaces/EventManagement/server/src/main/java/com/wecp/eventmanagementsystem/repository/AllocationRepository.java
 /workspaces/EventManagement/server/src/main/java/com/wecp/eventmanagementsystem/jwt/JwtUtil.java
 /workspaces/EventManagement/server/src/main/java/com/wecp/eventmanagementsystem/entity/Allocation.java

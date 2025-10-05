@@ -2,15 +2,21 @@ package com.wecp.eventmanagementsystem.controller;
 
 import com.wecp.eventmanagementsystem.entity.Allocation;
 import com.wecp.eventmanagementsystem.entity.Event;
+import com.wecp.eventmanagementsystem.entity.Message;
 import com.wecp.eventmanagementsystem.entity.Resource;
+import com.wecp.eventmanagementsystem.entity.User;
 import com.wecp.eventmanagementsystem.service.EventService;
+import com.wecp.eventmanagementsystem.service.MessageService;
 import com.wecp.eventmanagementsystem.service.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class EventPlannerController {
@@ -20,6 +26,9 @@ public class EventPlannerController {
 
     @Autowired
     private ResourceService resourceService;
+    
+    @Autowired
+    private MessageService messageService;
 
     @PostMapping("/api/planner/event")
     public ResponseEntity<Event> createEvent(@RequestBody Event event) {
@@ -78,6 +87,65 @@ public class EventPlannerController {
     public ResponseEntity<String> deleteEventById(@PathVariable Long eventId) {
         eventService.deleteEvent(eventId);
         return new ResponseEntity<String>(HttpStatus.NO_CONTENT);
+    }
+    
+    @GetMapping("/api/planner/staff")
+    public ResponseEntity<List<User>> getAllStaff() {
+        List<User> staffList = eventService.getAllStaff();
+        return new ResponseEntity<>(staffList, HttpStatus.OK);
+    }
+    
+    @PostMapping("/api/planner/assign-staff")
+    public ResponseEntity<Map<String, Object>> assignStaffToEvent(
+            @RequestParam Long eventId,
+            @RequestParam Long staffId) {
+        try {
+            Event event = eventService.assignStaffToEvent(eventId, staffId);
+            
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "Staff assigned successfully");
+            response.put("event", event);
+            
+            return ResponseEntity.ok(response);
+                } catch (Exception e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+    
+    // Messaging endpoints for PLANNER
+    @PostMapping("/api/planner/send-message")
+    public ResponseEntity<Map<String, Object>> sendMessage(
+            @RequestBody Map<String, Object> messageRequest,
+            Authentication authentication) {
+        try {
+            String username = authentication.getName();
+            Long eventId = Long.valueOf(messageRequest.get("eventId").toString());
+            String content = (String) messageRequest.get("content");
+            
+            Message message = messageService.sendMessage(eventId, username, content);
+            
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "Message sent successfully");
+            response.put("data", message);
+            
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (Exception e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+    
+    @GetMapping("/api/planner/messages/{eventId}")
+    public ResponseEntity<List<Message>> getEventMessages(@PathVariable Long eventId) {
+        List<Message> messages = messageService.getEventMessages(eventId);
+        return ResponseEntity.ok(messages);
     }
 
 }
