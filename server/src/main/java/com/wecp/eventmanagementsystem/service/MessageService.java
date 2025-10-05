@@ -27,8 +27,10 @@ public class MessageService {
         Event event = eventRepository.findById(eventId)
             .orElseThrow(() -> new RuntimeException("Event not found"));
         
-        User sender = userRepository.findByUsername(senderUsername)
-            .orElseThrow(() -> new RuntimeException("User not found"));
+        User sender = userRepository.findByUsername(senderUsername);
+        if (sender == null) {
+            throw new RuntimeException("User not found");
+        }
         
         Message message = new Message(event, sender, sender.getRole(), content);
         return messageRepository.save(message);
