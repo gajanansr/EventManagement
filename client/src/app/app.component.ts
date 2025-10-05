@@ -19,7 +19,11 @@ export class AppComponent {
     this.isLoggedIn = this.authService.getLoginStatus;
     this.roleName = this.authService.getRole;
     
-    if (!this.isLoggedIn) {
+    // Don't redirect to login if user is on landing page, login page, or registration page
+    const publicRoutes = ['/', '/login', '/registration'];
+    const currentRoute = this.router.url;
+    
+    if (!this.isLoggedIn && !publicRoutes.includes(currentRoute)) {
       this.router.navigateByUrl('/login');
     }
   }
