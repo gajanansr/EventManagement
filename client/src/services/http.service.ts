@@ -237,10 +237,15 @@ export class HttpService {
     return this.http.post(url, {}, { headers });
   }
 
-  // Messaging (CLIENT and PLANNER)
+  // Messaging (CLIENT, STAFF and PLANNER)
   sendMessage(messageData: any): Observable<any> {
     const role = this.authService.getRole;
-    const endpoint = role === 'PLANNER' ? 'planner' : 'client';
+    let endpoint = 'client';
+    if (role === 'PLANNER') {
+      endpoint = 'planner';
+    } else if (role === 'STAFF') {
+      endpoint = 'staff';
+    }
     const url = `${this.serverName}/api/${endpoint}/send-message`;
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
@@ -251,13 +256,38 @@ export class HttpService {
 
   getEventMessages(eventId: number): Observable<any> {
     const role = this.authService.getRole;
-    const endpoint = role === 'PLANNER' ? 'planner' : 'client';
+    let endpoint = 'client';
+    if (role === 'PLANNER') {
+      endpoint = 'planner';
+    } else if (role === 'STAFF') {
+      endpoint = 'staff';
+    }
     const url = `${this.serverName}/api/${endpoint}/messages/${eventId}`;
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${this.authService.getToken()}`
     });
     return this.http.get(url, { headers });
+  }
+
+  // Booking management for PLANNER
+  getAllBookings(): Observable<any> {
+    const url = `${this.serverName}/api/planner/bookings`;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+    return this.http.get(url, { headers });
+  }
+
+  updateBookingStatus(bookingId: number, status: string, notes?: string): Observable<any> {
+    const url = `${this.serverName}/api/planner/booking/${bookingId}/status`;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${this.authService.getToken()}`
+    });
+    const body = { status, notes };
+    return this.http.put(url, body, { headers });
   }
 }
 

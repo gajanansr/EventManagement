@@ -24,6 +24,10 @@
             <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
                 <h4 class="card-title mb-0">Events</h4>
                 <div class="d-flex flex-wrap gap-2 align-items-center">
+                    <!-- Bookings button for PLANNER -->
+                    <button *ngIf="roleName === 'PLANNER'" class="btn btn-info" (click)="viewAllBookings()">
+                        <i class="bi bi-calendar-check"></i> View Bookings
+                    </button>
                     <div>
                         <label for="sort" class="me-2 mb-0">Sort By:</label>
                         <select id="sort" (change)="onSortChange($event)" class="form-select d-inline-block w-auto">
@@ -338,6 +342,104 @@
                     Confirm Booking
                 </button>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bookings List Modal (for PLANNER) -->
+<div *ngIf="showBookingsListModal" class="custom-modal-overlay" (click)="closeBookingsListModal()">
+    <div class="custom-modal-content" (click)="$event.stopPropagation()" style="max-width: 900px;">
+        <div class="custom-modal-header">
+            <h5>All Booking Requests</h5>
+            <button type="button" class="btn-close" (click)="closeBookingsListModal()"></button>
+        </div>
+        <div class="custom-modal-body">
+            <div *ngIf="allBookings.length === 0" class="text-center py-4">
+                <p class="text-muted">No bookings found.</p>
+            </div>
+            <div *ngIf="allBookings.length > 0" class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Booking ID</th>
+                            <th>Event Title</th>
+                            <th>Client</th>
+                            <th>Booking Date</th>
+                            <th>Status</th>
+                            <th>Requirements</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let booking of allBookings">
+                            <td>{{ booking.bookingId }}</td>
+                            <td>{{ booking.event?.title || 'N/A' }}</td>
+                            <td>{{ booking.user?.username || 'N/A' }}</td>
+                            <td>{{ booking.bookingDate | date:'short' }}</td>
+                            <td>
+                                <span [ngClass]="getBookingStatusClass(booking.status)">
+                                    {{ booking.status }}
+                                </span>
+                            </td>
+                            <td>
+                                <small>{{ booking.clientRequirements || 'None' }}</small>
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-primary" (click)="openBookingStatusUpdate(booking)">
+                                    Update Status
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="custom-modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeBookingsListModal()">Close</button>
+        </div>
+    </div>
+</div>
+
+<!-- Booking Status Update Modal (for PLANNER) -->
+<div *ngIf="showBookingStatusModal" class="custom-modal-overlay" (click)="closeBookingStatusModal()">
+    <div class="custom-modal-content" (click)="$event.stopPropagation()">
+        <div class="custom-modal-header">
+            <h5>Update Booking Status</h5>
+            <button type="button" class="btn-close" (click)="closeBookingStatusModal()"></button>
+        </div>
+        <div class="custom-modal-body">
+            <div *ngIf="selectedBooking">
+                <div class="mb-3">
+                    <strong>Booking ID:</strong> {{ selectedBooking.bookingId }}<br>
+                    <strong>Event:</strong> {{ selectedBooking.event?.title }}<br>
+                    <strong>Client:</strong> {{ selectedBooking.user?.username }}<br>
+                    <strong>Requirements:</strong> {{ selectedBooking.clientRequirements || 'None' }}
+                </div>
+                
+                <div class="mb-3">
+                    <label for="bookingStatus" class="form-label">Status</label>
+                    <select id="bookingStatus" [(ngModel)]="bookingStatusUpdate" class="form-select">
+                        <option value="PENDING">Pending</option>
+                        <option value="CONFIRMED">Confirmed</option>
+                        <option value="APPROVED">Approved</option>
+                        <option value="REJECTED">Rejected</option>
+                        <option value="CANCELLED">Cancelled</option>
+                    </select>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="bookingNotes" class="form-label">Notes (Optional)</label>
+                    <textarea id="bookingNotes" [(ngModel)]="bookingNotes" 
+                              class="form-control" rows="3"
+                              placeholder="Add any notes for the client..."></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="custom-modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeBookingStatusModal()">Cancel</button>
+            <button type="button" class="btn btn-primary" (click)="updateBookingStatus()">
+                Update Status
+            </button>
         </div>
     </div>
 </div>

@@ -1,10 +1,12 @@
 package com.wecp.eventmanagementsystem.controller;
 
 import com.wecp.eventmanagementsystem.entity.Allocation;
+import com.wecp.eventmanagementsystem.entity.Booking;
 import com.wecp.eventmanagementsystem.entity.Event;
 import com.wecp.eventmanagementsystem.entity.Message;
 import com.wecp.eventmanagementsystem.entity.Resource;
 import com.wecp.eventmanagementsystem.entity.User;
+import com.wecp.eventmanagementsystem.service.BookingService;
 import com.wecp.eventmanagementsystem.service.EventService;
 import com.wecp.eventmanagementsystem.service.MessageService;
 import com.wecp.eventmanagementsystem.service.ResourceService;
@@ -29,6 +31,9 @@ public class EventPlannerController {
     
     @Autowired
     private MessageService messageService;
+    
+    @Autowired
+    private BookingService bookingService;
 
     @PostMapping("/api/planner/event")
     public ResponseEntity<Event> createEvent(@RequestBody Event event) {
@@ -146,6 +151,37 @@ public class EventPlannerController {
     public ResponseEntity<List<Message>> getEventMessages(@PathVariable Long eventId) {
         List<Message> messages = messageService.getEventMessages(eventId);
         return ResponseEntity.ok(messages);
+    }
+    
+    // Booking management endpoints for PLANNER
+    @GetMapping("/api/planner/bookings")
+    public ResponseEntity<List<Booking>> getAllBookings() {
+        List<Booking> bookings = bookingService.getAllBookings();
+        return ResponseEntity.ok(bookings);
+    }
+    
+    @PutMapping("/api/planner/booking/{bookingId}/status")
+    public ResponseEntity<Map<String, Object>> updateBookingStatus(
+            @PathVariable Long bookingId,
+            @RequestBody Map<String, String> statusUpdate) {
+        try {
+            String status = statusUpdate.get("status");
+            String notes = statusUpdate.get("notes");
+            
+            Booking booking = bookingService.updateBookingStatus(bookingId, status, notes);
+            
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "Booking status updated successfully");
+            response.put("booking", booking);
+            
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
     }
 
 }
