@@ -1,0 +1,153 @@
+<div class="landing-container"><p>landing works!</p>
+
+  <!-- Animated Background Particles -->
+  <div class="particles">
+    <div class="particle" *ngFor="let i of particles" [style.left.%]="i.x" [style.top.%]="i.y" [style.animation-delay.s]="i.delay"></div>
+  </div>
+
+  <!-- Floating Event Icons -->
+  <div class="floating-icons">
+    <div class="icon icon-1">🎉</div>
+    <div class="icon icon-2">🎪</div>
+    <div class="icon icon-3">🎭</div>
+    <div class="icon icon-4">🎨</div>
+    <div class="icon icon-5">🎵</div>
+    <div class="icon icon-6">✨</div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="content-wrapper">
+    <!-- Navigation -->
+    <nav class="landing-nav">
+      <div class="nav-brand">
+        <span class="brand-icon">🎉</span>
+        <span class="brand-text">EventOO.io</span>
+      </div>
+      <div class="nav-links">
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#about" class="nav-link">About</a>
+        <a href="#contact" class="nav-link">Contact</a>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="hero-content">
+        <h1 class="hero-title">
+          <span class="title-line">
+            <span class="word word-1">JOIN</span>
+            <span class="word word-2">TO OUR</span>
+          </span>
+          <span class="title-line">
+            <span class="word word-3 gradient-text">ULTIMATE EVENT</span>
+          </span>
+          <span class="title-line">
+            <span class="word word-4">AND GET A CHANCE</span>
+          </span>
+          <span class="title-line">
+            <span class="word word-5 gradient-text highlight">MANAGING</span>
+          </span>
+          <span class="title-line">
+            <span class="word word-6">YOUR DREAMS</span>
+          </span>
+        </h1>
+
+        <p class="hero-subtitle fade-in">
+          Experience the future of event planning with our cutting-edge platform.
+          Create, manage, and execute unforgettable events with ease.
+        </p>
+
+        <div class="cta-buttons">
+          <button class="cta-btn cta-primary" (click)="navigateToRegister()">
+            <span>GET STARTED</span>
+            <i class="arrow">→</i>
+          </button>
+          <button class="cta-btn cta-secondary" (click)="navigateToLogin()">
+            <span>SIGN IN</span>
+            <i class="arrow">→</i>
+          </button>
+        </div>
+
+        <!-- Countdown Timer -->
+        <div class="countdown-section">
+          <h3 class="countdown-title">
+            <span class="pulse-dot"></span>
+            LIVE PLATFORM
+          </h3>
+          <div class="countdown-timer">
+            <div class="time-box">
+              <div class="time-value">{{ days }}</div>
+              <div class="time-label">DAYS</div>
+            </div>
+            <div class="time-separator">:</div>
+            <div class="time-box">
+              <div class="time-value">{{ hours }}</div>
+              <div class="time-label">HOURS</div>
+            </div>
+            <div class="time-separator">:</div>
+            <div class="time-box">
+              <div class="time-value">{{ minutes }}</div>
+              <div class="time-label">MINUTES</div>
+            </div>
+            <div class="time-separator">:</div>
+            <div class="time-box">
+              <div class="time-value">{{ seconds }}</div>
+              <div class="time-label">SECONDS</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Animated 3D Event Visual -->
+      <div class="hero-visual">
+        <div class="visual-container">
+          <div class="event-sphere"></div>
+          <div class="orbit orbit-1"></div>
+          <div class="orbit orbit-2"></div>
+          <div class="orbit orbit-3"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section">
+      <h2 class="section-title">
+        <span class="title-accent">Why Choose Us</span>
+      </h2>
+      <div class="features-grid">
+        <div class="feature-card" *ngFor="let feature of features; let i = index" [style.animation-delay.s]="i * 0.1">
+          <div class="feature-icon">{{ feature.icon }}</div>
+          <h3 class="feature-title">{{ feature.title }}</h3>
+          <p class="feature-description">{{ feature.description }}</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+      <div class="stats-grid">
+        <div class="stat-card" *ngFor="let stat of stats">
+          <div class="stat-value">{{ stat.value }}</div>
+          <div class="stat-label">{{ stat.label }}</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="final-cta">
+      <div class="cta-content">
+        <h2 class="cta-title">Ready to Create Amazing Events?</h2>
+        <p class="cta-subtitle">Join thousands of event planners who trust our platform</p>
+        <button class="cta-btn cta-large" (click)="navigateToRegister()">
+          <span>START YOUR JOURNEY</span>
+          <i class="arrow">→</i>
+        </button>
+      </div>
+    </section>
+  </div>
+
+  <!-- Gradient Overlays -->
+  <div class="gradient-overlay gradient-1"></div>
+  <div class="gradient-overlay gradient-2"></div>
+  <div class="gradient-overlay gradient-3"></div>
+</div>

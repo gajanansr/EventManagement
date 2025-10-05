@@ -12,8 +12,10 @@ import { ResourceAllocateComponent } from './resource-allocate/resource-allocate
 import { ViewEventsComponent } from './view-events/view-events.component';
 import { BookingDetailsComponent } from './booking-details/booking-details.component';
 import { ProfileComponent } from './profile/profile.component';
+import { LandingComponent } from './landing/landing.component';
 
 const routes: Routes = [
+  { path: '', component: LandingComponent },
   { path: 'login', component: LoginComponent },
   { path: 'registration', component: RegistrationComponent },
   { path: 'dashboard', component: DashbaordComponent },
@@ -23,8 +25,7 @@ const routes: Routes = [
   { path: 'resource-allocate', component: ResourceAllocateComponent },  
   { path: 'view-events', component: ViewEventsComponent },  
   { path: 'booking-details', component: BookingDetailsComponent },   
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
-  { path: '**', redirectTo: '/login', pathMatch: 'full' },
+  { path: '**', redirectTo: '/', pathMatch: 'full' },
 ];
 
 @NgModule({
