@@ -1,402 +1,209 @@
-html,
-body,
-section {
-  height: 100%;
-  margin-top: -80px;
-  margin-left: -60px;
-  margin-right: -60px;
+// Clean Material Design styles for bookings
+
+.bookings-container {
   padding: 0;
-  overflow-x: hidden;
+  max-width: 100%;
 }
 
-.background-radial-gradient {
-  position: relative;
-  min-height: 100vh;
-  padding-top: 50px;
-  overflow: hidden;
-}
-
-.bg-glass {
-  background: rgba(255, 255, 255, 0.8);
-  border-radius: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-
-.badge {
-  font-size: 0.9em;
-  padding: 0.4em 0.6em;
-  color: black;
-}
-
-h1 {
-  position: relative;
-  color: #422482;
-  text-align: center;
-  margin-top: -40px;
-  margin-bottom: 40px;
-  font-weight: bold;
-  z-index: 100000 !important;
-}
-
-.allocation-info {
-  cursor: pointer;
-  color: #422482;
-  // text-decoration: underline;
-
-  &:hover {
-    color: #3f0847;
+.search-section {
+  .input-group {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    
+    .form-control {
+      border: none;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      
+      &:focus {
+        box-shadow: none;
+        border-color: transparent;
+      }
+    }
+    
+    .btn {
+      border: none;
+      padding: 0.75rem 1.5rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      
+      &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+    }
   }
-}
-
-.btn {
-  background: rgba(145, 53, 176, 0.975);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 10px;
-  padding: 10px 10px;
-  margin-right: 10px;
-  color: rgb(255, 255, 255);
-  font-size: 16px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  cursor: pointer;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(10px);
-  transition: all 0.3s ease;
-}
-
-.btn:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
-  background-color: rgb(93, 36, 131);
-  color: rgb(232, 247, 255);
-}
-
-.container-header {
-  display: flex;
-  justify-content: end;
-  color: #0056b3;
-}
-
-.container-header h4 {
-  padding-top: 20px;
-  font-weight: bold;
-}
-
-.container-header .sort {
-  margin: 0 20px;
-  display: block;
 }
 
 .card {
   border: none;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease-in-out;
-  border-radius: 20px;
-}
-
-.modal-body input {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease-in-out;
-}
-
-.card:hover {
-  transform: translateY(-10px);
-}
-
-.modal-content {
-  border-radius: 10px;
-}
-
-.form-control,
-.form-select {
-  border-radius: 5px;
-}
-
-.card-title {
-  margin-right: 30%;
-}
-
-.table-striped tbody tr:nth-of-type(odd) {
-  background-color: rgba(0, 123, 255, 0.1);
-}
-
-.table-striped tbody tr:hover {
-  background-color: rgba(0, 123, 255, 0.2);
-}
-
-.alert {
-  border-radius: 5px;
-}
-
-.input-group {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-select {
-  border-radius: 5px;
-  padding: 5px;
-}
-
-// Bubble effect
-.bubble {
-  position: absolute;
-  border-radius: 50%;
-  opacity: 0.3;
-  animation: float 20s infinite ease-in-out;
-}
-
-@for $i from 1 through 10 {
-  .bubble-#{$i} {
-    width: random(150) + 50px;
-    height: random(150) + 50px;
-    background: radial-gradient(hsl(random(360), 70%, 50%),
-        hsl(random(360), 70%, 30%));
-    top: random(100) * 1%;
-    left: random(100) * 1%;
-    animation-delay: random(10) * -1s;
-    animation-duration: 15s + random(10) * 1s;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
   }
-}
-
-@keyframes float {
-
-  0%,
-  100% {
-    transform: translateY(0) translateX(0) rotate(0deg) scale(1);
+  
+  .card-title {
+    color: #2c3e50;
+    font-weight: 600;
+    font-size: 1.25rem;
+    
+    i {
+      margin-right: 0.5rem;
+    }
   }
-
-  25% {
-    transform: translateY(-50px) translateX(25px) rotate(5deg) scale(1.1);
-  }
-
-  50% {
-    transform: translateY(-100px) translateX(-25px) rotate(10deg) scale(1.2);
-  }
-
-  75% {
-    transform: translateY(-50px) translateX(25px) rotate(5deg) scale(1.1);
-  }
-}
-
-.background-radial-gradient {
-  background: radial-gradient(circle, rgba(238, 174, 202, 1) 0%, rgba(148, 187, 233, 1) 100%);
-  overflow: hidden;
-}
-
-.bubble {
-  position: absolute;
-  border-radius: 50%;
-  opacity: 0.6;
-  animation: move 20s infinite linear;
-}
-
-.bubble-1 {
-  width: 200px;
-  height: 200px;
-  top: 20%;
-  left: 30%;
-  background-color: #ff8a8a;
-}
-
-.bubble-2 {
-  width: 250px;
-  height: 250px;
-  top: 60%;
-  left: 70%;
-  background-color: #ffdd59;
-}
-
-.bubble-3 {
-  width: 250px;
-  height: 250px;
-  top: 60%;
-  left: 70%;
-  background-color: #48105f;
-}
-
-.bubble-4 {
-  width: 250px;
-  height: 250px;
-  top: 60%;
-  left: 70%;
-  background-color: #59ffaf;
-}
-
-.bubble-5 {
-  width: 250px;
-  height: 250px;
-  top: 60%;
-  left: 70%;
-  background-color: #ffdd59;
-}
-
-.bubble-6 {
-  width: 250px;
-  height: 250px;
-  top: 60%;
-  left: 70%;
-  background-color: #c34d45;
-}
-
-.bubble-7 {
-  width: 250px;
-  height: 250px;
-  top: 60%;
-  left: 70%;
-  background-color: #4f4d8f;
-}
-
-.bubble-8 {
-  width: 250px;
-  height: 250px;
-  top: 60%;
-  left: 70%;
-  background-color: #60b94c;
-}
-
-.bubble-9 {
-  width: 250px;
-  height: 250px;
-  top: 60%;
-  left: 70%;
-  background-color: #ffdd59;
-}
-
-.bubble-10 {
-  width: 250px;
-  height: 250px;
-  top: 60%;
-  left: 70%;
-  background-color: #272419;
-}
-
-@keyframes move {
-  0% {
-    transform: translateY(0) translateX(0);
-  }
-
-  100% {
-    transform: translateY(-100px) translateX(-50px);
-  }
-}
-
-.bg-glass {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 10px;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-}
-
-.card-title {
-  color: #333;
-}
-
-.card-body {
-  padding: 20px;
-}
-
-.animate__animated {
-  animation-duration: 1s;
-}
-
-.animate__fadeInUp {
-  animation-delay: 0.5s;
 }
 
 .table {
-  background: rgba(255, 255, 255, 0.1);
-  /* Semi-transparent background */
-  backdrop-filter: blur(10px);
-  /* Glassy effect */
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  /* Soft white border */
-  color: #ffffff;
-  /* White text */
+  margin-bottom: 0;
+  
+  thead {
+    th {
+      border-bottom: 2px solid #dee2e6;
+      font-weight: 600;
+      color: #495057;
+      padding: 1rem 0.75rem;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  }
+  
+  tbody {
+    tr {
+      transition: background-color 0.2s ease;
+      
+      &:hover {
+        background-color: #f8f9fa;
+      }
+      
+      td {
+        padding: 1rem 0.75rem;
+        vertical-align: middle;
+        
+        strong {
+          color: #2c3e50;
+        }
+        
+        i {
+          margin-right: 0.25rem;
+          font-size: 0.875rem;
+        }
+        
+        small {
+          font-size: 0.875rem;
+        }
+      }
+    }
+  }
 }
 
-/* Table header styling */
-.table thead th {
-  background: rgba(255, 255, 255, 0.2);
-
-  color: black;
-  text-align: center;
-  padding: 15px;
-  font-size: 1.1rem;
+.badge {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: 6px;
+  
+  &.bg-success {
+    background-color: #28a745 !important;
+    color: white;
+  }
+  
+  &.bg-warning {
+    background-color: #ffc107 !important;
+    color: #000;
+  }
+  
+  &.bg-danger {
+    background-color: #dc3545 !important;
+    color: white;
+  }
+  
+  &.bg-secondary {
+    background-color: #6c757d !important;
+    color: white;
+  }
+  
+  &.bg-primary {
+    background-color: #0d6efd !important;
+    color: white;
+  }
 }
 
-/* Table body styling */
-.table tbody tr {
-  transition: background 0.3s ease;
-}
-
-.table tbody tr:hover {
-  background: rgba(255, 255, 255, 0.2);
-  /* Hover effect */
-}
-
-.table tbody td {
-  padding: 15px;
-  text-align: center;
-  font-size: 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  /* Soft border for rows */
-}
-
-/* Styling for the action buttons */
-.table .btn {
-  padding: 5px 10px;
-  font-size: 0.9rem;
-  background-color: #422482;
-  color: #ffffff;
+.alert {
+  border-radius: 8px;
   border: none;
-  border-radius: 5px;
-  transition: background 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 1rem 1.25rem;
+  
+  &.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+  }
+  
+  &.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
 }
 
-.table .btn:hover {
-  background-color: #0056b3;
+.empty-state {
+  .empty-icon {
+    font-size: 4rem;
+    opacity: 0.5;
+  }
+  
+  h4 {
+    color: #2c3e50;
+    font-weight: 600;
+    margin-top: 1rem;
+  }
+  
+  p {
+    color: #6c757d;
+    font-size: 1rem;
+  }
+  
+  .btn {
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+  }
 }
 
-/* Pagination controls */
-.pagination-controls {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px;
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
 }
 
-.pagination-controls button {
-  background-color: rgba(255, 255, 255, 0.2);
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  padding: 5px 10px;
-  border-radius: 5px;
-  margin: 0 10px;
-  cursor: pointer;
-  transition: background 0.3s ease;
+// Responsive Design
+@media (max-width: 768px) {
+  .table-responsive {
+    font-size: 0.875rem;
+  }
+  
+  .table {
+    thead th,
+    tbody td {
+      padding: 0.75rem 0.5rem;
+    }
+  }
+  
+  .card-title {
+    font-size: 1.1rem;
+  }
 }
 
-.pagination-controls button:hover {
-  background-color: rgba(255, 255, 255, 0.4);
-}
-
-.pagination-controls span {
-  color: #ffffff;
-  font-size: 1rem;
-}
-
-
-.custom-tooltip {
-  position: absolute;
-  background: rgba(255, 255, 255, 0.605);
-  border-radius: 10px;
-  padding: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-  max-width: 600px;
-  font-size: 14px;
+// Remove all old heavy CSS
+html, body, section {
+  height: auto;
+  margin: 0;
+  padding: 0;
+  overflow-x: visible;
 }

@@ -493,7 +493,8 @@ export class ViewEventsComponent  implements OnInit{
 
       this.httpService.sendMessage(messageData).subscribe({
         next: (response: any) => {
-          this.messages.push(response);
+          // Reload messages to get the updated list
+          this.loadMessages(this.selectedEventForMessaging.eventID);
           this.newMessage = '';
           
           // Scroll to bottom of messages

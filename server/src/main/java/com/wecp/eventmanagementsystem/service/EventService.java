@@ -74,5 +74,9 @@ public class EventService {
     public List<User> getAllStaff() {
         return userRepository.findByRole("STAFF");
     }
+    
+    public List<Event> getEventsForStaff(Long staffId) {
+        return eventRepository.findByAssignedStaffUserId(staffId);
+    }
 }
 

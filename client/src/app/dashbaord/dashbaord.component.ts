@@ -100,10 +100,16 @@ export class DashbaordComponent implements OnInit {
   }
 
   loadStaffStats() {
-    // Load events for staff
-    this.httpService.GetAllevents().subscribe(
+    // Load only assigned events for staff
+    this.httpService.GetEvents().subscribe(
       (events: any) => {
         this.totalEvents = events.length;
+        
+        // Count active events (Scheduled or Active status)
+        this.activeEvents = events.filter((e: any) => 
+          e.status === 'Scheduled' || e.status === 'Active'
+        ).length;
+        
         this.scheduledEvents = events.filter((e: any) => e.status === 'Scheduled').length;
         this.completedEvents = events.filter((e: any) => e.status === 'Completed').length;
         
@@ -112,7 +118,7 @@ export class DashbaordComponent implements OnInit {
         const next30Days = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
         this.upcomingEvents = events.filter((e: any) => {
           if (e.status !== 'Scheduled') return false;
-          const eventDate = new Date(e.date);
+          const eventDate = new Date(e.dateTime);
           return eventDate >= today && eventDate <= next30Days;
         }).length;
       },
