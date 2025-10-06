@@ -18,6 +18,26 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 2cm;
+
+  .brand-icon {
+    font-size: 1.75rem;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  
+  .brand-text {
+    font-size: 3rem;
+    font-weight: 700;
+    color: white;
+    letter-spacing: 0.5px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  }
+}
 // ==========================================
 // PARTICLES ANIMATION
 // ==========================================
