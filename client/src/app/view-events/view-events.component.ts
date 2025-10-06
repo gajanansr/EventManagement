@@ -59,6 +59,7 @@ export class ViewEventsComponent  implements OnInit{
   showBookingModal: boolean = false;
   showBookingsListModal: boolean = false;
   showBookingStatusModal: boolean = false;
+  showUpdateModal: boolean = false;
 
   constructor(private httpService: HttpService,
     private formBuilder: FormBuilder,private router: Router,
@@ -106,6 +107,15 @@ export class ViewEventsComponent  implements OnInit{
 
   closeBookingStatusModal(): void {
     this.showBookingStatusModal = false;
+  }
+
+  closeUpdateModal(): void {
+    this.showUpdateModal = false;
+  }
+
+  openUpdateModal(event: any): void {
+    this.edit(event);
+    this.showUpdateModal = true;
   }
 
   dateTimeValidator(control: AbstractControl): ValidationErrors | null{
@@ -286,6 +296,7 @@ export class ViewEventsComponent  implements OnInit{
             this.responseMessage = 'Event updated successfully.';
             this.getEvents();
             this.resetForm();
+            this.closeUpdateModal();
           },
           (error) => {
             this.showError = true;
@@ -299,6 +310,7 @@ export class ViewEventsComponent  implements OnInit{
             this.responseMessage = 'Event created successfully.';
             this.getEvents();
             this.resetForm();
+            this.closeUpdateModal();
           },
           (error) => {
             this.showError = true;
