@@ -18,13 +18,13 @@ com/wecp/eventmanagementsystem/repository/MessageRepository.class
 com/wecp/eventmanagementsystem/entity/Allocation.class
 com/wecp/eventmanagementsystem/repository/EventRepository.class
 com/wecp/eventmanagementsystem/config/Configurations$1.class
-com/wecp/eventmanagementsystem/service/UserService.class
 com/wecp/eventmanagementsystem/entity/User.class
+com/wecp/eventmanagementsystem/service/UserService.class
 com/wecp/eventmanagementsystem/repository/BookingRepository.class
 com/wecp/eventmanagementsystem/dto/UserProfileResponse.class
 com/wecp/eventmanagementsystem/repository/ResourceRepository.class
-com/wecp/eventmanagementsystem/service/BookingService.class
 com/wecp/eventmanagementsystem/dto/ProfileUpdateRequest.class
+com/wecp/eventmanagementsystem/service/BookingService.class
 com/wecp/eventmanagementsystem/controller/StaffController.class
 com/wecp/eventmanagementsystem/service/EventService.class
 com/wecp/eventmanagementsystem/repository/UserRepository.class
