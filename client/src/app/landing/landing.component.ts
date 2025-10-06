@@ -14,10 +14,6 @@ interface Particle {
 })
 export class LandingComponent implements OnInit, OnDestroy {
   particles: Particle[] = [];
-  days: string = '00';
-  hours: string = '00';
-  minutes: string = '00';
-  seconds: string = '00';
   
   private countdownInterval: any;
   private targetDate: Date;
@@ -98,31 +94,13 @@ export class LandingComponent implements OnInit, OnDestroy {
     const now = new Date().getTime();
     const distance = this.targetDate.getTime() - now;
 
-    if (distance < 0) {
-      this.days = '00';
-      this.hours = '00';
-      this.minutes = '00';
-      this.seconds = '00';
-      if (this.countdownInterval) {
-        clearInterval(this.countdownInterval);
-      }
-      return;
-    }
 
     const days = Math.floor(distance / (1000 * 60 * 60 * 24));
     const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-    this.days = this.padZero(days);
-    this.hours = this.padZero(hours);
-    this.minutes = this.padZero(minutes);
-    this.seconds = this.padZero(seconds);
   }
 
-  padZero(num: number): string {
-    return num < 10 ? '0' + num : num.toString();
-  }
 
   navigateToRegister(): void {
     this.router.navigate(['/registration']);
