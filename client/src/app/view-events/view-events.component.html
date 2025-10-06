@@ -107,8 +107,7 @@
                                 </ng-template>
                             </td>
                             <td *ngIf="roleName === 'PLANNER'">
-                                <button class="btn btn-sm btn-primary me-1" (click)="edit(event)" 
-                                        data-bs-toggle="modal" data-bs-target="#updateModal">
+                                <button class="btn btn-sm btn-primary me-1" (click)="openUpdateModal(event)">
                                     Update
                                 </button>
                                 <button class="btn btn-sm btn-info" 
@@ -145,18 +144,19 @@
         </div>
     </div>
 </div>
+
 <!-- Update Modal -->
-<div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="updateModalLabel">{{ isUpdate ? 'Update Event' : 'Create Event' }}</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+<div class="custom-modal-overlay" *ngIf="showUpdateModal" (click)="closeUpdateModal()">
+    <div class="custom-modal-dialog" (click)="$event.stopPropagation()">
+        <div class="custom-modal-content">
+            <div class="custom-modal-header">
+                <h5>{{ isUpdate ? 'Update Event' : 'Create Event' }}</h5>
+                <button type="button" class="btn-close" (click)="closeUpdateModal()">&times;</button>
             </div>
-            <div class="modal-body">
+            <div class="custom-modal-body">
                 <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
                     
-                    <div class="mb-3">
+                    <div class="form-group mb-3">
                         <label for="title" class="form-label">Title:</label>
                         <input type="text" id="title" formControlName="title" class="form-control" />
                         <div *ngIf="itemForm.get('title')?.hasError('required') && itemForm.get('title')?.touched"
@@ -164,7 +164,7 @@
                             Title is required.
                         </div>
                     </div>
-                    <div class="mb-3">
+                    <div class="form-group mb-3">
                         <label for="description" class="form-label">Description:</label>
                         <textarea id="description" formControlName="description" class="form-control" rows="3"></textarea>
                         <div *ngIf="itemForm.get('description')?.hasError('required') && itemForm.get('description')?.touched"
@@ -172,7 +172,7 @@
                             Description is required.
                         </div>
                     </div>
-                    <div class="mb-3">
+                    <div class="form-group mb-3">
                         <label for="dateTime" class="form-label">Date Time:</label>
                         <input type="datetime-local" id="dateTime" formControlName="dateTime" class="form-control" />
                         <div *ngIf="itemForm.get('dateTime')?.hasError('required') && itemForm.get('dateTime')?.touched"
@@ -180,7 +180,7 @@
                             Date and Time are required.
                         </div>
                     </div>
-                    <div class="mb-3">
+                    <div class="form-group mb-3">
                         <label for="location" class="form-label">Location:</label>
                         <input type="text" id="location" formControlName="location" class="form-control" />
                         <div *ngIf="itemForm.get('location')?.hasError('required') && itemForm.get('location')?.touched"
@@ -188,7 +188,7 @@
                             Location is required.
                         </div>
                     </div>
-                    <div class="mb-3">
+                    <div class="form-group mb-3">
                         <label for="status" class="form-label">Status:</label>
                         <select id="status" class="form-select" formControlName="status">
                             <option value="" disabled selected>Select status</option>
@@ -203,8 +203,8 @@
                     </div>
                 </form>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <div class="custom-modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="closeUpdateModal()">Close</button>
                 <button type="button" class="btn btn-primary" (click)="onSubmit()">
                     {{ isUpdate ? 'Update Event' : 'Create Event' }}
                 </button>
@@ -214,20 +214,19 @@
 </div>
 
 <!-- Staff Assignment Modal -->
-<!-- Staff Assignment Modal -->
-<div class="custom-modal" *ngIf="showStaffAssignModal" (click)="closeStaffAssignModal()">
+<div class="custom-modal-overlay" *ngIf="showStaffAssignModal" (click)="closeStaffAssignModal()">
     <div class="custom-modal-dialog" (click)="$event.stopPropagation()">
         <div class="custom-modal-content">
             <div class="custom-modal-header">
                 <h5>Assign Staff to Event</h5>
-                <button type="button" class="btn-close" (click)="closeStaffAssignModal()"></button>
+                <button type="button" class="btn-close" (click)="closeStaffAssignModal()">&times;</button>
             </div>
             <div class="custom-modal-body">
                 <div *ngIf="selectedEventForStaff">
                     <h6>Event: {{ selectedEventForStaff.title }}</h6>
                     <p class="text-muted small">{{ selectedEventForStaff.location }} - {{ selectedEventForStaff.dateTime | date:'medium' }}</p>
                     
-                    <div class="mb-3">
+                    <div class="form-group mb-3">
                         <label for="staffSelect" class="form-label">Select Staff Member:</label>
                         <select id="staffSelect" class="form-select" [(ngModel)]="selectedStaffId">
                             <option value="" disabled selected>Choose staff...</option>
@@ -254,12 +253,12 @@
 </div>
 
 <!-- Messaging Modal -->
-<div class="custom-modal" *ngIf="showMessagingModal" (click)="closeMessagingModal()">
+<div class="custom-modal-overlay" *ngIf="showMessagingModal" (click)="closeMessagingModal()">
     <div class="custom-modal-dialog custom-modal-lg" (click)="$event.stopPropagation()">
         <div class="custom-modal-content">
             <div class="custom-modal-header">
                 <h5>Event Messages</h5>
-                <button type="button" class="btn-close" (click)="closeMessagingModal()"></button>
+                <button type="button" class="btn-close" (click)="closeMessagingModal()">&times;</button>
             </div>
             <div class="custom-modal-body">
                 <div *ngIf="selectedEventForMessaging">
@@ -306,12 +305,12 @@
 </div>
 
 <!-- Booking Modal (for CLIENT) -->
-<div class="custom-modal" *ngIf="showBookingModal" (click)="closeBookingModal()">
+<div class="custom-modal-overlay" *ngIf="showBookingModal" (click)="closeBookingModal()">
     <div class="custom-modal-dialog" (click)="$event.stopPropagation()">
         <div class="custom-modal-content">
             <div class="custom-modal-header">
                 <h5>Book Event</h5>
-                <button type="button" class="btn-close" (click)="closeBookingModal()"></button>
+                <button type="button" class="btn-close" (click)="closeBookingModal()">&times;</button>
             </div>
             <div class="custom-modal-body">
                 <div *ngIf="selectedEventForBooking">
