@@ -1,5 +1,8 @@
 @use '@angular/material' as mat;
 
+// Include the common styles for Angular Material
+@include mat.core();
+
 $primary: mat.define-palette(mat.$indigo-palette, 500, 300, 700);
 $accent: mat.define-palette(mat.$blue-palette, 400, 200, 600);
 $warn: mat.define-palette(mat.$red-palette);
