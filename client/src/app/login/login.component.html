@@ -29,12 +29,12 @@
           <h2>Welcome Back</h2>
           <p>Sign in to continue to your account</p>
         </div>
-
+  
         <!-- Alert Messages -->
         <div *ngIf="showMessage" class="alert fade-in"
           [ngClass]="{'alert-success': !showError, 'alert-danger': showError}">
           {{responseMessage}}
-        </div>
+        </div> 
 
         <!-- Login Form -->
         <form [formGroup]="itemForm" (ngSubmit)="onLogin()" class="login-form">
@@ -73,7 +73,6 @@
               <i class="bi bi-exclamation-circle"></i> Password is required
             </small>
           </div>
-
           <button 
             type="submit" 
             class="btn btn-primary btn-login" 
@@ -83,7 +82,7 @@
           </button>
         </form>
 
-        <!-- Footer -->
+        <!-- Footer  -->
         <div class="form-footer">
           <p>Don't have an account? <a [routerLink]="['/registration']" class="link-primary">Create Account</a></p>
         </div>

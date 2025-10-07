@@ -13,6 +13,7 @@ export class RegistrationComponent implements OnInit {
   itemForm!: FormGroup;
   showMessage: boolean = false;
   responseMessage: any;
+  namePattern = '^[a-zA-Z]+$';
   usernamePattern = '^[a-z]+$';
   passwordPattern = '^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,20}$';
   users$: Observable<any> = of([]);
@@ -25,6 +26,7 @@ export class RegistrationComponent implements OnInit {
     private httpService: HttpService
   ) {
     this.itemForm = this.formBuilder.group({
+      name:['',[Validators.required,Validators.pattern(this.namePattern)]],
       username: ['', [Validators.required, Validators.pattern(this.usernamePattern)], [this.uniqueValidator.bind(this)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.pattern(this.passwordPattern)]],
