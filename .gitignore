@@ -1,0 +1,50 @@
+# Node modules
+node_modules/
+**/node_modules/
+
+# Angular build output
+client/dist/
+client/.angular/
+client/tmp/
+
+# Java/Maven build output
+server/target/
+*.class
+*.jar
+*.war
+*.ear
+
+# IDE files
+.vscode/
+.idea/
+*.iml
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
+server.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Test coverage
+coverage/
+*.lcov
+
+# Angular cache
+.angular/
+
+# Temporary files
+*.tmp
+*.temp
