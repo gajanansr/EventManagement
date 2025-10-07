@@ -25,10 +25,6 @@
         <div class="stat-content">
           <div class="stat-value">{{ totalEvents || 0 }}</div>
           <div class="stat-label">Total Events</div>
-          <div class="stat-trend positive">
-            <mat-icon>trending_up</mat-icon>
-            <span>+12% from last month</span>
-          </div>
         </div>
       </mat-card>
 
@@ -39,10 +35,6 @@
         <div class="stat-content">
           <div class="stat-value">{{ totalResources || 0 }}</div>
           <div class="stat-label">Total Resources</div>
-          <div class="stat-trend positive">
-            <mat-icon>trending_up</mat-icon>
-            <span>+8% this week</span>
-          </div>
         </div>
       </mat-card>
 
@@ -53,10 +45,6 @@
         <div class="stat-content">
           <div class="stat-value">{{ totalAllocations || 0 }}</div>
           <div class="stat-label">Allocations</div>
-          <div class="stat-trend neutral">
-            <mat-icon>remove</mat-icon>
-            <span>No change</span>
-          </div>
         </div>
       </mat-card>
 
@@ -67,10 +55,6 @@
         <div class="stat-content">
           <div class="stat-value">{{ activeEvents || 0 }}</div>
           <div class="stat-label">Active Events</div>
-          <div class="stat-trend positive">
-            <mat-icon>trending_up</mat-icon>
-            <span>+5 this week</span>
-          </div>
         </div>
       </mat-card>
     </div>
@@ -99,28 +83,39 @@
           </mat-menu>
         </mat-card-header>
         <mat-card-content>
-          <div class="event-grid">
-            <div class="event-card" *ngFor="let i of [1,2,3,4]">
+          <div class="event-grid" *ngIf="ongoingEvents.length > 0">
+            <div class="event-card" *ngFor="let event of ongoingEvents" (click)="navigateToEvent(event.id)">
               <div class="event-image">
-                <img src="https://via.placeholder.com/300x200/667eea/ffffff?text=Event+{{i}}" alt="Event">
+                <img [src]="'https://via.placeholder.com/300x200/667eea/ffffff?text=' + (event.eventName || 'Event')" [alt]="event.eventName">
                 <div class="event-badge live">LIVE</div>
               </div>
               <div class="event-info">
-                <h4>Tech Conference 2025</h4>
+                <h4>{{ event.eventName || 'Untitled Event' }}</h4>
                 <div class="event-meta">
                   <span class="meta-item">
                     <mat-icon>schedule</mat-icon>
-                    Today, 10:00 AM
+                    {{ getEventTime(event) }}
                   </span>
                   <span class="meta-item">
-                    <mat-icon>people</mat-icon>
-                    250 attendees
+                    <mat-icon>location_on</mat-icon>
+                    {{ event.venue || 'TBA' }}
                   </span>
                 </div>
-                <mat-progress-bar mode="determinate" value="65" class="event-progress"></mat-progress-bar>
-                <p class="progress-text">65% Complete</p>
+                <div class="event-status">
+                  <span [class]="'status-badge ' + getStatusClass(event.status)">
+                    {{ event.status || 'Scheduled' }}
+                  </span>
+                </div>
               </div>
             </div>
+          </div>
+          <div *ngIf="ongoingEvents.length === 0" class="empty-state">
+            <mat-icon>event_busy</mat-icon>
+            <p>No ongoing events today</p>
+            <button mat-raised-button color="primary" routerLink="/create-event">
+              <mat-icon>add</mat-icon>
+              Create Event
+            </button>
           </div>
         </mat-card-content>
       </mat-card>
@@ -134,20 +129,36 @@
           </mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <div class="upcoming-list">
-            <div class="upcoming-item" *ngFor="let i of [1,2,3,4,5]">
+          <div class="upcoming-list" *ngIf="upcomingEventsList.length > 0">
+            <div class="upcoming-item" *ngFor="let event of upcomingEventsList" (click)="navigateToEvent(event.id)">
               <div class="upcoming-date">
-                <div class="date-day">15</div>
-                <div class="date-month">OCT</div>
+                <div class="date-day">{{ getEventDay(event) }}</div>
+                <div class="date-month">{{ getEventMonth(event) }}</div>
               </div>
               <div class="upcoming-details">
-                <h5>Product Launch Event</h5>
-                <p>Grand Ballroom, NYC</p>
-                <div class="attendee-avatars">
-                  <span class="avatar" *ngFor="let j of [1,2,3]">{{j}}</span>
-                  <span class="avatar-more">+5</span>
+                <h5>{{ event.eventName || 'Untitled Event' }}</h5>
+                <p>{{ event.venue || 'Venue TBA' }}</p>
+                <div class="event-time">
+                  <mat-icon>schedule</mat-icon>
+                  {{ getEventTime(event) }}
                 </div>
               </div>
+              <button mat-icon-button [matMenuTriggerFor]="eventMenu">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #eventMenu="matMenu">
+                <button mat-menu-item (click)="navigateToEvent(event.id)">
+                  <mat-icon>visibility</mat-icon>
+                  View Details
+                </button>
+              </mat-menu>
+            </div>
+          </div>
+          <div *ngIf="upcomingEventsList.length === 0" class="empty-state">
+            <mat-icon>event_available</mat-icon>
+            <p>No upcoming events scheduled</p>
+          </div>
+        </mat-card-content>
               <button mat-icon-button color="primary">
                 <mat-icon>arrow_forward</mat-icon>
               </button>
@@ -330,45 +341,18 @@
         <mat-card-content>
           <div class="timeline-container">
             <!-- Today's Events -->
-            <div class="timeline-section">
+            <div class="timeline-section" *ngIf="ongoingEvents.length > 0">
               <h4 class="timeline-section-title">Today</h4>
-              <div class="timeline-item" *ngFor="let i of [1,2]">
+              <div class="timeline-item" *ngFor="let event of ongoingEvents" (click)="navigateToEvent(event.id)">
                 <div class="timeline-marker success"></div>
                 <div class="timeline-content">
-                  <div class="timeline-time">10:00 AM - 2:00 PM</div>
-                  <h5>Corporate Meeting Event</h5>
-                  <p>Grand Conference Hall</p>
+                  <div class="timeline-time">{{ getEventTime(event) }}</div>
+                  <h5>{{ event.eventName || 'Untitled Event' }}</h5>
+                  <p>{{ event.venue || 'Venue TBA' }}</p>
                   <div class="timeline-meta">
-                    <span class="badge badge-success">
-                      <mat-icon>check</mat-icon>
-                      On Schedule
-                    </span>
-                    <span class="attendee-count">
-                      <mat-icon>people</mat-icon>
-                      150 attendees
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Tomorrow's Events -->
-            <div class="timeline-section">
-              <h4 class="timeline-section-title">Tomorrow</h4>
-              <div class="timeline-item" *ngFor="let i of [1]">
-                <div class="timeline-marker warning"></div>
-                <div class="timeline-content">
-                  <div class="timeline-time">3:00 PM - 7:00 PM</div>
-                  <h5>Product Launch Event</h5>
-                  <p>Main Auditorium</p>
-                  <div class="timeline-meta">
-                    <span class="badge badge-warning">
-                      <mat-icon>schedule</mat-icon>
-                      Scheduled
-                    </span>
-                    <span class="attendee-count">
-                      <mat-icon>people</mat-icon>
-                      300 attendees
+                    <span [class]="'badge badge-' + getStatusClass(event.status).replace('status-', '')">
+                      <mat-icon>{{ event.status === 'Active' ? 'check' : 'schedule' }}</mat-icon>
+                      {{ event.status || 'Scheduled' }}
                     </span>
                   </div>
                 </div>
@@ -376,26 +360,28 @@
             </div>
 
             <!-- Upcoming Events -->
-            <div class="timeline-section">
-              <h4 class="timeline-section-title">This Week</h4>
-              <div class="timeline-item" *ngFor="let i of [1,2]">
+            <div class="timeline-section" *ngIf="upcomingEventsList.length > 0">
+              <h4 class="timeline-section-title">Upcoming</h4>
+              <div class="timeline-item" *ngFor="let event of upcomingEventsList.slice(0, 5)" (click)="navigateToEvent(event.id)">
                 <div class="timeline-marker info"></div>
                 <div class="timeline-content">
-                  <div class="timeline-time">Oct 10 - 9:00 AM</div>
-                  <h5>Annual Conference 2025</h5>
-                  <p>Convention Center</p>
+                  <div class="timeline-time">{{ getEventDate(event) }} - {{ getEventTime(event) }}</div>
+                  <h5>{{ event.eventName || 'Untitled Event' }}</h5>
+                  <p>{{ event.venue || 'Venue TBA' }}</p>
                   <div class="timeline-meta">
                     <span class="badge badge-info">
                       <mat-icon>event</mat-icon>
-                      Upcoming
-                    </span>
-                    <span class="attendee-count">
-                      <mat-icon>people</mat-icon>
-                      500 attendees
+                      {{ event.status || 'Scheduled' }}
                     </span>
                   </div>
                 </div>
               </div>
+            </div>
+
+            <!-- Empty State -->
+            <div *ngIf="ongoingEvents.length === 0 && upcomingEventsList.length === 0" class="empty-state">
+              <mat-icon>event_available</mat-icon>
+              <p>No events assigned</p>
             </div>
           </div>
         </mat-card-content>
@@ -418,25 +404,33 @@
                 Completion Rate
               </div>
               <div class="performance-value">
-                <span class="value-number">94%</span>
-                <mat-progress-bar mode="determinate" value="94" class="success-bar"></mat-progress-bar>
+                <span class="value-number">{{ totalEvents > 0 ? Math.round((completedEvents / totalEvents) * 100) : 0 }}%</span>
+                <mat-progress-bar mode="determinate" [value]="totalEvents > 0 ? (completedEvents / totalEvents) * 100 : 0" class="success-bar"></mat-progress-bar>
               </div>
             </div>
 
             <div class="performance-item">
               <div class="performance-label">
                 <mat-icon>schedule</mat-icon>
-                On-Time Events
+                Active Events
               </div>
               <div class="performance-value">
-                <span class="value-number">{{ completedEvents || 0 }}/{{ totalEvents || 0 }}</span>
-                <mat-progress-bar mode="determinate" [value]="(completedEvents / totalEvents) * 100" class="primary-bar"></mat-progress-bar>
+                <span class="value-number">{{ activeEvents || 0 }}/{{ totalEvents || 0 }}</span>
+                <mat-progress-bar mode="determinate" [value]="totalEvents > 0 ? (activeEvents / totalEvents) * 100 : 0" class="primary-bar"></mat-progress-bar>
               </div>
             </div>
 
             <div class="performance-item">
               <div class="performance-label">
-                <mat-icon>star</mat-icon>
+                <mat-icon>upcoming</mat-icon>
+                Upcoming Events
+              </div>
+              <div class="performance-value">
+                <span class="value-number">{{ upcomingEvents || 0 }}</span>
+                <mat-progress-bar mode="determinate" [value]="totalEvents > 0 ? (upcomingEvents / totalEvents) * 100 : 0" class="info-bar"></mat-progress-bar>
+              </div>
+            </div>
+          </mat-card-content>
                 Average Rating
               </div>
               <div class="performance-value">
@@ -675,52 +669,49 @@
             </button>
           </mat-card-header>
           <mat-card-content>
-            <div class="upcoming-bookings-list">
-              <div class="booking-item" *ngFor="let i of [1,2,3]">
+            <div class="upcoming-bookings-list" *ngIf="myBookingsList.length > 0">
+              <div class="booking-item" *ngFor="let booking of myBookingsList.slice(0, 3)" (click)="navigateToEvent(booking.event?.id)">
                 <div class="booking-date-card">
-                  <div class="date-day">15</div>
-                  <div class="date-month">OCT</div>
+                  <div class="date-day">{{ getEventDay(booking.event) }}</div>
+                  <div class="date-month">{{ getEventMonth(booking.event) }}</div>
                 </div>
                 <div class="booking-details">
-                  <h5>Annual Tech Conference 2025</h5>
+                  <h5>{{ booking.event?.eventName || 'Event Details Pending' }}</h5>
                   <p>
                     <mat-icon>schedule</mat-icon>
-                    10:00 AM - 5:00 PM
+                    {{ getEventTime(booking.event) }}
                   </p>
                   <p>
                     <mat-icon>location_on</mat-icon>
-                    Grand Convention Center, NYC
+                    {{ booking.event?.venue || 'Venue TBA' }}
                   </p>
                   <div class="booking-status-row">
-                    <span class="badge badge-success">
-                      <mat-icon>check_circle</mat-icon>
-                      Confirmed
+                    <span [class]="'badge badge-' + getBookingStatusClass(booking.status).replace('status-', '')">
+                      <mat-icon>{{ booking.status === 'CONFIRMED' || booking.status === 'Confirmed' ? 'check_circle' : 'pending' }}</mat-icon>
+                      {{ booking.status || 'Pending' }}
                     </span>
-                    <span class="booking-id">ID: #BK12345</span>
+                    <span class="booking-id" *ngIf="booking.id">ID: #{{ booking.id }}</span>
                   </div>
                 </div>
                 <div class="booking-actions">
-                  <button mat-icon-button color="primary" matTooltip="View Details">
+                  <button mat-icon-button color="primary" matTooltip="View Details" (click)="navigateToEvent(booking.event?.id); $event.stopPropagation()">
                     <mat-icon>info</mat-icon>
-                  </button>
-                  <button mat-icon-button matTooltip="Download Ticket">
-                    <mat-icon>download</mat-icon>
                   </button>
                 </div>
               </div>
-
-              <!-- Empty State if no bookings -->
-              <app-empty-state
-                *ngIf="upcomingBookings === 0"
-                icon="event_busy"
-                title="No Upcoming Events"
-                message="You don't have any confirmed bookings yet. Browse available events and book your next experience!">
-                <button mat-raised-button color="primary" (click)="scrollToEvents()">
-                  <mat-icon>explore</mat-icon>
-                  Browse Events
-                </button>
-              </app-empty-state>
             </div>
+
+            <!-- Empty State if no bookings -->
+            <app-empty-state
+              *ngIf="myBookingsList.length === 0"
+              icon="event_busy"
+              title="No Upcoming Events"
+              message="You don't have any confirmed bookings yet. Browse available events and book your next experience!">
+              <button mat-raised-button color="primary" (click)="scrollToEvents()">
+                <mat-icon>explore</mat-icon>
+                Browse Events
+              </button>
+            </app-empty-state>
           </mat-card-content>
         </mat-card>
       </div>

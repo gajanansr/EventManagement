@@ -1854,3 +1854,135 @@ mat-card {
     padding: 1.5rem !important;
   }
 }
+
+// Empty State Styles
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  text-align: center;
+  color: var(--gray-500);
+
+  mat-icon {
+    font-size: 4rem;
+    width: 4rem;
+    height: 4rem;
+    color: var(--gray-400);
+    margin-bottom: 1rem;
+  }
+
+  p {
+    font-size: 1rem;
+    margin: 0.5rem 0 1.5rem 0;
+    color: var(--gray-600);
+  }
+
+  button {
+    mat-icon {
+      font-size: 1.25rem;
+      width: 1.25rem;
+      height: 1.25rem;
+      margin-right: 0.5rem;
+    }
+  }
+}
+
+// Event Card Clickable
+.event-card,
+.upcoming-item,
+.timeline-item,
+.booking-item {
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+}
+
+// Status Badge Styles
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+
+  mat-icon {
+    font-size: 1rem;
+    width: 1rem;
+    height: 1rem;
+  }
+
+  &.status-success {
+    background: var(--success-light);
+    color: var(--success);
+  }
+
+  &.status-warning {
+    background: var(--warning-light);
+    color: var(--warning);
+  }
+
+  &.status-error {
+    background: var(--error-light);
+    color: var(--error);
+  }
+
+  &.status-info {
+    background: var(--info-light);
+    color: var(--info);
+  }
+
+  &.status-default {
+    background: var(--gray-100);
+    color: var(--gray-700);
+  }
+}
+
+.badge {
+  &.badge-success {
+    @extend .status-badge;
+    @extend .status-badge.status-success;
+  }
+
+  &.badge-warning {
+    @extend .status-badge;
+    @extend .status-badge.status-warning;
+  }
+
+  &.badge-error {
+    @extend .status-badge;
+    @extend .status-badge.status-error;
+  }
+
+  &.badge-info {
+    @extend .status-badge;
+    @extend .status-badge.status-info;
+  }
+}
+
+// Progress Bar Colors
+mat-progress-bar {
+  &.success-bar ::ng-deep .mat-mdc-progress-bar-fill::after {
+    background-color: var(--success) !important;
+  }
+
+  &.primary-bar ::ng-deep .mat-mdc-progress-bar-fill::after {
+    background-color: var(--primary-500) !important;
+  }
+
+  &.info-bar ::ng-deep .mat-mdc-progress-bar-fill::after {
+    background-color: var(--info) !important;
+  }
+
+  &.warning-bar ::ng-deep .mat-mdc-progress-bar-fill::after {
+    background-color: var(--warning) !important;
+  }
+}

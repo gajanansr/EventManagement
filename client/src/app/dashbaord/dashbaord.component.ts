@@ -16,6 +16,9 @@ export class DashbaordComponent implements OnInit {
   stateIdMd: any;
   roleName: string | null;
   
+  // Make Math available in template
+  Math = Math;
+  
   // Planner Statistics
   totalEvents: number = 0;
   totalResources: number = 0;
@@ -32,6 +35,12 @@ export class DashbaordComponent implements OnInit {
   pendingBookings: number = 0;
   confirmedBookings: number = 0;
   upcomingBookings: number = 0;
+  
+  // Actual data arrays
+  ongoingEvents: any[] = [];
+  upcomingEventsList: any[] = [];
+  recentEvents: any[] = [];
+  myBookingsList: any[] = [];
   
   constructor(
     public router: Router, 
@@ -78,6 +87,38 @@ export class DashbaordComponent implements OnInit {
     this.httpService.GetAllevents().subscribe(
       (events: any) => {
         this.totalEvents = events.length;
+        
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        
+        // Filter ongoing events (today's events)
+        this.ongoingEvents = events.filter((e: any) => {
+          if (!e.dateTime) return false;
+          const eventDate = new Date(e.dateTime);
+          eventDate.setHours(0, 0, 0, 0);
+          return eventDate.getTime() === today.getTime() && 
+                 (e.status === 'Scheduled' || e.status === 'Active');
+        }).slice(0, 4); // Limit to 4
+        
+        // Filter upcoming events (future events)
+        this.upcomingEventsList = events.filter((e: any) => {
+          if (!e.dateTime) return false;
+          const eventDate = new Date(e.dateTime);
+          eventDate.setHours(0, 0, 0, 0);
+          return eventDate > today && e.status === 'Scheduled';
+        }).sort((a: any, b: any) => {
+          return new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime();
+        }).slice(0, 5); // Limit to 5
+        
+        // Recent events (recently created or updated)
+        this.recentEvents = [...events]
+          .sort((a: any, b: any) => {
+            const dateA = new Date(a.createdAt || a.dateTime).getTime();
+            const dateB = new Date(b.createdAt || b.dateTime).getTime();
+            return dateB - dateA;
+          })
+          .slice(0, 5); // Limit to 5
+        
         this.activeEvents = events.filter((e: any) => 
           e.status === 'Scheduled' || e.status === 'Active'
         ).length;
@@ -105,6 +146,28 @@ export class DashbaordComponent implements OnInit {
       (events: any) => {
         this.totalEvents = events.length;
         
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        
+        // Filter ongoing events (today's events)
+        this.ongoingEvents = events.filter((e: any) => {
+          if (!e.dateTime) return false;
+          const eventDate = new Date(e.dateTime);
+          eventDate.setHours(0, 0, 0, 0);
+          return eventDate.getTime() === today.getTime() && 
+                 (e.status === 'Scheduled' || e.status === 'Active');
+        }).slice(0, 4);
+        
+        // Filter upcoming events
+        this.upcomingEventsList = events.filter((e: any) => {
+          if (!e.dateTime) return false;
+          const eventDate = new Date(e.dateTime);
+          eventDate.setHours(0, 0, 0, 0);
+          return eventDate > today && e.status === 'Scheduled';
+        }).sort((a: any, b: any) => {
+          return new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime();
+        }).slice(0, 5);
+        
         // Count active events (Scheduled or Active status)
         this.activeEvents = events.filter((e: any) => 
           e.status === 'Scheduled' || e.status === 'Active'
@@ -114,7 +177,6 @@ export class DashbaordComponent implements OnInit {
         this.completedEvents = events.filter((e: any) => e.status === 'Completed').length;
         
         // Upcoming events (scheduled and within next 30 days)
-        const today = new Date();
         const next30Days = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
         this.upcomingEvents = events.filter((e: any) => {
           if (e.status !== 'Scheduled') return false;
@@ -131,6 +193,8 @@ export class DashbaordComponent implements OnInit {
     this.httpService.getMyBookings().subscribe(
       (bookings: any) => {
         this.totalBookings = bookings.length;
+        this.myBookingsList = bookings.slice(0, 5); // Limit to 5 recent bookings
+        
         this.pendingBookings = bookings.filter((b: any) => 
           b.status === 'PENDING' || b.status === 'Pending'
         ).length;
@@ -142,8 +206,8 @@ export class DashbaordComponent implements OnInit {
         const today = new Date();
         this.upcomingBookings = bookings.filter((b: any) => {
           if (b.status !== 'CONFIRMED' && b.status !== 'Confirmed') return false;
-          if (!b.event || !b.event.date) return false;
-          const eventDate = new Date(b.event.date);
+          if (!b.event || !b.event.dateTime) return false;
+          const eventDate = new Date(b.event.dateTime);
           return eventDate >= today;
         }).length;
       },
@@ -154,6 +218,7 @@ export class DashbaordComponent implements OnInit {
         this.pendingBookings = 0;
         this.confirmedBookings = 0;
         this.upcomingBookings = 0;
+        this.myBookingsList = [];
       }
     );
   }
@@ -175,5 +240,54 @@ export class DashbaordComponent implements OnInit {
   logout() {
     this.authService.logout();
     this.router.navigateByUrl('/login');
+  }
+
+  // Helper methods for displaying data
+  getEventDate(event: any): string {
+    if (!event.dateTime) return 'N/A';
+    const date = new Date(event.dateTime);
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  getEventTime(event: any): string {
+    if (!event.dateTime) return 'N/A';
+    const date = new Date(event.dateTime);
+    return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  getEventDay(event: any): string {
+    if (!event.dateTime) return '?';
+    const date = new Date(event.dateTime);
+    return date.getDate().toString();
+  }
+
+  getEventMonth(event: any): string {
+    if (!event.dateTime) return '?';
+    const date = new Date(event.dateTime);
+    return date.toLocaleString('en-US', { month: 'short' }).toUpperCase();
+  }
+
+  getStatusClass(status: string): string {
+    if (!status) return 'status-default';
+    const statusLower = status.toLowerCase();
+    if (statusLower === 'scheduled' || statusLower === 'active') return 'status-success';
+    if (statusLower === 'completed') return 'status-info';
+    if (statusLower === 'cancelled') return 'status-error';
+    return 'status-warning';
+  }
+
+  getBookingStatusClass(status: string): string {
+    if (!status) return 'status-default';
+    const statusLower = status.toLowerCase();
+    if (statusLower === 'confirmed') return 'status-success';
+    if (statusLower === 'pending') return 'status-warning';
+    if (statusLower === 'cancelled' || statusLower === 'rejected') return 'status-error';
+    return 'status-default';
+  }
+
+  navigateToEvent(eventId: any) {
+    if (eventId) {
+      this.router.navigate(['/view-events'], { queryParams: { eventId: eventId } });
+    }
   }
 }

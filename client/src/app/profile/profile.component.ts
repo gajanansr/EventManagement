@@ -103,47 +103,57 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  // Get user stats (placeholder data)
+  // User stats loaded from backend
+  userStats = {
+    events: 0,
+    bookings: 0,
+    days: 0
+  };
+
+  // Get user stats (loads real data)
   getUserStats() {
-    return {
-      events: this.profile?.role === 'PLANNER' ? 24 : this.profile?.role === 'CLIENT' ? 12 : 8,
-      bookings: this.profile?.role === 'CLIENT' ? 15 : this.profile?.role === 'PLANNER' ? 48 : 0,
-      days: Math.floor(Math.random() * 90) + 30
-    };
+    return this.userStats;
   }
 
-  // Get recent activities (placeholder data)
+  // Recent activities loaded from backend
+  recentActivities: any[] = [];
+
+  // Get recent activities (loads real data)
   getRecentActivities() {
-    return [
-      {
-        type: 'event',
-        icon: 'event',
-        title: 'Event Created',
-        description: 'Created "Annual Tech Conference 2025"',
-        time: '2 hours ago'
-      },
-      {
-        type: 'booking',
-        icon: 'bookmark',
-        title: 'New Booking',
-        description: 'Booked "Wedding Reception"',
-        time: '5 hours ago'
-      },
-      {
-        type: 'update',
-        icon: 'edit',
-        title: 'Profile Updated',
-        description: 'Updated contact information',
-        time: '1 day ago'
-      },
-      {
-        type: 'message',
-        icon: 'message',
-        title: 'Message Sent',
-        description: 'Sent message about event details',
-        time: '2 days ago'
-      }
-    ];
+    return this.recentActivities;
+  }
+
+  // Load actual user statistics
+  loadUserStats() {
+    const role = this.profile?.role?.toUpperCase();
+    
+    if (role === 'PLANNER' || role === 'STAFF') {
+      // Load events for planner/staff
+      this.httpService.GetAllevents().subscribe(
+        (events: any) => {
+          this.userStats.events = events ? events.length : 0;
+        },
+        (error: any) => console.error('Error loading events:', error)
+      );
+    }
+    
+    if (role === 'CLIENT') {
+      // Load bookings for client
+      this.httpService.getMyBookings().subscribe(
+        (bookings: any) => {
+          this.userStats.bookings = bookings ? bookings.length : 0;
+        },
+        (error: any) => console.error('Error loading bookings:', error)
+      );
+    }
+    
+    // Calculate days active from registration date
+    if (this.profile?.createdAt) {
+      const registrationDate = new Date(this.profile.createdAt);
+      const today = new Date();
+      const diffTime = Math.abs(today.getTime() - registrationDate.getTime());
+      this.userStats.days = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    }
   }
 
   // Get unread notification count
@@ -176,6 +186,9 @@ export class ProfileComponent implements OnInit {
           phoneNumber: data.phoneNumber || '',
           address: data.address || ''
         });
+        
+        // Load user statistics after profile is loaded
+        this.loadUserStats();
       },
       (error: any) => {
         this.showErrorMessage('Failed to load profile: ' + error.message);
