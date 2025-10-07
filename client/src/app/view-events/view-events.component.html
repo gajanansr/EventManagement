@@ -1,178 +1,209 @@
-<div class="container py-4">
-    <h1 class="text-center mb-4 text-primary">Manage Events</h1>
- 
-    <!-- Search Form -->
-    <div class="card shadow-sm mb-4">
-        <div class="card-body">
-            <form [formGroup]="itemForm" (ngSubmit)="searchEvent()" class="mb-0">
-                <div class="input-group">
-                    <input type="text" formControlName="searchTerm" class="form-control" placeholder="Search With ID or Title">
-                    <button type="submit" class="btn btn-primary">Search</button>
+<div class="view-events-container">
+    <!-- Header Section -->
+    <div class="page-header">
+        <div class="header-content">
+            <div class="title-section">
+                <mat-icon class="header-icon">event</mat-icon>
+                <div>
+                    <h1 class="page-title">Events</h1>
+                    <p class="page-subtitle">Browse and manage all events</p>
                 </div>
-            </form>
+            </div>
+            <button *ngIf="roleName === 'PLANNER'" mat-raised-button color="primary" (click)="viewAllBookings()">
+                <mat-icon>calendar_month</mat-icon>
+                View Bookings
+            </button>
         </div>
     </div>
 
-    <div *ngIf="message" class="alert mt-3"
-        [ngClass]="{'alert-success': message.type === 'success', 'alert-danger': message.type === 'error'}"
-        role="alert">
-        {{ message.text }}
+    <!-- Alert Message -->
+    <div *ngIf="message" class="alert-message" [@fadeInOut]
+        [ngClass]="{'alert-success': message.type === 'success', 'alert-error': message.type === 'error'}">
+        <mat-icon>{{ message.type === 'success' ? 'check_circle' : 'error' }}</mat-icon>
+        <span>{{ message.text }}</span>
     </div>
+
+    <!-- Search and Filters Bar -->
+    <mat-card class="filters-card">
+        <div class="filters-container">
+            <!-- Search Bar -->
+            <mat-form-field appearance="outline" class="search-field">
+                <mat-label>Search events</mat-label>
+                <input matInput [formControl]="searchControl" placeholder="Search by ID or title...">
+                <mat-icon matPrefix>search</mat-icon>
+                <button *ngIf="searchControl.value" matSuffix mat-icon-button (click)="clearSearch()">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+
+            <!-- Filter Chips -->
+            <div class="filter-chips">
+                <mat-chip-list>
+                    <mat-chip [class.active]="selectedFilter === 'all'" (click)="selectedFilter = 'all'; getEvents()">All Events</mat-chip>
+                    <mat-chip [class.active]="selectedFilter === 'past'" (click)="selectedFilter = 'past'; filterPastEvents()">Past</mat-chip>
+                    <mat-chip [class.active]="selectedFilter === 'today'" (click)="selectedFilter = 'today'; filterTodayEvents()">Today</mat-chip>
+                    <mat-chip [class.active]="selectedFilter === 'future'" (click)="selectedFilter = 'future'; filterFutureEvents()">Upcoming</mat-chip>
+                </mat-chip-list>
+            </div>
+
+            <!-- Sort Dropdown -->
+            <mat-form-field appearance="outline" class="sort-field">
+                <mat-label>Sort by</mat-label>
+                <mat-select [(value)]="selectedSort" (selectionChange)="onSortChange($event)">
+                    <mat-option value="id">Event ID</mat-option>
+                    <mat-option value="title">Title</mat-option>
+                    <mat-option value="date">Date</mat-option>
+                    <mat-option value="location">Location</mat-option>
+                </mat-select>
+                <mat-icon matPrefix>sort</mat-icon>
+            </mat-form-field>
+        </div>
+    </mat-card>
+
     <!-- Events Grid -->
-    <div class="card shadow-sm">
-        <div class="card-body">
-            <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
-                <h4 class="card-title mb-0">Events</h4>
-                <div class="d-flex flex-wrap gap-2 align-items-center">
-                    <!-- Bookings button for PLANNER -->
-                    <button *ngIf="roleName === 'PLANNER'" class="btn btn-info" (click)="viewAllBookings()">
-                        <i class="bi bi-calendar-check"></i> View Bookings
+    <div class="events-grid">
+        <mat-card *ngFor="let event of paginatedEvents" class="event-card" [@cardAnimation]>
+            <!-- Event Image Header -->
+            <div class="event-image-header">
+                <img [src]="getEventImage(event)" [alt]="event.title" class="event-image">
+                <div class="image-overlay">
+                    <div class="event-badges">
+                        <span class="event-id-badge">#{{ event.eventID }}</span>
+                        <span class="status-badge" 
+                            [ngClass]="{
+                                'status-scheduled': event.status === 'Scheduled',
+                                'status-cancelled': event.status === 'Cancelled',
+                                'status-completed': event.status === 'Completed'
+                            }">
+                            {{ event.status }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Event Content -->
+            <mat-card-content class="event-content">
+                <h3 class="event-title">{{ event.title }}</h3>
+                <p class="event-description">{{ event.description }}</p>
+
+                <!-- Event Info Grid -->
+                <div class="event-info-grid">
+                    <div class="info-item">
+                        <mat-icon class="info-icon">event</mat-icon>
+                        <div class="info-details">
+                            <span class="info-label">Date & Time</span>
+                            <span class="info-value">{{ event.dateTime | date:'MMM d, y, h:mm a' }}</span>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <mat-icon class="info-icon">location_on</mat-icon>
+                        <div class="info-details">
+                            <span class="info-label">Location</span>
+                            <span class="info-value">{{ event.location }}</span>
+                        </div>
+                    </div>
+
+                    <div class="info-item" *ngIf="event.allocations && event.allocations.length > 0">
+                        <mat-icon class="info-icon">inventory_2</mat-icon>
+                        <div class="info-details">
+                            <span class="info-label">Resources</span>
+                            <div class="resources-chips">
+                                <mat-chip *ngFor="let allocation of event.allocations.slice(0, 3)">
+                                    {{ allocation.resource?.name || 'N/A' }} ({{ allocation.quantity }})
+                                </mat-chip>
+                                <mat-chip *ngIf="event.allocations.length > 3" class="more-chip">
+                                    +{{ event.allocations.length - 3 }} more
+                                </mat-chip>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-item" *ngIf="!event.allocations || event.allocations.length === 0">
+                        <mat-icon class="info-icon">inventory_2</mat-icon>
+                        <div class="info-details">
+                            <span class="info-label">Resources</span>
+                            <span class="info-value text-muted">No resources allocated</span>
+                        </div>
+                    </div>
+
+                    <div class="info-item" *ngIf="roleName === 'PLANNER'">
+                        <mat-icon class="info-icon">person</mat-icon>
+                        <div class="info-details">
+                            <span class="info-label">Assigned Staff</span>
+                            <mat-chip *ngIf="event.assignedStaff" class="staff-chip">
+                                {{ event.assignedStaff.fullName || event.assignedStaff.username }}
+                            </mat-chip>
+                            <button *ngIf="!event.assignedStaff" mat-stroked-button color="primary" 
+                                    class="assign-staff-btn" (click)="openStaffAssignment(event)">
+                                Assign Staff
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </mat-card-content>
+
+            <!-- Event Actions -->
+            <mat-card-actions class="event-actions">
+                <!-- PLANNER Actions -->
+                <div *ngIf="roleName === 'PLANNER'" class="action-buttons">
+                    <button mat-raised-button color="primary" (click)="openUpdateModal(event)">
+                        <mat-icon>edit</mat-icon>
+                        Update
                     </button>
-                    <div>
-                        <label for="sort" class="me-2 mb-0">Sort By:</label>
-                        <select id="sort" (change)="onSortChange($event)" class="form-select d-inline-block w-auto">
-                            <option value="id">ID</option>
-                            <option value="title">Title</option>
-                            <option value="date">Date</option>
-                            <option value="location">Location</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="filter" class="me-2 mb-0">Filter:</label>
-                        <select id="filter" (change)="onFilterChange($event)" class="form-select d-inline-block w-auto">
-                            <option value="all">All Events</option>
-                            <option value="past">Past Events</option>
-                            <option value="today">Today's Events</option>
-                            <option value="future">Future Events</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Events Cards Grid -->
-            <div class="events-grid">
-                <div *ngFor="let event of paginatedEvents" class="event-card">
-                    <div class="event-card-header">
-                        <div class="event-header-top">
-                            <span class="event-id">#{{ event.eventID }}</span>
-                            <span class="badge event-status" 
-                                [ngClass]="{
-                                    'bg-success': event.status === 'Scheduled',
-                                    'bg-danger': event.status === 'Cancelled',
-                                    'bg-secondary': event.status === 'Completed'
-                                }">
-                                {{ event.status }}
-                            </span>
-                        </div>
-                        <h3 class="event-title">{{ event.title }}</h3>
-                    </div>
-
-                    <div class="event-card-body">
-                        <p class="event-description">{{ event.description }}</p>
-                        
-                        <div class="event-info-grid">
-                            <div class="info-item">
-                                <span class="info-icon">📅</span>
-                                <div class="info-content">
-                                    <span class="info-label">Date & Time</span>
-                                    <span class="info-value">{{ event.dateTime | date:'medium' }}</span>
-                                </div>
-                            </div>
-
-                            <div class="info-item">
-                                <span class="info-icon">📍</span>
-                                <div class="info-content">
-                                    <span class="info-label">Location</span>
-                                    <span class="info-value">{{ event.location }}</span>
-                                </div>
-                            </div>
-
-                            <div class="info-item" *ngIf="event.allocations && event.allocations.length > 0">
-                                <span class="info-icon">📦</span>
-                                <div class="info-content">
-                                    <span class="info-label">Resources</span>
-                                    <div class="resources-list">
-                                        <div *ngFor="let allocation of event.allocations" class="resource-item">
-                                            <span class="resource-name">{{ allocation.resource?.name || 'N/A' }}</span>
-                                            <span class="badge bg-info">{{ allocation.quantity }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="info-item" *ngIf="!event.allocations || event.allocations.length === 0">
-                                <span class="info-icon">📦</span>
-                                <div class="info-content">
-                                    <span class="info-label">Resources</span>
-                                    <span class="info-value text-muted fst-italic">No resources allocated</span>
-                                </div>
-                            </div>
-
-                            <div class="info-item" *ngIf="roleName === 'PLANNER'">
-                                <span class="info-icon">👤</span>
-                                <div class="info-content">
-                                    <span class="info-label">Assigned Staff</span>
-                                    <span *ngIf="event.assignedStaff" class="badge bg-primary">
-                                        {{ event.assignedStaff.fullName || event.assignedStaff.username }}
-                                    </span>
-                                    <button *ngIf="!event.assignedStaff" class="btn btn-sm btn-secondary" 
-                                            (click)="openStaffAssignment(event)">
-                                        Assign Staff
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="event-card-footer">
-                        <!-- PLANNER Actions -->
-                        <div *ngIf="roleName === 'PLANNER'" class="action-buttons">
-                            <button class="btn btn-primary" (click)="openUpdateModal(event)">
-                                ✏️ Update
-                            </button>
-                            <button class="btn btn-info" (click)="openMessaging(event)">
-                                💬 Messages
-                            </button>
-                        </div>
-
-                        <!-- CLIENT Actions -->
-                        <div *ngIf="roleName === 'CLIENT'" class="action-buttons">
-                            <button class="btn btn-success" (click)="openBookingForm(event)">
-                                ✅ Book Event
-                            </button>
-                            <button class="btn btn-info" (click)="openMessaging(event)">
-                                💬 Messages
-                            </button>
-                        </div>
-
-                        <!-- STAFF Actions -->
-                        <div *ngIf="roleName === 'STAFF'" class="action-buttons">
-                            <button class="btn btn-info" (click)="openMessaging(event)">
-                                💬 Messages
-                            </button>
-                        </div>
-                    </div>
+                    <button mat-stroked-button (click)="openMessaging(event)">
+                        <mat-icon>chat</mat-icon>
+                        Messages
+                    </button>
                 </div>
 
-                <!-- Empty State -->
-                <div *ngIf="paginatedEvents.length === 0" class="empty-state">
-                    <div class="empty-icon">📅</div>
-                    <h3>No Events Found</h3>
-                    <p>There are no events matching your criteria.</p>
+                <!-- CLIENT Actions -->
+                <div *ngIf="roleName === 'CLIENT'" class="action-buttons">
+                    <button mat-raised-button color="accent" (click)="openBookingForm(event)">
+                        <mat-icon>check_circle</mat-icon>
+                        Book Event
+                    </button>
+                    <button mat-stroked-button (click)="openMessaging(event)">
+                        <mat-icon>chat</mat-icon>
+                        Messages
+                    </button>
                 </div>
-            </div>
 
-            <!-- Pagination -->
-            <div class="pagination-controls">
-                <button class="btn btn-outline-primary" (click)="previousPage()" [disabled]="currentPage === 1">
-                    ← Previous
-                </button>
-                <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
-                <button class="btn btn-outline-primary" (click)="nextPage()" [disabled]="currentPage === totalPages">
-                    Next →
-                </button>
-            </div>
+                <!-- STAFF Actions -->
+                <div *ngIf="roleName === 'STAFF'" class="action-buttons">
+                    <button mat-stroked-button (click)="openMessaging(event)">
+                        <mat-icon>chat</mat-icon>
+                        Messages
+                    </button>
+                </div>
+            </mat-card-actions>
+        </mat-card>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="paginatedEvents.length === 0" class="empty-state" [@fadeInOut]>
+        <div class="empty-icon">
+            <mat-icon>event_busy</mat-icon>
         </div>
+        <h3>No Events Found</h3>
+        <p>There are no events matching your criteria.</p>
+    </div>
+
+    <!-- Pagination -->
+    <div *ngIf="paginatedEvents.length > 0" class="pagination-controls">
+        <button mat-button (click)="previousPage()" [disabled]="currentPage === 1">
+            <mat-icon>chevron_left</mat-icon>
+            Previous
+        </button>
+        <div class="page-info">
+            <span class="current-page">{{ currentPage }}</span>
+            <span class="separator">/</span>
+            <span class="total-pages">{{ totalPages }}</span>
+        </div>
+        <button mat-button (click)="nextPage()" [disabled]="currentPage === totalPages">
+            Next
+            <mat-icon>chevron_right</mat-icon>
+        </button>
     </div>
 </div>
 

@@ -1,118 +1,284 @@
-<div class="container py-4">
-    <h1 class="text-center mb-4 text-primary">Manage Resources</h1>
+<div class="resource-management-container">
+  <!-- Page Header -->
+  <app-page-header
+    title="Resource Management"
+    subtitle="Add and manage your event resources"
+    icon="inventory_2"
+    actionLabel="View Allocations"
+    actionIcon="assignment"
+    (action)="navigateToAllocations()">
+  </app-page-header>
 
-    <div class="alert-container">
-        <div *ngIf="showSuccess" class="alert alert-success" role="alert">
-            {{ successMessage }}
-            <button type="button" class="btn-close" (click)="showSuccess = false" aria-label="Close"></button>
+  <!-- Alert Messages -->
+  <div class="alert-wrapper" *ngIf="showSuccess || showError">
+    <div *ngIf="showSuccess" class="alert alert-success">
+      <mat-icon>check_circle</mat-icon>
+      <span>{{ successMessage }}</span>
+      <button mat-icon-button (click)="showSuccess = false">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    <div *ngIf="showError" class="alert alert-error">
+      <mat-icon>error</mat-icon>
+      <span>{{ errorMessage }}</span>
+      <button mat-icon-button (click)="showError = false">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Split View Layout -->
+  <div class="split-view-container">
+    
+    <!-- Left Side: Add Resource Form -->
+    <mat-card class="form-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>add_circle</mat-icon>
+          Add New Resource
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
+          
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Resource Name</mat-label>
+            <input matInput formControlName="name" placeholder="e.g., Projector, Chairs, Microphone">
+            <mat-icon matPrefix>label</mat-icon>
+            <mat-error *ngIf="itemForm.get('name')?.hasError('required')">
+              Name is required
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Resource Type</mat-label>
+            <mat-select formControlName="type">
+              <mat-option value="Equipment">Equipment</mat-option>
+              <mat-option value="Furniture">Furniture</mat-option>
+              <mat-option value="Technology">Technology</mat-option>
+              <mat-option value="Catering">Catering</mat-option>
+              <mat-option value="Decoration">Decoration</mat-option>
+              <mat-option value="Transportation">Transportation</mat-option>
+              <mat-option value="Other">Other</mat-option>
+            </mat-select>
+            <mat-icon matPrefix>category</mat-icon>
+            <mat-error *ngIf="itemForm.get('type')?.hasError('required')">
+              Type is required
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Quantity</mat-label>
+            <input matInput type="number" placeholder="e.g., 10" min="1">
+            <mat-icon matPrefix>numbers</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Location/Storage</mat-label>
+            <input matInput placeholder="e.g., Storage Room A">
+            <mat-icon matPrefix>place</mat-icon>
+          </mat-form-field>
+
+          <div class="availability-section">
+            <label class="section-label">
+              <mat-icon>check_circle</mat-icon>
+              Availability Status
+            </label>
+            <mat-radio-group formControlName="availability" class="availability-radio-group">
+              <mat-radio-button [value]="true" class="availability-option">
+                <div class="radio-content">
+                  <mat-icon class="status-icon available">check_circle</mat-icon>
+                  <div>
+                    <div class="radio-label">Available</div>
+                    <div class="radio-description">Ready to be allocated</div>
+                  </div>
+                </div>
+              </mat-radio-button>
+              <mat-radio-button [value]="false" class="availability-option">
+                <div class="radio-content">
+                  <mat-icon class="status-icon unavailable">cancel</mat-icon>
+                  <div>
+                    <div class="radio-label">Unavailable</div>
+                    <div class="radio-description">In maintenance or repair</div>
+                  </div>
+                </div>
+              </mat-radio-button>
+            </mat-radio-group>
+            <mat-error *ngIf="itemForm.get('availability')?.hasError('required') && itemForm.get('availability')?.touched">
+              Availability status is required
+            </mat-error>
+          </div>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Description (Optional)</mat-label>
+            <textarea matInput rows="3" placeholder="Additional notes about this resource"></textarea>
+            <mat-icon matPrefix>description</mat-icon>
+          </mat-form-field>
+
+          <div class="form-actions">
+            <button mat-button type="button" (click)="itemForm.reset({ availability: true })">
+              <mat-icon>clear</mat-icon>
+              Clear
+            </button>
+            <button mat-raised-button color="primary" type="submit" [disabled]="!itemForm.valid">
+              <mat-icon>add</mat-icon>
+              Add Resource
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Right Side: Resource List -->
+    <mat-card class="list-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>list</mat-icon>
+          Resource Inventory
+        </mat-card-title>
+        <div class="header-actions">
+          <mat-form-field appearance="outline" class="search-field">
+            <mat-label>Search</mat-label>
+            <input matInput [(ngModel)]="searchQuery" (input)="onSearch()" placeholder="Search by ID or name">
+            <mat-icon matPrefix>search</mat-icon>
+            <button mat-icon-button matSuffix *ngIf="searchQuery" (click)="searchQuery=''; onSearch()">
+              <mat-icon>close</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <!-- Resource Stats -->
+        <div class="resource-stats">
+          <div class="stat-item">
+            <mat-icon>inventory</mat-icon>
+            <div>
+              <span class="stat-value">{{ resourceList.length }}</span>
+              <span class="stat-label">Total Resources</span>
+            </div>
+          </div>
+          <div class="stat-item">
+            <mat-icon class="available">check_circle</mat-icon>
+            <div>
+              <span class="stat-value">{{ getAvailableCount() }}</span>
+              <span class="stat-label">Available</span>
+            </div>
+          </div>
+          <div class="stat-item">
+            <mat-icon class="unavailable">cancel</mat-icon>
+            <div>
+              <span class="stat-value">{{ getUnavailableCount() }}</span>
+              <span class="stat-label">Unavailable</span>
+            </div>
+          </div>
         </div>
 
-        <div *ngIf="showError" class="alert alert-danger" role="alert">
-            {{ errorMessage }}
-            <button type="button" class="btn-close" (click)="showError = false" aria-label="Close"></button>
+        <!-- Resource Table -->
+        <div class="table-container">
+          <table mat-table [dataSource]="paginatedResources" class="resource-table" *ngIf="paginatedResources.length > 0">
+            
+            <!-- ID Column -->
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef>
+                <mat-icon>tag</mat-icon>
+                ID
+              </th>
+              <td mat-cell *matCellDef="let resource">
+                <span class="resource-id">#{{ resource.resourceID }}</span>
+              </td>
+            </ng-container>
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef>
+                <mat-icon>label</mat-icon>
+                Name
+              </th>
+              <td mat-cell *matCellDef="let resource">
+                <div class="resource-name">{{ resource.name }}</div>
+              </td>
+            </ng-container>
+
+            <!-- Type Column -->
+            <ng-container matColumnDef="type">
+              <th mat-header-cell *matHeaderCellDef>
+                <mat-icon>category</mat-icon>
+                Type
+              </th>
+              <td mat-cell *matCellDef="let resource">
+                <span class="resource-type">{{ resource.type }}</span>
+              </td>
+            </ng-container>
+
+            <!-- Status Column -->
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef>
+                <mat-icon>info</mat-icon>
+                Status
+              </th>
+              <td mat-cell *matCellDef="let resource">
+                <span class="status-badge" [ngClass]="resource.availability ? 'available' : 'unavailable'">
+                  <mat-icon>{{ resource.availability ? 'check_circle' : 'cancel' }}</mat-icon>
+                  {{ resource.availability ? 'Available' : 'Unavailable' }}
+                </span>
+              </td>
+            </ng-container>
+
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>Actions</th>
+              <td mat-cell *matCellDef="let resource">
+                <div class="action-buttons">
+                  <button mat-icon-button color="primary" matTooltip="Edit" (click)="editResource(resource)">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button mat-icon-button color="warn" matTooltip="Delete" (click)="deleteResource(resource.resourceID)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="resource-row"></tr>
+          </table>
+
+          <!-- Empty State -->
+          <app-empty-state
+            *ngIf="paginatedResources.length === 0 && !searchQuery"
+            icon="inventory_2"
+            title="No Resources Yet"
+            message="Start by adding your first resource using the form on the left.">
+          </app-empty-state>
+
+          <app-empty-state
+            *ngIf="paginatedResources.length === 0 && searchQuery"
+            icon="search_off"
+            title="No Results Found"
+            message="Try adjusting your search query.">
+            <button mat-button color="primary" (click)="searchQuery=''; onSearch()">
+              Clear Search
+            </button>
+          </app-empty-state>
         </div>
-    </div>
-    <div class="row justify-content-center">
-        <div class="col-md-5 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0">Add Resource</h4>
-                </div>
-                <div class="card-body">
-                    <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Name</label>
-                            <input type="text" class="form-control" id="name" placeholder="Enter Resource Name"
-                                formControlName="name">
-                            <div *ngIf="itemForm.controls['name'].invalid && (itemForm.controls['name'].dirty || itemForm.controls['name'].touched)" class="text-danger small mt-1">
-                                Name is required.
-                            </div>
-                        </div>
- 
-                        <div class="mb-3">
-                            <label for="type" class="form-label">Type</label>
-                            <input type="text" class="form-control" id="type" placeholder="Enter Resource Type"
-                                formControlName="type">
-                            <div *ngIf="itemForm.controls['type'].invalid && (itemForm.controls['type'].dirty || itemForm.controls['type'].touched)" class="text-danger small mt-1">
-                                Type is required.
-                            </div>
-                        </div>
- 
-                        <div class="mb-3">
-                            <label class="form-label">Availability</label>
-                            <div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" id="available"
-                                        formControlName="availability" [value]="true">
-                                    <label class="form-check-label" for="available">Available</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" id="unavailable"
-                                        formControlName="availability" [value]="false">
-                                    <label class="form-check-label" for="unavailable">Unavailable</label>
-                                </div>
-                            </div>
-                            <div *ngIf="itemForm.controls['availability'].invalid && (itemForm.controls['availability'].dirty || itemForm.controls['availability'].touched)" class="text-danger small mt-1">
-                                Availability is required.
-                            </div>
-                        </div>
- 
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-primary">Add Resource</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+
+        <!-- Pagination -->
+        <div class="pagination" *ngIf="totalPages > 1">
+          <button mat-icon-button [disabled]="currentPage === 1" (click)="previousPage()">
+            <mat-icon>chevron_left</mat-icon>
+          </button>
+          <span class="page-info">
+            <span class="current-page">{{ currentPage }}</span>
+            <span class="separator">/</span>
+            <span class="total-pages">{{ totalPages }}</span>
+          </span>
+          <button mat-icon-button [disabled]="currentPage === totalPages" (click)="nextPage()">
+            <mat-icon>chevron_right</mat-icon>
+          </button>
         </div>
- 
-        <div class="col-md-5 mb-4">
-            <div class="card shadow-sm">
-                <div class="card-header bg-secondary text-white">
-                    <h4 class="mb-0">Resource Information</h4>
-                </div>
-                <div class="card-body">
-                    <div class="mb-3">
-                        <input type="text" class="form-control" placeholder="Search by ID or Name"
-                            [(ngModel)]="searchQuery" (input)="onSearch()">
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table table-sm" *ngIf="paginatedResources && paginatedResources.length > 0">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Name</th>
-                                    <th>Type</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr *ngFor="let resource of paginatedResources">
-                                    <td>{{ resource.resourceID }}</td>
-                                    <td>{{ resource.name }}</td>
-                                    <td>{{ resource.type }}</td>
-                                    <td>
-                                        <span class="badge" [ngClass]="resource.availability ? 'bg-success' : 'bg-danger'">
-                                            {{ resource.availability ? 'Available' : 'Unavailable' }}
-                                        </span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div *ngIf="paginatedResources && paginatedResources.length === 0" class="text-center text-muted py-3">
-                        No resources found.
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <button class="btn btn-sm btn-outline-secondary" (click)="previousPage()"
-                            [disabled]="currentPage === 1">Previous</button>
-                        <span class="text-muted">Page {{ currentPage }} of {{ totalPages }}</span>
-                        <button class="btn btn-sm btn-outline-secondary" (click)="nextPage()"
-                            [disabled]="currentPage === totalPages">Next</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
 </div>

@@ -44,8 +44,12 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { LandingComponent } from './landing/landing.component'
+import { LandingComponent } from './landing/landing.component';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -69,6 +73,7 @@ import { LandingComponent } from './landing/landing.component'
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    SharedModule,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
@@ -94,7 +99,10 @@ import { LandingComponent } from './landing/landing.component'
     MatStepperModule,
     MatTabsModule,
     MatSlideToggleModule,
-    MatRippleModule
+    MatRippleModule,
+    MatProgressBarModule,
+    MatCheckboxModule,
+    MatExpansionModule
   ],
   providers: [HttpService,HttpClientModule ],
   bootstrap: [AppComponent]

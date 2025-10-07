@@ -1,0 +1,22 @@
+<mat-card class="stat-card" [ngClass]="getColorClass()">
+  <div *ngIf="!loading" class="stat-card-content">
+    <div class="stat-icon-wrapper">
+      <mat-icon class="stat-icon">{{ icon }}</mat-icon>
+    </div>
+    <div class="stat-details">
+      <span class="stat-title">{{ title }}</span>
+      <h3 class="stat-value">{{ value }}</h3>
+      <div class="stat-footer">
+        <span class="stat-subtitle" *ngIf="subtitle">{{ subtitle }}</span>
+        <div *ngIf="trend && trendValue" class="stat-trend" [ngClass]="getTrendClass()">
+          <mat-icon class="trend-icon">{{ getTrendIcon() }}</mat-icon>
+          <span class="trend-value">{{ trendValue }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div *ngIf="loading" class="stat-card-loading">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+</mat-card>

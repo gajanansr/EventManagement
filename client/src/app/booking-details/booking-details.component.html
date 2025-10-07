@@ -1,108 +1,292 @@
-<div class="bookings-container">
-  <!-- Search Box -->
-  <div class="search-section mb-4">
-    <form [formGroup]="itemForm" (ngSubmit)="searchBookings()">
-      <div class="input-group">
-        <input 
-          type="text" 
-          formControlName="searchTerm" 
-          class="form-control" 
-          placeholder="Search bookings by event name or booking ID...">
-        <button type="submit" class="btn btn-primary">
-          <i class="fas fa-search"></i> Search
-        </button>
-        <button 
-          type="button" 
-          class="btn btn-secondary" 
-          (click)="clearSearch()" 
-          *ngIf="searchPerformed">
-          Clear
-        </button>
-      </div>
-    </form>
-  </div>
+<div class="booking-details-container">
+  <!-- Page Header -->
+  <app-page-header
+    title="My Bookings"
+    subtitle="View and manage your event bookings"
+    icon="bookmark"
+    actionLabel="Refresh"
+    actionIcon="refresh"
+    (action)="loadMyBookings()">
+  </app-page-header>
 
   <!-- Alert Messages -->
-  <div *ngIf="message" class="alert" 
-       [ngClass]="{'alert-success': message.type === 'success', 'alert-danger': message.type === 'error'}" 
-       role="alert">
-    {{ message.text }}
-  </div>
-
-  <!-- Loading State -->
-  <div *ngIf="loadingBookings" class="text-center py-5">
-    <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Loading...</span>
-    </div>
-    <p class="mt-3 text-muted">Loading your bookings...</p>
-  </div>
-
-  <!-- Bookings Table -->
-  <div *ngIf="!loadingBookings && displayedBookings.length > 0" class="card shadow-sm">
-    <div class="card-body">
-      <h5 class="card-title mb-4">
-        <i class="fas fa-calendar-check text-primary"></i> My Event Bookings
-        <span class="badge bg-primary ms-2">{{ displayedBookings.length }}</span>
-      </h5>
-      
-      <div class="table-responsive">
-        <table class="table table-hover">
-          <thead class="table-light">
-            <tr>
-              <th>Booking ID</th>
-              <th>Event Title</th>
-              <th>Event Date & Time</th>
-              <th>Location</th>
-              <th>Booking Date</th>
-              <th>Status</th>
-              <th>Requirements</th>
-              <th>Notes</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let booking of displayedBookings">
-              <td><strong>#{{ booking.bookingId }}</strong></td>
-              <td>
-                <strong>{{ booking.event?.title || 'N/A' }}</strong>
-              </td>
-              <td>
-                <i class="far fa-clock text-muted"></i>
-                {{ booking.event?.dateTime | date:'medium' }}
-              </td>
-              <td>
-                <i class="fas fa-map-marker-alt text-muted"></i>
-                {{ booking.event?.location || 'N/A' }}
-              </td>
-              <td>{{ booking.bookingDate | date:'short' }}</td>
-              <td>
-                <span class="badge" [ngClass]="getBookingStatusClass(booking.status)">
-                  {{ booking.status }}
-                </span>
-              </td>
-              <td>
-                <small class="text-muted">{{ booking.clientRequirements || 'None' }}</small>
-              </td>
-              <td>
-                <small class="text-muted">{{ booking.notes || '-' }}</small>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <!-- Empty State -->
-  <div *ngIf="!loadingBookings && displayedBookings.length === 0" class="empty-state card shadow-sm">
-    <div class="card-body text-center py-5">
-      <div class="empty-icon">📅</div>
-      <h4 class="mt-3">No Bookings Found</h4>
-      <p class="text-muted">
-        {{ searchPerformed ? 'No bookings match your search criteria.' : 'You haven\'t made any event bookings yet.' }}
-      </p>
-      <button class="btn btn-primary mt-3" routerLink="/dashboard" *ngIf="!searchPerformed">
-        <i class="fas fa-calendar-plus"></i> Browse Available Events
+  <div class="alert-wrapper" *ngIf="message">
+    <div class="alert" [ngClass]="{'alert-success': message.type === 'success', 'alert-error': message.type === 'error'}">
+      <mat-icon>{{ message.type === 'success' ? 'check_circle' : 'error' }}</mat-icon>
+      <span>{{ message.text }}</span>
+      <button mat-icon-button (click)="message = null">
+        <mat-icon>close</mat-icon>
       </button>
     </div>
   </div>
+
+  <!-- Main Content Card -->
+  <mat-card class="bookings-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>event_note</mat-icon>
+        Booking History
+        <span class="booking-count" *ngIf="!loadingBookings">{{ displayedBookings.length }}</span>
+      </mat-card-title>
+      <div class="header-actions">
+        <!-- Search Field -->
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Search bookings</mat-label>
+          <input matInput [formControl]="searchControl" placeholder="Event name, ID, location...">
+          <mat-icon matPrefix>search</mat-icon>
+          <button mat-icon-button matSuffix *ngIf="searchControl.value" (click)="clearSearch()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+
+        <!-- Filter Button -->
+        <button mat-stroked-button [matMenuTriggerFor]="filterMenu">
+          <mat-icon>filter_list</mat-icon>
+          Filter
+        </button>
+        <mat-menu #filterMenu="matMenu">
+          <button mat-menu-item (click)="filterByStatus('all')">
+            <mat-icon>list</mat-icon>
+            All Bookings
+          </button>
+          <button mat-menu-item (click)="filterByStatus('CONFIRMED')">
+            <mat-icon class="success-icon">check_circle</mat-icon>
+            Confirmed
+          </button>
+          <button mat-menu-item (click)="filterByStatus('PENDING')">
+            <mat-icon class="warning-icon">pending</mat-icon>
+            Pending
+          </button>
+          <button mat-menu-item (click)="filterByStatus('CANCELLED')">
+            <mat-icon class="error-icon">cancel</mat-icon>
+            Cancelled
+          </button>
+        </mat-menu>
+      </div>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Loading State -->
+      <app-loading-spinner *ngIf="loadingBookings" message="Loading your bookings..." [size]="'medium'"></app-loading-spinner>
+
+      <!-- Bookings Table with Expandable Rows -->
+      <div class="table-container" *ngIf="!loadingBookings && displayedBookings.length > 0">
+        <table mat-table [dataSource]="displayedBookings" multiTemplateDataRows class="bookings-table">
+          
+          <!-- Expand Column -->
+          <ng-container matColumnDef="expand">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let booking">
+              <button mat-icon-button (click)="expandedBooking = expandedBooking === booking ? null : booking">
+                <mat-icon>{{ expandedBooking === booking ? 'expand_less' : 'expand_more' }}</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <!-- Booking ID Column -->
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-icon>tag</mat-icon>
+              Booking ID
+            </th>
+            <td mat-cell *matCellDef="let booking">
+              <span class="booking-id">#{{ booking.bookingId }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Event Title Column -->
+          <ng-container matColumnDef="event">
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-icon>event</mat-icon>
+              Event
+            </th>
+            <td mat-cell *matCellDef="let booking">
+              <div class="event-info">
+                <div class="event-title">{{ booking.event?.title || 'N/A' }}</div>
+                <div class="event-location">
+                  <mat-icon>location_on</mat-icon>
+                  {{ booking.event?.location || 'N/A' }}
+                </div>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Event Date Column -->
+          <ng-container matColumnDef="eventDate">
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-icon>schedule</mat-icon>
+              Event Date
+            </th>
+            <td mat-cell *matCellDef="let booking">
+              <div class="date-info">
+                <div class="date">{{ booking.event?.dateTime | date:'MMM dd, yyyy' }}</div>
+                <div class="time">{{ booking.event?.dateTime | date:'h:mm a' }}</div>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Booking Date Column -->
+          <ng-container matColumnDef="bookingDate">
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-icon>today</mat-icon>
+              Booked On
+            </th>
+            <td mat-cell *matCellDef="let booking">
+              {{ booking.bookingDate | date:'MMM dd, yyyy' }}
+            </td>
+          </ng-container>
+
+          <!-- Status Column -->
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-icon>info</mat-icon>
+              Status
+            </th>
+            <td mat-cell *matCellDef="let booking">
+              <span class="status-badge" [ngClass]="getStatusClass(booking.status)">
+                <mat-icon>{{ getStatusIcon(booking.status) }}</mat-icon>
+                {{ booking.status }}
+              </span>
+            </td>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let booking">
+              <button mat-icon-button [matMenuTriggerFor]="actionMenu" class="action-button">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #actionMenu="matMenu">
+                <button mat-menu-item (click)="viewDetails(booking)">
+                  <mat-icon>visibility</mat-icon>
+                  View Details
+                </button>
+                <button mat-menu-item *ngIf="booking.status !== 'CANCELLED'" (click)="cancelBooking(booking)">
+                  <mat-icon>cancel</mat-icon>
+                  Cancel Booking
+                </button>
+                <button mat-menu-item (click)="downloadTicket(booking)">
+                  <mat-icon>download</mat-icon>
+                  Download Ticket
+                </button>
+              </mat-menu>
+            </td>
+          </ng-container>
+
+          <!-- Expanded Content -->
+          <ng-container matColumnDef="expandedDetail">
+            <td mat-cell *matCellDef="let booking" [attr.colspan]="displayedColumns.length">
+              <div class="expanded-detail" [@detailExpand]="booking === expandedBooking ? 'expanded' : 'collapsed'">
+                <div class="detail-content">
+                  
+                  <!-- Event Details Section -->
+                  <div class="detail-section">
+                    <h4>
+                      <mat-icon>event</mat-icon>
+                      Event Details
+                    </h4>
+                    <div class="detail-grid">
+                      <div class="detail-item">
+                        <span class="label">Event Title:</span>
+                        <span class="value">{{ booking.event?.title }}</span>
+                      </div>
+                      <div class="detail-item">
+                        <span class="label">Description:</span>
+                        <span class="value">{{ booking.event?.description || 'No description' }}</span>
+                      </div>
+                      <div class="detail-item">
+                        <span class="label">Date & Time:</span>
+                        <span class="value">{{ booking.event?.dateTime | date:'full' }}</span>
+                      </div>
+                      <div class="detail-item">
+                        <span class="label">Location:</span>
+                        <span class="value">{{ booking.event?.location }}</span>
+                      </div>
+                      <div class="detail-item">
+                        <span class="label">Event Status:</span>
+                        <span class="value">{{ booking.event?.status }}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Booking Details Section -->
+                  <div class="detail-section">
+                    <h4>
+                      <mat-icon>confirmation_number</mat-icon>
+                      Booking Information
+                    </h4>
+                    <div class="detail-grid">
+                      <div class="detail-item">
+                        <span class="label">Booking ID:</span>
+                        <span class="value">#{{ booking.bookingId }}</span>
+                      </div>
+                      <div class="detail-item">
+                        <span class="label">Booking Date:</span>
+                        <span class="value">{{ booking.bookingDate | date:'full' }}</span>
+                      </div>
+                      <div class="detail-item">
+                        <span class="label">Requirements:</span>
+                        <span class="value">{{ booking.clientRequirements || 'None specified' }}</span>
+                      </div>
+                      <div class="detail-item">
+                        <span class="label">Notes:</span>
+                        <span class="value">{{ booking.notes || 'No additional notes' }}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Action Buttons -->
+                  <div class="detail-actions">
+                    <button mat-raised-button color="primary" (click)="downloadTicket(booking)">
+                      <mat-icon>download</mat-icon>
+                      Download Ticket
+                    </button>
+                    <button mat-stroked-button (click)="viewEventDetails(booking.event)">
+                      <mat-icon>info</mat-icon>
+                      View Event Page
+                    </button>
+                    <button mat-stroked-button color="warn" *ngIf="booking.status !== 'CANCELLED'" (click)="cancelBooking(booking)">
+                      <mat-icon>cancel</mat-icon>
+                      Cancel Booking
+                    </button>
+                  </div>
+
+                </div>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let booking; columns: displayedColumns;"
+              class="booking-row"
+              [class.expanded-row]="expandedBooking === booking">
+          </tr>
+          <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
+        </table>
+      </div>
+
+      <!-- Empty State -->
+      <app-empty-state
+        *ngIf="!loadingBookings && displayedBookings.length === 0 && !searchControl.value"
+        icon="event_busy"
+        title="No Bookings Yet"
+        message="You haven't made any event bookings yet. Browse available events and book your first experience!">
+        <button mat-raised-button color="primary" routerLink="/view-events">
+          <mat-icon>explore</mat-icon>
+          Browse Events
+        </button>
+      </app-empty-state>
+
+      <app-empty-state
+        *ngIf="!loadingBookings && displayedBookings.length === 0 && searchControl.value"
+        icon="search_off"
+        title="No Results Found"
+        message="No bookings match your search criteria. Try adjusting your filters or search query.">
+        <button mat-button color="primary" (click)="clearSearch()">
+          Clear Search
+        </button>
+      </app-empty-state>
+    </mat-card-content>
+  </mat-card>
 </div>

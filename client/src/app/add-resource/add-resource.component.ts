@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { HttpService } from '../../services/http.service';
 
 @Component({
@@ -12,17 +13,19 @@ export class AddResourceComponent implements OnInit {
   resourceList: any[] = [];
   paginatedResources: any[] = [];
   currentPage: number = 1;
-  itemsPerPage: number = 4;
+  itemsPerPage: number = 5;
   totalPages: number = 1;
   showError: boolean = false;
   errorMessage: string = '';
   showSuccess: boolean = false;
   successMessage: string = '';
   searchQuery: string = '';
+  displayedColumns: string[] = ['id', 'name', 'type', 'status', 'actions'];
 
   constructor(
     private formBuilder: FormBuilder,
-    private httpService: HttpService
+    private httpService: HttpService,
+    private router: Router
   ) {
     this.itemForm = this.formBuilder.group({
       name: ['', Validators.required],
@@ -127,6 +130,46 @@ export class AddResourceComponent implements OnInit {
     setTimeout(() => {
       this.showError = false;
       this.errorMessage = '';
-    }, 3000); // Message disappears after 3 seconds
+    }, 5000);
+  }
+
+  getAvailableCount(): number {
+    return this.resourceList.filter(r => r.availability).length;
+  }
+
+  getUnavailableCount(): number {
+    return this.resourceList.filter(r => !r.availability).length;
+  }
+
+  navigateToAllocations = () => {
+    this.router.navigate(['/resource-allocate']);
+  }
+
+  editResource(resource: any): void {
+    // Populate form with resource data for editing
+    this.itemForm.patchValue({
+      name: resource.name,
+      type: resource.type,
+      availability: resource.availability
+    });
+    // Scroll to form
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  deleteResource(id: number): void {
+    if (confirm('Are you sure you want to delete this resource?')) {
+      // For now, just show a message since delete endpoint may not exist
+      this.showSuccessMessage('Resource deletion feature coming soon!');
+      // Uncomment when backend endpoint is ready:
+      // this.httpService.deleteResource(id).subscribe(
+      //   () => {
+      //     this.showSuccessMessage('Resource deleted successfully!');
+      //     this.getResources();
+      //   },
+      //   (error: any) => {
+      //     this.showErrorMessage('Failed to delete resource: ' + error.message);
+      //   }
+      // );
+    }
   }
 }

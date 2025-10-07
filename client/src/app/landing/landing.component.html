@@ -1,122 +1,179 @@
 <div class="landing-container">
+  
+  <!-- Hero Section with Gradient Background -->
+  <section class="hero-section">
+    <div class="hero-background">
+      <div class="gradient-blob blob-1"></div>
+      <div class="gradient-blob blob-2"></div>
+      <div class="gradient-blob blob-3"></div>
+    </div>
 
-  <!-- Animated Background Particles -->
-  <div class="particles">
-    <div class="particle" *ngFor="let i of particles" [style.left.%]="i.x" [style.top.%]="i.y" [style.animation-delay.s]="i.delay"></div>
-  </div>
-
-  <!-- Floating Event Icons -->
-  <div class="floating-icons">
-    <div class="icon icon-1">🎉</div>
-    <div class="icon icon-2">🎪</div>
-    <div class="icon icon-3">🎭</div>
-    <div class="icon icon-4">🎨</div>
-    <div class="icon icon-5">🎵</div>
-    <div class="icon icon-6">✨</div>
-  </div>
-
-  <!-- Main Content -->
-  <div class="content-wrapper">
-    <!-- Navigation -->
-    <nav class="navbar-brand">
-      <div class="nav-brand" >
-        <span class="brand-icon">🎉</span>
-        <span class="brand-text">EventOO.io</span>        
-      </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section class="hero-section">
-      <div class="hero-content">
+    <div class="hero-content">
+      <div class="hero-text" [@fadeInUp]>
+        <span class="hero-badge">
+          <mat-icon>celebration</mat-icon>
+          Welcome to the Future of Events
+        </span>
         <h1 class="hero-title">
-          <span class="title-line">
-            <span class="word word-1">JOIN</span>
-            <span class="word word-2"> TO OUR</span>
-          </span>
-          <span class="title-line">
-            <span class="word word-3 gradient-text"> ULTIMATE EVENT </span>
-          </span>
-          <span class="title-line">
-            <span class="word word-4">AND GET A CHANCE</span>
-          </span>
-          <span class="title-line">
-            <span class="word word-5 gradient-text highlight"> MANAGING </span>
-          </span>
-          <span class="title-line">
-            <span class="word word-6">YOUR DREAMS</span>
-          </span>
+          Create Unforgettable
+          <span class="gradient-text"> Experiences</span>
         </h1>
-
-        <p class="hero-subtitle fade-in">
-          Experience the future of event planning with our cutting-edge platform.
-          Create, manage, and execute unforgettable events with ease.
+        <p class="hero-subtitle">
+          The ultimate event management platform for planners, teams, and organizers. 
+          Streamline your workflow, engage attendees, and deliver exceptional events.
         </p>
-
-        <div class="center-btn">
-          <button class="cta-buttons" (click)="navigateToRegister()">
-            <span>GET STARTED</span>
-            <i class="arrow">→</i>
+        <div class="hero-actions">
+          <button mat-raised-button color="primary" class="cta-primary" (click)="navigateToRegister()">
+            Get Started Free
+            <mat-icon>arrow_forward</mat-icon>
           </button>
-          
-          <button class="cta-buttons" (click)="navigateToLogin()">
-            <span>SIGN IN</span>
-            <i class="arrow">→</i>
+          <button mat-stroked-button class="cta-secondary" (click)="navigateToLogin()">
+            Sign In
+            <mat-icon>login</mat-icon>
           </button>
         </div>
-      </div>
-
-      <!-- Animated 3D Event Visual -->
-      <div class="hero-visual">
-        <div class="visual-container">
-          <div class="event-sphere"></div>
-          <div class="orbit orbit-1"></div>
-          <div class="orbit orbit-2"></div>
-          <div class="orbit orbit-3"></div>
+        <div class="hero-stats">
+          <div class="stat-item">
+            <span class="stat-value">10K+</span>
+            <span class="stat-label">Events</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value">5K+</span>
+            <span class="stat-label">Users</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value">99.9%</span>
+            <span class="stat-label">Uptime</span>
+          </div>
         </div>
       </div>
-    </section>
+      <div class="hero-visual" [@fadeIn]>
+        <div class="visual-card card-1">
+          <mat-icon class="visual-icon">event</mat-icon>
+          <span>Upcoming Events</span>
+          <div class="card-stat">245</div>
+        </div>
+        <div class="visual-card card-2">
+          <mat-icon class="visual-icon">people</mat-icon>
+          <span>Attendees</span>
+          <div class="card-stat">12.5K</div>
+        </div>
+        <div class="visual-card card-3">
+          <mat-icon class="visual-icon">trending_up</mat-icon>
+          <span>Success Rate</span>
+          <div class="card-stat">98%</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    <!-- Features Section -->
-    <section id="features" class="features-section">
-      <h2 class="section-title">
-        <span class="title-accent">Why Choose Us</span>
-      </h2>
+  <!-- Features Section -->
+  <section class="features-section">
+    <div class="section-container">
+      <div class="section-header">
+        <span class="section-badge">Features</span>
+        <h2 class="section-title">Everything You Need to Succeed</h2>
+        <p class="section-subtitle">
+          Powerful tools designed for modern event management
+        </p>
+      </div>
+
       <div class="features-grid">
-        <div class="feature-card" *ngFor="let feature of features; let i = index" [style.animation-delay.s]="i * 0.1">
-          <div class="feature-icon">{{ feature.icon }}</div>
-          <h3 class="feature-title">{{ feature.title }}</h3>
-          <p class="feature-description">{{ feature.description }}</p>
+        <mat-card class="feature-card" *ngFor="let feature of features; let i = index" [@fadeInUp]="i">
+          <div class="feature-icon-wrapper" [style.background]="feature.color">
+            <mat-icon class="feature-icon">{{ feature.icon }}</mat-icon>
+          </div>
+          <mat-card-content>
+            <h3 class="feature-title">{{ feature.title }}</h3>
+            <p class="feature-description">{{ feature.description }}</p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section class="how-it-works-section">
+    <div class="section-container">
+      <div class="section-header">
+        <span class="section-badge">Process</span>
+        <h2 class="section-title">How It Works</h2>
+        <p class="section-subtitle">Get started in three simple steps</p>
+      </div>
+
+      <div class="steps-container">
+        <div class="step-card" *ngFor="let step of steps; let i = index" [@fadeInUp]="i">
+          <div class="step-number">{{ i + 1 }}</div>
+          <div class="step-icon-wrapper">
+            <mat-icon class="step-icon">{{ step.icon }}</mat-icon>
+          </div>
+          <h3 class="step-title">{{ step.title }}</h3>
+          <p class="step-description">{{ step.description }}</p>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- Stats Section -->
-    <section class="stats-section">
-      <div class="stats-grid">
-        <div class="stat-card" *ngFor="let stat of stats">
-          <div class="stat-value">{{ stat.value }}</div>
-          <div class="stat-label">{{ stat.label }}</div>
-        </div>
+  <!-- Testimonials Section -->
+  <section class="testimonials-section">
+    <div class="section-container">
+      <div class="section-header">
+        <span class="section-badge">Testimonials</span>
+        <h2 class="section-title">Loved by Event Professionals</h2>
+        <p class="section-subtitle">See what our customers have to say</p>
       </div>
-    </section>
 
-    <!-- CTA Section -->
-    <section class="final-cta">
-      <div class="cta-content">
-        <h2 class="cta-title">Ready to Create Amazing Events?</h2>
-        <p class="cta-subtitle">Join thousands of event planners who trust our platform</p>
-        <div class="center-btn">
-          <button class="cta-buttons" (click)="navigateToRegister()">
-            <span>START YOUR JOURNEY</span>
-            <i class="arrow">→</i>
-          </button>
-        </div>
+      <div class="testimonials-grid">
+        <mat-card class="testimonial-card" *ngFor="let testimonial of testimonials" [@fadeIn]>
+          <mat-card-content>
+            <div class="testimonial-rating">
+              <mat-icon *ngFor="let star of [1,2,3,4,5]">star</mat-icon>
+            </div>
+            <p class="testimonial-text">"{{ testimonial.text }}"</p>
+            <div class="testimonial-author">
+              <div class="author-avatar">
+                <span>{{ testimonial.avatar }}</span>
+              </div>
+              <div class="author-info">
+                <div class="author-name">{{ testimonial.name }}</div>
+                <div class="author-role">{{ testimonial.role }}</div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
       </div>
-    </section>
-  </div>
+    </div>
+  </section>
 
-  <!-- Gradient Overlays -->
-  <div class="gradient-overlay gradient-1"></div>
-  <div class="gradient-overlay gradient-2"></div>
-  <div class="gradient-overlay gradient-3"></div>
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="cta-background">
+      <div class="gradient-blob blob-4"></div>
+      <div class="gradient-blob blob-5"></div>
+    </div>
+    <div class="cta-content">
+      <h2 class="cta-title">Ready to Transform Your Events?</h2>
+      <p class="cta-subtitle">
+        Join thousands of event professionals who trust our platform
+      </p>
+      <button mat-raised-button color="primary" class="cta-button" (click)="navigateToRegister()">
+        Start Your Free Trial
+        <mat-icon>arrow_forward</mat-icon>
+      </button>
+      <p class="cta-note">No credit card required • 14-day free trial</p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer-section">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <mat-icon class="footer-logo">celebration</mat-icon>
+        <span class="footer-brand-text">EventManage</span>
+      </div>
+      <p class="footer-text">
+        © 2025 EventManage. All rights reserved.
+      </p>
+    </div>
+  </footer>
 </div>

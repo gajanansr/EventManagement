@@ -1,200 +1,927 @@
 <div class="dashboard-container">
 
   <!-- PLANNER DASHBOARD -->
-  <div *ngIf="roleName === 'PLANNER'" class="planner-dashboard">
+  <div *ngIf="roleName === 'PLANNER'" class="planner-dashboard modern-dashboard">
+    <!-- Dashboard Header -->
     <div class="dashboard-header">
-      <h1 class="text-gradient">📋 Event Planner Dashboard</h1>
-      <p class="subtitle">Manage events, resources, and allocations</p>
+      <div class="header-content">
+        <h1>Event Planner Dashboard</h1>
+        <p>Manage your events, resources, and team efficiently</p>
+      </div>
+      <div class="header-actions">
+        <button mat-raised-button color="primary" routerLink="/create-event">
+          <mat-icon>add</mat-icon>
+          Create Event
+        </button>
+      </div>
     </div>
 
     <!-- Statistics Cards -->
     <div class="stats-grid">
-      <div class="stat-card card">
-        <div class="stat-icon">📅</div>
-        <div class="stat-content">
-          <h3>{{ totalEvents || 0 }}</h3>
-          <p>Total Events</p>
+      <mat-card class="stat-card stat-primary">
+        <div class="stat-icon-wrapper">
+          <mat-icon>event</mat-icon>
         </div>
-      </div>
-      <div class="stat-card card">
-        <div class="stat-icon">📦</div>
         <div class="stat-content">
-          <h3>{{ totalResources || 0 }}</h3>
-          <p>Total Resources</p>
+          <div class="stat-value">{{ totalEvents || 0 }}</div>
+          <div class="stat-label">Total Events</div>
+          <div class="stat-trend positive">
+            <mat-icon>trending_up</mat-icon>
+            <span>+12% from last month</span>
+          </div>
         </div>
-      </div>
-      <div class="stat-card card">
-        <div class="stat-icon">🎯</div>
+      </mat-card>
+
+      <mat-card class="stat-card stat-success">
+        <div class="stat-icon-wrapper">
+          <mat-icon>inventory_2</mat-icon>
+        </div>
         <div class="stat-content">
-          <h3>{{ totalAllocations || 0 }}</h3>
-          <p>Allocations</p>
+          <div class="stat-value">{{ totalResources || 0 }}</div>
+          <div class="stat-label">Total Resources</div>
+          <div class="stat-trend positive">
+            <mat-icon>trending_up</mat-icon>
+            <span>+8% this week</span>
+          </div>
         </div>
-      </div>
-      <div class="stat-card card">
-        <div class="stat-icon">✅</div>
+      </mat-card>
+
+      <mat-card class="stat-card stat-warning">
+        <div class="stat-icon-wrapper">
+          <mat-icon>assignment</mat-icon>
+        </div>
         <div class="stat-content">
-          <h3>{{ activeEvents || 0 }}</h3>
-          <p>Active Events</p>
+          <div class="stat-value">{{ totalAllocations || 0 }}</div>
+          <div class="stat-label">Allocations</div>
+          <div class="stat-trend neutral">
+            <mat-icon>remove</mat-icon>
+            <span>No change</span>
+          </div>
         </div>
-      </div>
+      </mat-card>
+
+      <mat-card class="stat-card stat-info">
+        <div class="stat-icon-wrapper">
+          <mat-icon>check_circle</mat-icon>
+        </div>
+        <div class="stat-content">
+          <div class="stat-value">{{ activeEvents || 0 }}</div>
+          <div class="stat-label">Active Events</div>
+          <div class="stat-trend positive">
+            <mat-icon>trending_up</mat-icon>
+            <span>+5 this week</span>
+          </div>
+        </div>
+      </mat-card>
     </div>
 
-    <!-- Quick Actions -->
-    <div class="quick-actions card">
-      <h3>⚡ Quick Actions</h3>
-      <div class="action-buttons">
-        <button class="btn btn-primary" routerLink="/create-event">
-          <span class="icon">➕</span> Create Event
-        </button>
-        <button class="btn btn-success" routerLink="/add-resource">
-          <span class="icon">📦</span> Add Resource
-        </button>
-        <button class="btn btn-secondary" routerLink="/resource-allocate">
-          <span class="icon">🎯</span> Allocate Resources
-        </button>
-      </div>
+    <!-- Main Content Grid -->
+    <div class="dashboard-grid">
+      <!-- Ongoing Events Section -->
+      <mat-card class="ongoing-events-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>play_circle</mat-icon>
+            Ongoing Events
+          </mat-card-title>
+          <button mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item>
+              <mat-icon>refresh</mat-icon>
+              Refresh
+            </button>
+            <button mat-menu-item>
+              <mat-icon>visibility</mat-icon>
+              View All
+            </button>
+          </mat-menu>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="event-grid">
+            <div class="event-card" *ngFor="let i of [1,2,3,4]">
+              <div class="event-image">
+                <img src="https://via.placeholder.com/300x200/667eea/ffffff?text=Event+{{i}}" alt="Event">
+                <div class="event-badge live">LIVE</div>
+              </div>
+              <div class="event-info">
+                <h4>Tech Conference 2025</h4>
+                <div class="event-meta">
+                  <span class="meta-item">
+                    <mat-icon>schedule</mat-icon>
+                    Today, 10:00 AM
+                  </span>
+                  <span class="meta-item">
+                    <mat-icon>people</mat-icon>
+                    250 attendees
+                  </span>
+                </div>
+                <mat-progress-bar mode="determinate" value="65" class="event-progress"></mat-progress-bar>
+                <p class="progress-text">65% Complete</p>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Upcoming Events -->
+      <mat-card class="upcoming-events-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>schedule</mat-icon>
+            Upcoming Events
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="upcoming-list">
+            <div class="upcoming-item" *ngFor="let i of [1,2,3,4,5]">
+              <div class="upcoming-date">
+                <div class="date-day">15</div>
+                <div class="date-month">OCT</div>
+              </div>
+              <div class="upcoming-details">
+                <h5>Product Launch Event</h5>
+                <p>Grand Ballroom, NYC</p>
+                <div class="attendee-avatars">
+                  <span class="avatar" *ngFor="let j of [1,2,3]">{{j}}</span>
+                  <span class="avatar-more">+5</span>
+                </div>
+              </div>
+              <button mat-icon-button color="primary">
+                <mat-icon>arrow_forward</mat-icon>
+              </button>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Quick Actions -->
+      <mat-card class="quick-actions-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>bolt</mat-icon>
+            Quick Actions
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="action-grid">
+            <button mat-raised-button color="primary" routerLink="/create-event" class="action-btn">
+              <mat-icon>event</mat-icon>
+              <span>Create Event</span>
+            </button>
+            <button mat-raised-button color="accent" routerLink="/add-resource" class="action-btn">
+              <mat-icon>inventory</mat-icon>
+              <span>Add Resource</span>
+            </button>
+            <button mat-stroked-button routerLink="/resource-allocate" class="action-btn">
+              <mat-icon>assignment</mat-icon>
+              <span>Allocate</span>
+            </button>
+            <button mat-stroked-button routerLink="/view-events" class="action-btn">
+              <mat-icon>visibility</mat-icon>
+              <span>View All</span>
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Notifications Panel -->
+      <mat-card class="notifications-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>notifications</mat-icon>
+            Notifications
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="notification-list">
+            <div class="notification-item success">
+              <mat-icon>check_circle</mat-icon>
+              <div class="notification-content">
+                <p>Event "Tech Summit" created successfully</p>
+                <span>2 hours ago</span>
+              </div>
+            </div>
+            <div class="notification-item warning">
+              <mat-icon>warning</mat-icon>
+              <div class="notification-content">
+                <p>Resource allocation pending for 3 events</p>
+                <span>5 hours ago</span>
+              </div>
+            </div>
+            <div class="notification-item info">
+              <mat-icon>info</mat-icon>
+              <div class="notification-content">
+                <p>New booking request received</p>
+                <span>1 day ago</span>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
     </div>
 
-    <!-- Events List -->
-    <div class="card">
-      <div class="card-header">
-        <h3>📋 All Events</h3>
-      </div>
-      <div class="card-body">
+    <!-- Full Width Events Table -->
+    <mat-card class="events-table-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>list</mat-icon>
+          All Events
+        </mat-card-title>
+        <div class="header-actions">
+          <button mat-stroked-button>
+            <mat-icon>filter_list</mat-icon>
+            Filter
+          </button>
+          <button mat-stroked-button>
+            <mat-icon>download</mat-icon>
+            Export
+          </button>
+        </div>
+      </mat-card-header>
+      <mat-card-content>
         <app-view-events></app-view-events>
-      </div>
-    </div>
+      </mat-card-content>
+    </mat-card>
   </div>
 
   <!-- STAFF DASHBOARD -->
-  <div *ngIf="roleName === 'STAFF'" class="staff-dashboard">
-    <div class="dashboard-header">
-      <h1 class="text-gradient">👷 Staff Dashboard</h1>
-      <p class="subtitle">View and manage assigned events</p>
-    </div>
+  <div *ngIf="roleName === 'STAFF'" class="staff-dashboard modern-dashboard">
+    <!-- Page Header using Shared Component -->
+    <app-page-header
+      title="Staff Dashboard"
+      subtitle="Manage your assigned events and tasks"
+      icon="badge"
+      (action)="scrollToEvents()">
+      <button mat-stroked-button>
+        <mat-icon>refresh</mat-icon>
+        Refresh
+      </button>
+    </app-page-header>
 
-    <!-- Statistics Cards -->
+    <!-- Statistics Cards using Shared StatCard Component -->
     <div class="stats-grid">
-      <div class="stat-card card">
-        <div class="stat-icon">📅</div>
-        <div class="stat-content">
-          <h3>{{ totalEvents || 0 }}</h3>
-          <p>Total Events</p>
-        </div>
-      </div>
-      <div class="stat-card card">
-        <div class="stat-icon">⏳</div>
-        <div class="stat-content">
-          <h3>{{ scheduledEvents || 0 }}</h3>
-          <p>Scheduled</p>
-        </div>
-      </div>
-      <div class="stat-card card">
-        <div class="stat-icon">✅</div>
-        <div class="stat-content">
-          <h3>{{ completedEvents || 0 }}</h3>
-          <p>Completed</p>
-        </div>
-      </div>
-      <div class="stat-card card">
-        <div class="stat-icon">🔔</div>
-        <div class="stat-content">
-          <h3>{{ upcomingEvents || 0 }}</h3>
-          <p>Upcoming</p>
-        </div>
+      <app-stat-card
+        icon="event"
+        title="Assigned Events"
+        [value]="totalEvents || 0"
+        subtitle="Total assigned to you"
+        color="primary">
+      </app-stat-card>
+
+      <app-stat-card
+        icon="schedule"
+        title="Scheduled"
+        [value]="scheduledEvents || 0"
+        subtitle="Upcoming events"
+        trend="up"
+        trendValue="+3"
+        color="warning">
+      </app-stat-card>
+
+      <app-stat-card
+        icon="check_circle"
+        title="Completed"
+        [value]="completedEvents || 0"
+        subtitle="Successfully finished"
+        trend="up"
+        trendValue="+5"
+        color="success">
+      </app-stat-card>
+
+      <app-stat-card
+        icon="upcoming"
+        title="Upcoming"
+        [value]="upcomingEvents || 0"
+        subtitle="Next 30 days"
+        trend="neutral"
+        color="info">
+      </app-stat-card>
+    </div>
+
+    <!-- Two Column Layout -->
+    <div class="dashboard-grid-staff">
+      <!-- Left Column: Event Timeline -->
+      <mat-card class="timeline-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>timeline</mat-icon>
+            Event Timeline
+          </mat-card-title>
+          <button mat-icon-button [matMenuTriggerFor]="timelineMenu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #timelineMenu="matMenu">
+            <button mat-menu-item>
+              <mat-icon>today</mat-icon>
+              Today
+            </button>
+            <button mat-menu-item>
+              <mat-icon>view_week</mat-icon>
+              This Week
+            </button>
+            <button mat-menu-item>
+              <mat-icon>calendar_month</mat-icon>
+              This Month
+            </button>
+          </mat-menu>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="timeline-container">
+            <!-- Today's Events -->
+            <div class="timeline-section">
+              <h4 class="timeline-section-title">Today</h4>
+              <div class="timeline-item" *ngFor="let i of [1,2]">
+                <div class="timeline-marker success"></div>
+                <div class="timeline-content">
+                  <div class="timeline-time">10:00 AM - 2:00 PM</div>
+                  <h5>Corporate Meeting Event</h5>
+                  <p>Grand Conference Hall</p>
+                  <div class="timeline-meta">
+                    <span class="badge badge-success">
+                      <mat-icon>check</mat-icon>
+                      On Schedule
+                    </span>
+                    <span class="attendee-count">
+                      <mat-icon>people</mat-icon>
+                      150 attendees
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tomorrow's Events -->
+            <div class="timeline-section">
+              <h4 class="timeline-section-title">Tomorrow</h4>
+              <div class="timeline-item" *ngFor="let i of [1]">
+                <div class="timeline-marker warning"></div>
+                <div class="timeline-content">
+                  <div class="timeline-time">3:00 PM - 7:00 PM</div>
+                  <h5>Product Launch Event</h5>
+                  <p>Main Auditorium</p>
+                  <div class="timeline-meta">
+                    <span class="badge badge-warning">
+                      <mat-icon>schedule</mat-icon>
+                      Scheduled
+                    </span>
+                    <span class="attendee-count">
+                      <mat-icon>people</mat-icon>
+                      300 attendees
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Upcoming Events -->
+            <div class="timeline-section">
+              <h4 class="timeline-section-title">This Week</h4>
+              <div class="timeline-item" *ngFor="let i of [1,2]">
+                <div class="timeline-marker info"></div>
+                <div class="timeline-content">
+                  <div class="timeline-time">Oct 10 - 9:00 AM</div>
+                  <h5>Annual Conference 2025</h5>
+                  <p>Convention Center</p>
+                  <div class="timeline-meta">
+                    <span class="badge badge-info">
+                      <mat-icon>event</mat-icon>
+                      Upcoming
+                    </span>
+                    <span class="attendee-count">
+                      <mat-icon>people</mat-icon>
+                      500 attendees
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Right Column: Tasks & Info -->
+      <div class="staff-right-column">
+        <!-- Quick Stats -->
+        <mat-card class="quick-stats-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>insights</mat-icon>
+              Performance Overview
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="performance-item">
+              <div class="performance-label">
+                <mat-icon>task_alt</mat-icon>
+                Completion Rate
+              </div>
+              <div class="performance-value">
+                <span class="value-number">94%</span>
+                <mat-progress-bar mode="determinate" value="94" class="success-bar"></mat-progress-bar>
+              </div>
+            </div>
+
+            <div class="performance-item">
+              <div class="performance-label">
+                <mat-icon>schedule</mat-icon>
+                On-Time Events
+              </div>
+              <div class="performance-value">
+                <span class="value-number">{{ completedEvents || 0 }}/{{ totalEvents || 0 }}</span>
+                <mat-progress-bar mode="determinate" [value]="(completedEvents / totalEvents) * 100" class="primary-bar"></mat-progress-bar>
+              </div>
+            </div>
+
+            <div class="performance-item">
+              <div class="performance-label">
+                <mat-icon>star</mat-icon>
+                Average Rating
+              </div>
+              <div class="performance-value">
+                <span class="value-number">4.8/5.0</span>
+                <div class="rating-stars">
+                  <mat-icon *ngFor="let i of [1,2,3,4,5]">star</mat-icon>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Recent Activity -->
+        <mat-card class="activity-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>history</mat-icon>
+              Recent Activity
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="activity-list">
+              <div class="activity-item" *ngFor="let i of [1,2,3,4]">
+                <div class="activity-icon success">
+                  <mat-icon>check_circle</mat-icon>
+                </div>
+                <div class="activity-details">
+                  <p>Completed event setup</p>
+                  <span class="activity-event">Tech Conference 2025</span>
+                  <span class="activity-time">2 hours ago</span>
+                </div>
+              </div>
+
+              <div class="activity-item">
+                <div class="activity-icon warning">
+                  <mat-icon>update</mat-icon>
+                </div>
+                <div class="activity-details">
+                  <p>Updated event status</p>
+                  <span class="activity-event">Product Launch</span>
+                  <span class="activity-time">5 hours ago</span>
+                </div>
+              </div>
+
+              <div class="activity-item">
+                <div class="activity-icon info">
+                  <mat-icon>assignment</mat-icon>
+                </div>
+                <div class="activity-details">
+                  <p>Assigned to new event</p>
+                  <span class="activity-event">Annual Gala</span>
+                  <span class="activity-time">1 day ago</span>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Important Notes -->
+        <mat-card class="notes-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>sticky_note_2</mat-icon>
+              Important Notes
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="notes-list">
+              <div class="note-item priority-high">
+                <div class="note-priority">
+                  <mat-icon>priority_high</mat-icon>
+                </div>
+                <div class="note-content">
+                  <p>Don't forget to confirm AV equipment for tomorrow's event</p>
+                  <span class="note-time">Added today</span>
+                </div>
+              </div>
+
+              <div class="note-item priority-medium">
+                <div class="note-priority">
+                  <mat-icon>info</mat-icon>
+                </div>
+                <div class="note-content">
+                  <p>Meeting with event coordinator at 3 PM</p>
+                  <span class="note-time">Added yesterday</span>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
       </div>
     </div>
 
-    <!-- Info Card -->
-    <div class="info-card card">
-      <div class="info-icon">ℹ️</div>
-      <div class="info-content">
-        <h4>Welcome to Staff Portal!</h4>
-        <p>You can view all events, check event details, and track schedules. Use the search feature below to find specific events.</p>
-      </div>
-    </div>
-
-    <!-- Events List -->
-    <div class="card">
-      <div class="card-header">
-        <h3>📋 Event Schedule</h3>
-      </div>
-      <div class="card-body">
+    <!-- Full Width: My Assigned Events Table -->
+    <mat-card class="events-table-card" id="events-section">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>event_note</mat-icon>
+          My Assigned Events
+        </mat-card-title>
+        <div class="header-actions">
+          <button mat-stroked-button>
+            <mat-icon>filter_list</mat-icon>
+            Filter
+          </button>
+          <button mat-stroked-button>
+            <mat-icon>download</mat-icon>
+            Export Schedule
+          </button>
+        </div>
+      </mat-card-header>
+      <mat-card-content>
         <app-view-events></app-view-events>
-      </div>
-    </div>
+      </mat-card-content>
+    </mat-card>
   </div>
 
   <!-- CLIENT DASHBOARD -->
-  <div *ngIf="roleName === 'CLIENT'" class="client-dashboard">
-    <div class="dashboard-header">
-      <h1 class="text-gradient">🎉 Client Dashboard</h1>
-      <p class="subtitle">Manage your event bookings and requests</p>
-    </div>
+  <div *ngIf="roleName === 'CLIENT'" class="client-dashboard modern-dashboard">
+    <!-- Page Header using Shared Component -->
+    <app-page-header
+      title="Welcome Back!"
+      subtitle="Discover and book amazing events"
+      icon="celebration"
+      actionLabel="Browse Events"
+      actionIcon="explore"
+      (action)="scrollToEvents()">
+    </app-page-header>
 
-    <!-- Statistics Cards -->
+    <!-- Statistics Cards using Shared StatCard Component -->
     <div class="stats-grid">
-      <div class="stat-card card">
-        <div class="stat-icon">📋</div>
-        <div class="stat-content">
-          <h3>{{ totalBookings || 0 }}</h3>
-          <p>My Bookings</p>
-        </div>
+      <app-stat-card
+        icon="confirmation_number"
+        title="My Bookings"
+        [value]="totalBookings || 0"
+        subtitle="Total bookings"
+        color="primary">
+      </app-stat-card>
+
+      <app-stat-card
+        icon="pending"
+        title="Pending"
+        [value]="pendingBookings || 0"
+        subtitle="Awaiting confirmation"
+        trend="neutral"
+        color="warning">
+      </app-stat-card>
+
+      <app-stat-card
+        icon="check_circle"
+        title="Confirmed"
+        [value]="confirmedBookings || 0"
+        subtitle="Ready to attend"
+        trend="up"
+        trendValue="+2"
+        color="success">
+      </app-stat-card>
+
+      <app-stat-card
+        icon="event_available"
+        title="Upcoming"
+        [value]="upcomingBookings || 0"
+        subtitle="Next 30 days"
+        trend="up"
+        trendValue="+1"
+        color="info">
+      </app-stat-card>
+    </div>
+
+    <!-- Two Column Layout -->
+    <div class="dashboard-grid-client">
+      <!-- Left Column: Upcoming Events & Featured -->
+      <div class="client-left-column">
+        <!-- Featured Events -->
+        <mat-card class="featured-events-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>star</mat-icon>
+              Featured Events
+            </mat-card-title>
+            <button mat-button color="primary" routerLink="/view-events">
+              View All
+              <mat-icon>arrow_forward</mat-icon>
+            </button>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="featured-event-grid">
+              <div class="featured-event-card" *ngFor="let i of [1,2]">
+                <div class="featured-image">
+                  <img src="https://via.placeholder.com/400x250/667eea/ffffff?text=Featured+Event+{{i}}" alt="Event">
+                  <div class="featured-badge">Featured</div>
+                </div>
+                <div class="featured-info">
+                  <div class="featured-category">
+                    <mat-icon>category</mat-icon>
+                    Conference
+                  </div>
+                  <h4>Tech Innovation Summit 2025</h4>
+                  <p>Experience the future of technology with industry leaders and innovators.</p>
+                  <div class="featured-meta">
+                    <span class="meta-item">
+                      <mat-icon>event</mat-icon>
+                      Oct 15, 2025
+                    </span>
+                    <span class="meta-item">
+                      <mat-icon>location_on</mat-icon>
+                      NYC Convention Center
+                    </span>
+                  </div>
+                  <div class="featured-footer">
+                    <div class="featured-price">
+                      <span class="price-label">From</span>
+                      <span class="price-value">$99</span>
+                    </div>
+                    <button mat-raised-button color="primary">
+                      <mat-icon>add_shopping_cart</mat-icon>
+                      Book Now
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- My Upcoming Bookings -->
+        <mat-card class="upcoming-bookings-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>event_upcoming</mat-icon>
+              My Upcoming Events
+            </mat-card-title>
+            <button mat-button (click)="scrollToBookings()">
+              View All Bookings
+              <mat-icon>arrow_forward</mat-icon>
+            </button>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="upcoming-bookings-list">
+              <div class="booking-item" *ngFor="let i of [1,2,3]">
+                <div class="booking-date-card">
+                  <div class="date-day">15</div>
+                  <div class="date-month">OCT</div>
+                </div>
+                <div class="booking-details">
+                  <h5>Annual Tech Conference 2025</h5>
+                  <p>
+                    <mat-icon>schedule</mat-icon>
+                    10:00 AM - 5:00 PM
+                  </p>
+                  <p>
+                    <mat-icon>location_on</mat-icon>
+                    Grand Convention Center, NYC
+                  </p>
+                  <div class="booking-status-row">
+                    <span class="badge badge-success">
+                      <mat-icon>check_circle</mat-icon>
+                      Confirmed
+                    </span>
+                    <span class="booking-id">ID: #BK12345</span>
+                  </div>
+                </div>
+                <div class="booking-actions">
+                  <button mat-icon-button color="primary" matTooltip="View Details">
+                    <mat-icon>info</mat-icon>
+                  </button>
+                  <button mat-icon-button matTooltip="Download Ticket">
+                    <mat-icon>download</mat-icon>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Empty State if no bookings -->
+              <app-empty-state
+                *ngIf="upcomingBookings === 0"
+                icon="event_busy"
+                title="No Upcoming Events"
+                message="You don't have any confirmed bookings yet. Browse available events and book your next experience!">
+                <button mat-raised-button color="primary" (click)="scrollToEvents()">
+                  <mat-icon>explore</mat-icon>
+                  Browse Events
+                </button>
+              </app-empty-state>
+            </div>
+          </mat-card-content>
+        </mat-card>
       </div>
-      <div class="stat-card card">
-        <div class="stat-icon">⏳</div>
-        <div class="stat-content">
-          <h3>{{ pendingBookings || 0 }}</h3>
-          <p>Pending</p>
-        </div>
-      </div>
-      <div class="stat-card card">
-        <div class="stat-icon">✅</div>
-        <div class="stat-content">
-          <h3>{{ confirmedBookings || 0 }}</h3>
-          <p>Confirmed</p>
-        </div>
-      </div>
-      <div class="stat-card card">
-        <div class="stat-icon">🎯</div>
-        <div class="stat-content">
-          <h3>{{ upcomingBookings || 0 }}</h3>
-          <p>Upcoming</p>
-        </div>
+
+      <!-- Right Column: Quick Actions & Info -->
+      <div class="client-right-column">
+        <!-- Quick Actions -->
+        <mat-card class="quick-actions-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>bolt</mat-icon>
+              Quick Actions
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="action-buttons">
+              <button mat-raised-button color="primary" class="action-button" (click)="scrollToEvents()">
+                <mat-icon>explore</mat-icon>
+                <div class="action-text">
+                  <span class="action-title">Browse Events</span>
+                  <span class="action-subtitle">Discover new experiences</span>
+                </div>
+              </button>
+
+              <button mat-stroked-button class="action-button" (click)="scrollToBookings()">
+                <mat-icon>bookmark</mat-icon>
+                <div class="action-text">
+                  <span class="action-title">My Bookings</span>
+                  <span class="action-subtitle">View all reservations</span>
+                </div>
+              </button>
+
+              <button mat-stroked-button class="action-button" routerLink="/profile">
+                <mat-icon>person</mat-icon>
+                <div class="action-text">
+                  <span class="action-title">My Profile</span>
+                  <span class="action-subtitle">Update preferences</span>
+                </div>
+              </button>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Booking History Summary -->
+        <mat-card class="history-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>history</mat-icon>
+              Booking History
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="history-stats">
+              <div class="history-item">
+                <div class="history-icon success">
+                  <mat-icon>event_available</mat-icon>
+                </div>
+                <div class="history-info">
+                  <span class="history-value">{{ confirmedBookings || 0 }}</span>
+                  <span class="history-label">Attended Events</span>
+                </div>
+              </div>
+
+              <div class="history-item">
+                <div class="history-icon warning">
+                  <mat-icon>pending_actions</mat-icon>
+                </div>
+                <div class="history-info">
+                  <span class="history-value">{{ pendingBookings || 0 }}</span>
+                  <span class="history-label">Pending Confirmations</span>
+                </div>
+              </div>
+
+              <div class="history-item">
+                <div class="history-icon info">
+                  <mat-icon>payments</mat-icon>
+                </div>
+                <div class="history-info">
+                  <span class="history-value">$1,250</span>
+                  <span class="history-label">Total Spent</span>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Recommendations -->
+        <mat-card class="recommendations-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>recommend</mat-icon>
+              Recommended for You
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="recommendation-list">
+              <div class="recommendation-item" *ngFor="let i of [1,2,3]">
+                <div class="recommendation-image">
+                  <img src="https://via.placeholder.com/80x80/667eea/ffffff?text={{i}}" alt="Event">
+                </div>
+                <div class="recommendation-info">
+                  <h6>Summer Music Festival</h6>
+                  <div class="recommendation-meta">
+                    <span class="meta-date">
+                      <mat-icon>event</mat-icon>
+                      Jul 20, 2025
+                    </span>
+                    <span class="meta-price">$75</span>
+                  </div>
+                </div>
+                <button mat-icon-button color="primary">
+                  <mat-icon>arrow_forward</mat-icon>
+                </button>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Recent Notifications -->
+        <mat-card class="notifications-mini-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>notifications</mat-icon>
+              Recent Updates
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="notification-mini-list">
+              <div class="notification-mini-item success">
+                <mat-icon>check_circle</mat-icon>
+                <div class="notification-mini-content">
+                  <p>Booking confirmed for Tech Summit</p>
+                  <span>2 hours ago</span>
+                </div>
+              </div>
+
+              <div class="notification-mini-item info">
+                <mat-icon>info</mat-icon>
+                <div class="notification-mini-content">
+                  <p>New event matching your interests</p>
+                  <span>1 day ago</span>
+                </div>
+              </div>
+
+              <div class="notification-mini-item warning">
+                <mat-icon>schedule</mat-icon>
+                <div class="notification-mini-content">
+                  <p>Event starts in 3 days</p>
+                  <span>2 days ago</span>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
       </div>
     </div>
 
-    <!-- Welcome Card -->
-    <div class="welcome-card card">
-      <div class="welcome-content">
-        <h3>👋 Welcome Back!</h3>
-        <p>You can search for events, view your bookings, and manage your event requests. We're here to make your event experience unforgettable!</p>
-        <button class="btn btn-primary" (click)="scrollToEvents()">
-          <span class="icon">🎉</span> Browse Available Events
-        </button>
-      </div>
-      <div class="welcome-illustration">🎊</div>
-    </div>
-
-    <!-- Available Events Section -->
-    <div class="card" id="events-section">
-      <div class="card-header">
-        <h3>🎉 Available Events to Book</h3>
-        <p class="text-muted">Browse and book events that interest you</p>
-      </div>
-      <div class="card-body">
+    <!-- Full Width: Available Events Browser -->
+    <mat-card class="events-browser-card" id="events-section">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>explore</mat-icon>
+          Discover Events
+        </mat-card-title>
+        <div class="header-actions">
+          <button mat-stroked-button>
+            <mat-icon>filter_list</mat-icon>
+            Filter
+          </button>
+          <button mat-stroked-button>
+            <mat-icon>sort</mat-icon>
+            Sort
+          </button>
+        </div>
+      </mat-card-header>
+      <mat-card-content>
         <app-view-events></app-view-events>
-      </div>
-    </div>
+      </mat-card-content>
+    </mat-card>
 
-    <!-- Bookings List -->
-    <div class="card" id="bookings-section">
-      <div class="card-header">
-        <h3>📋 My Event Bookings</h3>
-      </div>
-      <div class="card-body">
+    <!-- Full Width: My Bookings Table -->
+    <mat-card class="bookings-table-card" id="bookings-section">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>bookmark</mat-icon>
+          My Event Bookings
+        </mat-card-title>
+        <div class="header-actions">
+          <button mat-stroked-button>
+            <mat-icon>filter_list</mat-icon>
+            Filter
+          </button>
+          <button mat-stroked-button>
+            <mat-icon>download</mat-icon>
+            Export
+          </button>
+        </div>
+      </mat-card-header>
+      <mat-card-content>
         <app-booking-details></app-booking-details>
-      </div>
-    </div>
+      </mat-card-content>
+    </mat-card>
   </div>
 </div>

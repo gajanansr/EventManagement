@@ -1,156 +1,292 @@
-<div class="container py-4">
-    <h1 class="text-center mb-4 text-primary">My Profile</h1>
-
+<div class="profile-container">
     <!-- Alert Messages -->
-    <div class="alert-container" *ngIf="showSuccess || showError">
-        <div class="alert" [ngClass]="{'alert-success': showSuccess, 'alert-danger': showError}">
-            {{ showSuccess ? successMessage : errorMessage }}
-            <button type="button" class="btn-close" (click)="showSuccess = false; showError = false" aria-label="Close"></button>
-        </div>
+    <div *ngIf="showSuccess || showError" class="alert-message" [@fadeInOut]
+        [ngClass]="{'alert-success': showSuccess, 'alert-error': showError}">
+        <mat-icon>{{ showSuccess ? 'check_circle' : 'error' }}</mat-icon>
+        <span>{{ showSuccess ? successMessage : errorMessage }}</span>
+        <button mat-icon-button (click)="showSuccess = false; showError = false">
+            <mat-icon>close</mat-icon>
+        </button>
     </div>
 
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <!-- Profile Information Card -->
-            <div class="card shadow-sm mb-4">
-                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                    <h4 class="mb-0">Profile Information</h4>
-                    <button class="btn btn-light btn-sm" (click)="toggleEditMode()" *ngIf="!isEditMode">
-                        <i class="bi bi-pencil"></i> Edit
+    <!-- Profile Header Card -->
+    <mat-card class="profile-header-card">
+        <div class="profile-header">
+            <div class="avatar-section">
+                <div class="avatar-wrapper">
+                    <img [src]="getAvatarUrl()" [alt]="profile?.username || 'User'" class="avatar-image">
+                    <button mat-mini-fab color="primary" class="avatar-edit-btn" (click)="fileInput.click()">
+                        <mat-icon>photo_camera</mat-icon>
                     </button>
+                    <input #fileInput type="file" accept="image/*" (change)="onAvatarChange($event)" style="display: none;">
                 </div>
-                <div class="card-body">
+                <div class="header-info">
+                    <h1 class="profile-name">{{ profile?.fullName || profile?.username || 'User' }}</h1>
+                    <p class="profile-email">{{ profile?.email || 'No email provided' }}</p>
+                    <mat-chip class="role-chip">
+                        <mat-icon>{{ getRoleIcon() }}</mat-icon>
+                        {{ profile?.role || 'USER' }}
+                    </mat-chip>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button mat-raised-button color="primary" (click)="toggleEditMode()" *ngIf="!isEditMode">
+                    <mat-icon>edit</mat-icon>
+                    Edit Profile
+                </button>
+            </div>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="stats-section">
+            <div class="stat-item">
+                <div class="stat-icon">
+                    <mat-icon>event</mat-icon>
+                </div>
+                <div class="stat-content">
+                    <span class="stat-value">{{ getUserStats().events }}</span>
+                    <span class="stat-label">Events</span>
+                </div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon">
+                    <mat-icon>bookmark</mat-icon>
+                </div>
+                <div class="stat-content">
+                    <span class="stat-value">{{ getUserStats().bookings }}</span>
+                    <span class="stat-label">Bookings</span>
+                </div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon">
+                    <mat-icon>schedule</mat-icon>
+                </div>
+                <div class="stat-content">
+                    <span class="stat-value">{{ getUserStats().days }}</span>
+                    <span class="stat-label">Days Active</span>
+                </div>
+            </div>
+        </div>
+    </mat-card>
+
+    <!-- Tabs Content -->
+    <mat-card class="tabs-card">
+        <mat-tab-group [(selectedIndex)]="selectedTabIndex" animationDuration="300ms">
+            <!-- Profile Info Tab -->
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <mat-icon>person</mat-icon>
+                    Profile Info
+                </ng-template>
+                <div class="tab-content">
                     <form [formGroup]="profileForm" (ngSubmit)="onSubmitProfile()" *ngIf="profile">
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Username</label>
-                                <p class="form-control-plaintext" *ngIf="!isEditMode">{{ profile.username }}</p>
-                                <input type="text" class="form-control" [value]="profile.username" disabled *ngIf="isEditMode">
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Role</label>
-                                <p class="form-control-plaintext">
-                                    <span class="badge bg-info">{{ profile.role }}</span>
-                                </p>
-                            </div>
-                        </div>
+                        <div class="form-grid">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Username</mat-label>
+                                <input matInput [value]="profile.username" disabled>
+                                <mat-icon matPrefix>account_circle</mat-icon>
+                            </mat-form-field>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="fullName" class="form-label fw-bold">Full Name</label>
-                                <p class="form-control-plaintext" *ngIf="!isEditMode">
-                                    {{ profile.fullName || 'Not provided' }}
-                                </p>
-                                <input type="text" id="fullName" formControlName="fullName" 
-                                       class="form-control" *ngIf="isEditMode">
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="email" class="form-label fw-bold">Email</label>
-                                <p class="form-control-plaintext" *ngIf="!isEditMode">
-                                    {{ profile.email || 'Not provided' }}
-                                </p>
-                                <input type="email" id="email" formControlName="email" 
-                                       class="form-control" *ngIf="isEditMode">
-                                <div *ngIf="isEditMode && profileForm.get('email')?.invalid && profileForm.get('email')?.touched" 
-                                     class="text-danger small mt-1">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Role</mat-label>
+                                <input matInput [value]="profile.role" disabled>
+                                <mat-icon matPrefix>badge</mat-icon>
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline">
+                                <mat-label>Full Name</mat-label>
+                                <input matInput formControlName="fullName" [readonly]="!isEditMode">
+                                <mat-icon matPrefix>person</mat-icon>
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline">
+                                <mat-label>Email</mat-label>
+                                <input matInput type="email" formControlName="email" [readonly]="!isEditMode">
+                                <mat-icon matPrefix>email</mat-icon>
+                                <mat-error *ngIf="profileForm.get('email')?.hasError('email')">
                                     Please enter a valid email
-                                </div>
-                            </div>
+                                </mat-error>
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline">
+                                <mat-label>Phone Number</mat-label>
+                                <input matInput type="tel" formControlName="phoneNumber" [readonly]="!isEditMode">
+                                <mat-icon matPrefix>phone</mat-icon>
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline" class="full-width">
+                                <mat-label>Address</mat-label>
+                                <input matInput formControlName="address" [readonly]="!isEditMode">
+                                <mat-icon matPrefix>location_on</mat-icon>
+                            </mat-form-field>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="phoneNumber" class="form-label fw-bold">Phone Number</label>
-                                <p class="form-control-plaintext" *ngIf="!isEditMode">
-                                    {{ profile.phoneNumber || 'Not provided' }}
-                                </p>
-                                <input type="tel" id="phoneNumber" formControlName="phoneNumber" 
-                                       class="form-control" *ngIf="isEditMode">
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="address" class="form-label fw-bold">Address</label>
-                                <p class="form-control-plaintext" *ngIf="!isEditMode">
-                                    {{ profile.address || 'Not provided' }}
-                                </p>
-                                <input type="text" id="address" formControlName="address" 
-                                       class="form-control" *ngIf="isEditMode">
-                            </div>
-                        </div>
-
-                        <div class="d-flex gap-2" *ngIf="isEditMode">
-                            <button type="submit" class="btn btn-primary" [disabled]="!profileForm.valid">
+                        <div class="form-actions" *ngIf="isEditMode">
+                            <button mat-raised-button color="primary" type="submit" [disabled]="!profileForm.valid">
+                                <mat-icon>save</mat-icon>
                                 Save Changes
                             </button>
-                            <button type="button" class="btn btn-secondary" (click)="toggleEditMode()">
+                            <button mat-stroked-button type="button" (click)="toggleEditMode()">
+                                <mat-icon>close</mat-icon>
                                 Cancel
                             </button>
                         </div>
                     </form>
 
-                    <div *ngIf="!profile" class="text-center py-4">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
+                    <div *ngIf="!profile" class="loading-state">
+                        <mat-spinner></mat-spinner>
+                        <p>Loading profile...</p>
                     </div>
                 </div>
-            </div>
+            </mat-tab>
 
-            <!-- Change Password Card -->
-            <div class="card shadow-sm">
-                <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
-                    <h4 class="mb-0">Security</h4>
-                    <button class="btn btn-light btn-sm" (click)="togglePasswordChange()" *ngIf="!isChangingPassword">
-                        <i class="bi bi-key"></i> Change Password
-                    </button>
-                </div>
-                <div class="card-body">
-                    <form [formGroup]="passwordForm" (ngSubmit)="onSubmitPassword()" *ngIf="isChangingPassword">
-                        <div class="mb-3">
-                            <label for="currentPassword" class="form-label">Current Password</label>
-                            <input type="password" id="currentPassword" formControlName="currentPassword" 
-                                   class="form-control" placeholder="Enter current password">
-                            <div *ngIf="passwordForm.get('currentPassword')?.invalid && passwordForm.get('currentPassword')?.touched" 
-                                 class="text-danger small mt-1">
-                                Current password is required
-                            </div>
+            <!-- Settings Tab -->
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <mat-icon>settings</mat-icon>
+                    Settings
+                </ng-template>
+                <div class="tab-content">
+                    <h3 class="section-title">Change Password</h3>
+                    <form [formGroup]="passwordForm" (ngSubmit)="onSubmitPassword()">
+                        <div class="form-grid">
+                            <mat-form-field appearance="outline" class="full-width">
+                                <mat-label>Current Password</mat-label>
+                                <input matInput [type]="hideCurrentPassword ? 'password' : 'text'" 
+                                       formControlName="currentPassword">
+                                <mat-icon matPrefix>lock</mat-icon>
+                                <button mat-icon-button matSuffix (click)="hideCurrentPassword = !hideCurrentPassword" 
+                                        type="button">
+                                    <mat-icon>{{ hideCurrentPassword ? 'visibility' : 'visibility_off' }}</mat-icon>
+                                </button>
+                                <mat-error *ngIf="passwordForm.get('currentPassword')?.hasError('required')">
+                                    Current password is required
+                                </mat-error>
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline">
+                                <mat-label>New Password</mat-label>
+                                <input matInput [type]="hideNewPassword ? 'password' : 'text'" 
+                                       formControlName="newPassword">
+                                <mat-icon matPrefix>lock_open</mat-icon>
+                                <button mat-icon-button matSuffix (click)="hideNewPassword = !hideNewPassword" 
+                                        type="button">
+                                    <mat-icon>{{ hideNewPassword ? 'visibility' : 'visibility_off' }}</mat-icon>
+                                </button>
+                                <mat-hint>At least 6 characters</mat-hint>
+                                <mat-error *ngIf="passwordForm.get('newPassword')?.hasError('minlength')">
+                                    Password must be at least 6 characters
+                                </mat-error>
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline">
+                                <mat-label>Confirm New Password</mat-label>
+                                <input matInput [type]="hideConfirmPassword ? 'password' : 'text'" 
+                                       formControlName="confirmPassword">
+                                <mat-icon matPrefix>lock_reset</mat-icon>
+                                <button mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword" 
+                                        type="button">
+                                    <mat-icon>{{ hideConfirmPassword ? 'visibility' : 'visibility_off' }}</mat-icon>
+                                </button>
+                                <mat-error *ngIf="passwordForm.hasError('mismatch')">
+                                    Passwords do not match
+                                </mat-error>
+                            </mat-form-field>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="newPassword" class="form-label">New Password</label>
-                            <input type="password" id="newPassword" formControlName="newPassword" 
-                                   class="form-control" placeholder="Enter new password (min 6 characters)">
-                            <div *ngIf="passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched" 
-                                 class="text-danger small mt-1">
-                                Password must be at least 6 characters
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="confirmPassword" class="form-label">Confirm New Password</label>
-                            <input type="password" id="confirmPassword" formControlName="confirmPassword" 
-                                   class="form-control" placeholder="Confirm new password">
-                            <div *ngIf="passwordForm.hasError('mismatch') && passwordForm.get('confirmPassword')?.touched" 
-                                 class="text-danger small mt-1">
-                                Passwords do not match
-                            </div>
-                        </div>
-
-                        <div class="d-flex gap-2">
-                            <button type="submit" class="btn btn-primary" [disabled]="!passwordForm.valid">
-                                Change Password
+                        <div class="form-actions">
+                            <button mat-raised-button color="primary" type="submit" [disabled]="!passwordForm.valid">
+                                <mat-icon>vpn_key</mat-icon>
+                                Update Password
                             </button>
-                            <button type="button" class="btn btn-secondary" (click)="togglePasswordChange()">
-                                Cancel
+                            <button mat-stroked-button type="button" (click)="passwordForm.reset()">
+                                <mat-icon>refresh</mat-icon>
+                                Reset
                             </button>
                         </div>
                     </form>
+                </div>
+            </mat-tab>
 
-                    <div *ngIf="!isChangingPassword" class="text-muted">
-                        <p class="mb-0"><i class="bi bi-shield-check"></i> Your password is secure</p>
-                        <small>Click "Change Password" to update your password</small>
+            <!-- Activity History Tab -->
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <mat-icon>history</mat-icon>
+                    Activity
+                </ng-template>
+                <div class="tab-content">
+                    <h3 class="section-title">Recent Activity</h3>
+                    <div class="activity-timeline">
+                        <div class="activity-item" *ngFor="let activity of getRecentActivities()">
+                            <div class="activity-icon" [ngClass]="'activity-' + activity.type">
+                                <mat-icon>{{ activity.icon }}</mat-icon>
+                            </div>
+                            <div class="activity-content">
+                                <h4 class="activity-title">{{ activity.title }}</h4>
+                                <p class="activity-description">{{ activity.description }}</p>
+                                <span class="activity-time">{{ activity.time }}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
+            </mat-tab>
+
+            <!-- Notifications Tab -->
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <mat-icon [matBadge]="getUnreadCount()" matBadgeColor="warn" 
+                              [matBadgeHidden]="getUnreadCount() === 0">notifications</mat-icon>
+                    Notifications
+                </ng-template>
+                <div class="tab-content">
+                    <h3 class="section-title">Notification Preferences</h3>
+                    <div class="notification-settings">
+                        <mat-slide-toggle [checked]="notificationSettings.emailNotifications" 
+                                         (change)="toggleNotification('emailNotifications')">
+                            <div class="toggle-content">
+                                <mat-icon>email</mat-icon>
+                                <div>
+                                    <strong>Email Notifications</strong>
+                                    <p>Receive notifications via email</p>
+                                </div>
+                            </div>
+                        </mat-slide-toggle>
+
+                        <mat-slide-toggle [checked]="notificationSettings.eventReminders" 
+                                         (change)="toggleNotification('eventReminders')">
+                            <div class="toggle-content">
+                                <mat-icon>event_note</mat-icon>
+                                <div>
+                                    <strong>Event Reminders</strong>
+                                    <p>Get reminders before events</p>
+                                </div>
+                            </div>
+                        </mat-slide-toggle>
+
+                        <mat-slide-toggle [checked]="notificationSettings.bookingUpdates" 
+                                         (change)="toggleNotification('bookingUpdates')">
+                            <div class="toggle-content">
+                                <mat-icon>bookmark</mat-icon>
+                                <div>
+                                    <strong>Booking Updates</strong>
+                                    <p>Updates about your bookings</p>
+                                </div>
+                            </div>
+                        </mat-slide-toggle>
+
+                        <mat-slide-toggle [checked]="notificationSettings.systemAlerts" 
+                                         (change)="toggleNotification('systemAlerts')">
+                            <div class="toggle-content">
+                                <mat-icon>warning</mat-icon>
+                                <div>
+                                    <strong>System Alerts</strong>
+                                    <p>Important system notifications</p>
+                                </div>
+                            </div>
+                        </mat-slide-toggle>
+                    </div>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+    </mat-card>
 </div>

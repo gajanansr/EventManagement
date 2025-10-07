@@ -1,22 +1,53 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 import { HttpService } from '../../services/http.service';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
+  animations: [
+    trigger('fadeInOut', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(-10px)' }),
+        animate('300ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
+      ]),
+      transition(':leave', [
+        animate('300ms ease-in', style({ opacity: 0, transform: 'translateY(-10px)' }))
+      ])
+    ])
+  ]
 })
 export class LoginComponent implements OnInit {
   itemForm!: FormGroup;
   showMessage: boolean = false;
   showError: boolean = false;
   responseMessage: string = '';
+  hidePassword: boolean = true;
+  isLoading: boolean = false;
 
   usernamePattern = '^[a-z]+$';
-  passwordPattern = '^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,64}$';
+
+  features = [
+    {
+      icon: 'event',
+      title: 'Smart Planning',
+      description: 'Intelligent event management with automated workflows'
+    },
+    {
+      icon: 'groups',
+      title: 'Team Collaboration',
+      description: 'Seamless coordination across your entire team'
+    },
+    {
+      icon: 'analytics',
+      title: 'Real-time Analytics',
+      description: 'Track performance with comprehensive insights'
+    }
+  ];
 
   constructor(
     private router: Router,
@@ -34,16 +65,17 @@ export class LoginComponent implements OnInit {
 
   onLogin() {
     if (this.itemForm.valid) {
+      this.isLoading = true;
       this.showMessage = false;
       this.showError = false;
       this.responseMessage = '';
 
       this.httpService.Login(this.itemForm.value).subscribe(
         (data: any) => {
+          this.isLoading = false;
           this.showMessage = true;
           this.responseMessage = 'Login successful! Redirecting to dashboard...';
           
-          // Set a timeout to allow the user to see the success message
           setTimeout(() => {
             this.authService.setRole(data.role);
             this.authService.saveToken(data.token);
@@ -51,9 +83,10 @@ export class LoginComponent implements OnInit {
             this.router.navigateByUrl('dashboard').then(() => {
               window.location.reload();
             });
-          }, 1000); // 1 second delay
+          }, 1000);
         },
         error => {
+          this.isLoading = false;
           this.showMessage = true;
           this.showError = true;
           if (error.status === 401) {

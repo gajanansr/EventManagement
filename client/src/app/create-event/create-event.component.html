@@ -1,107 +1,425 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Event</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-    <link rel="stylesheet" href="create-event.component.scss">
-</head>
-<body>
-    <div class="background-wrapper">
-        <div class="bubble bubble-1"></div>
-        <div class="bubble bubble-2"></div>
-        <div class="bubble bubble-3"></div>
-        <div class="bubble bubble-4"></div>
-        <div class="bubble bubble-5"></div>
-        <div class="bubble bubble-6"></div>
-        <div class="bubble bubble-7"></div>
-        <div class="bubble bubble-8"></div>
-        <div class="bubble bubble-9"></div>
-        <div class="bubble bubble-10"></div>
-        <div class="alert-container">
-          <div *ngIf="showMessage" class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ responseMessage }}
-            <button type="button" class="btn-close" aria-label="Close" (click)="closeAlert()"></button>
-          </div>
-          <div *ngIf="showError" class="alert alert-danger alert-dismissible fade show" role="alert">
-            {{ errorMessage }}
-            <button type="button" class="btn-close" aria-label="Close" (click)="closeAlert()"></button>
-          </div>
-        </div>
-        
-        <div class="container position-relative">
-            <h1 class="text-center mb-4 text-primary" id="title">
-                Manage Event
-            </h1>
+<div class="create-event-container">
+  <!-- Page Header -->
+  <app-page-header
+    title="Create New Event"
+    subtitle="Fill in the details to create your event"
+    icon="event"
+    actionLabel="Cancel"
+    actionIcon="close"
+    (action)="router.navigate(['/dashboard'])">
+  </app-page-header>
 
-            <div class="card mx-auto col-md-10 mb-8">
-                <div class="card-header">
-                    <h4>Create Event</h4>
-                </div>
-                <div class="card-body">
-                    <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
-                        <!-- Form fields here -->
-                        <div class="row mb-3">
-                          <div class="col">
-                            <label for="title" class="form-label">Title</label>
-                            <input type="text" class="form-control" id="title" placeholder="Title" formControlName="title">
-                            <div *ngIf="itemForm.get('title')?.hasError('required') && itemForm.get('title')?.touched"
-                              class="text-danger">Title is required</div>
-                          </div>
-              
-                          <div class="col">
-                            <label for="description" class="form-label">Description</label>
-                            <input type="text" class="form-control" id="description" placeholder="Description"
-                              formControlName="description">
-                            <div *ngIf="itemForm.get('description')?.hasError('required') && itemForm.get('description')?.touched"
-                              class="text-danger">Description is required</div>
-                          </div>
-                        </div>
-              
-                        <div class="row mb-3">
-                          <div class="col">
-                            <label for="dateTime" class="form-label">Date and Time</label>
-                            <input type="datetime-local" class="form-control" id="dateTime" placeholder="Date and Time"
-                              formControlName="dateTime" [min]="minDate">
-                            <div *ngIf="itemForm.get('dateTime')?.hasError('required') && itemForm.get('dateTime')?.touched"
-                              class="text-danger">Date and Time is required</div>
-                            <div *ngIf="itemForm.get('dateTime')?.hasError('dateInPast') && itemForm.get('dateTime')?.touched"
-                              class="text-danger">Date must be tomorrow or later</div>
-                          </div>
-              
-                          <div class="col">
-                            <label for="location" class="form-label">Location</label>
-                            <input type="text" class="form-control" id="location" placeholder="Location" formControlName="location">
-                            <div *ngIf="itemForm.get('location')?.hasError('required') && itemForm.get('location')?.touched"
-                              class="text-danger">Location is required</div>
-                          </div>
-                        </div>
-              
-                        <div class="mb-3">
-                          <label for="status" class="form-label">Status</label>
-                          <select id="status" class="form-control" formControlName="status">
-                            <option value="" disabled selected>Select status</option>
-                            <option value="Scheduled">Scheduled</option>
-                            <option value="Cancelled">Cancelled</option>
-                            <option value="Completed">Completed</option>
-                          </select>
-                          <div *ngIf="itemForm.get('status')?.hasError('required') && itemForm.get('status')?.touched"
-                            class="text-danger">Status is required</div>
-                        </div>
-              
-                        <div class="d-flex justify-content-start">
-                          <button type="submit" class="btn btn-primary">Submit</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+  <!-- Alert Messages -->
+  <div class="alert-wrapper" *ngIf="showMessage || showError">
+    <div *ngIf="showMessage" class="alert alert-success">
+      <mat-icon>check_circle</mat-icon>
+      <span>{{ responseMessage }}</span>
+      <button mat-icon-button (click)="closeAlert()">
+        <mat-icon>close</mat-icon>
+      </button>
     </div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
-</body>
-</html>
+    <div *ngIf="showError" class="alert alert-error">
+      <mat-icon>error</mat-icon>
+      <span>{{ errorMessage }}</span>
+      <button mat-icon-button (click)="closeAlert()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Stepper Form -->
+  <mat-card class="stepper-card">
+    <mat-stepper [linear]="true" #stepper>
+      
+      <!-- Step 1: Basic Information -->
+      <mat-step [stepControl]="itemForm" label="Basic Information">
+        <div class="step-content">
+          <div class="step-header">
+            <mat-icon>info</mat-icon>
+            <div>
+              <h3>Event Details</h3>
+              <p>Provide the basic information about your event</p>
+            </div>
+          </div>
+
+          <form [formGroup]="itemForm">
+            <div class="form-grid">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Event Title</mat-label>
+                <input matInput formControlName="title" placeholder="Enter event title">
+                <mat-icon matPrefix>title</mat-icon>
+                <mat-error *ngIf="itemForm.get('title')?.hasError('required')">
+                  Title is required
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Event Description</mat-label>
+                <textarea matInput formControlName="description" 
+                          placeholder="Describe your event" 
+                          rows="4"></textarea>
+                <mat-icon matPrefix>description</mat-icon>
+                <mat-error *ngIf="itemForm.get('description')?.hasError('required')">
+                  Description is required
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Event Category</mat-label>
+                <mat-select placeholder="Select category">
+                  <mat-option value="conference">Conference</mat-option>
+                  <mat-option value="workshop">Workshop</mat-option>
+                  <mat-option value="seminar">Seminar</mat-option>
+                  <mat-option value="networking">Networking</mat-option>
+                  <mat-option value="social">Social Event</mat-option>
+                  <mat-option value="training">Training</mat-option>
+                </mat-select>
+                <mat-icon matPrefix>category</mat-icon>
+              </mat-form-field>
+            </div>
+
+            <div class="step-actions">
+              <button mat-button routerLink="/dashboard">Cancel</button>
+              <button mat-raised-button color="primary" matStepperNext>
+                Next
+                <mat-icon>arrow_forward</mat-icon>
+              </button>
+            </div>
+          </form>
+        </div>
+      </mat-step>
+
+      <!-- Step 2: Date, Time & Location -->
+      <mat-step label="Date & Location">
+        <div class="step-content">
+          <div class="step-header">
+            <mat-icon>schedule</mat-icon>
+            <div>
+              <h3>When & Where</h3>
+              <p>Set the date, time, and location for your event</p>
+            </div>
+          </div>
+
+          <form [formGroup]="itemForm">
+            <div class="form-grid">
+              <mat-form-field appearance="outline">
+                <mat-label>Event Date & Time</mat-label>
+                <input matInput type="datetime-local" formControlName="dateTime" [min]="minDate">
+                <mat-icon matPrefix>event</mat-icon>
+                <mat-error *ngIf="itemForm.get('dateTime')?.hasError('required')">
+                  Date and time is required
+                </mat-error>
+                <mat-error *ngIf="itemForm.get('dateTime')?.hasError('dateInPast')">
+                  Date must be tomorrow or later
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Duration (hours)</mat-label>
+                <input matInput type="number" placeholder="e.g., 2" min="1">
+                <mat-icon matPrefix>timelapse</mat-icon>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Event Location</mat-label>
+                <input matInput formControlName="location" placeholder="Enter venue or address">
+                <mat-icon matPrefix>location_on</mat-icon>
+                <mat-error *ngIf="itemForm.get('location')?.hasError('required')">
+                  Location is required
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Event Type</mat-label>
+                <mat-select placeholder="Select type">
+                  <mat-option value="in-person">In-Person</mat-option>
+                  <mat-option value="virtual">Virtual</mat-option>
+                  <mat-option value="hybrid">Hybrid</mat-option>
+                </mat-select>
+                <mat-icon matPrefix>location_city</mat-icon>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Virtual Link (if applicable)</mat-label>
+                <input matInput placeholder="https://zoom.us/...">
+                <mat-icon matPrefix>link</mat-icon>
+              </mat-form-field>
+            </div>
+
+            <div class="step-actions">
+              <button mat-button matStepperPrevious>
+                <mat-icon>arrow_back</mat-icon>
+                Back
+              </button>
+              <button mat-raised-button color="primary" matStepperNext>
+                Next
+                <mat-icon>arrow_forward</mat-icon>
+              </button>
+            </div>
+          </form>
+        </div>
+      </mat-step>
+
+      <!-- Step 3: Capacity & Pricing -->
+      <mat-step label="Capacity & Pricing">
+        <div class="step-content">
+          <div class="step-header">
+            <mat-icon>people</mat-icon>
+            <div>
+              <h3>Attendees & Tickets</h3>
+              <p>Configure capacity and ticket pricing</p>
+            </div>
+          </div>
+
+          <form [formGroup]="itemForm">
+            <div class="form-grid">
+              <mat-form-field appearance="outline">
+                <mat-label>Maximum Capacity</mat-label>
+                <input matInput type="number" placeholder="e.g., 100" min="1">
+                <mat-icon matPrefix>group</mat-icon>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Minimum Attendees</mat-label>
+                <input matInput type="number" placeholder="e.g., 10" min="0">
+                <mat-icon matPrefix>person</mat-icon>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Ticket Price</mat-label>
+                <input matInput type="number" placeholder="0.00" min="0" step="0.01">
+                <span matPrefix>$&nbsp;</span>
+                <mat-icon matSuffix>attach_money</mat-icon>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Early Bird Price</mat-label>
+                <input matInput type="number" placeholder="0.00" min="0" step="0.01">
+                <span matPrefix>$&nbsp;</span>
+                <mat-icon matSuffix>local_offer</mat-icon>
+              </mat-form-field>
+
+              <mat-checkbox class="full-width">Allow waitlist</mat-checkbox>
+              <mat-checkbox class="full-width">Require registration approval</mat-checkbox>
+            </div>
+
+            <div class="step-actions">
+              <button mat-button matStepperPrevious>
+                <mat-icon>arrow_back</mat-icon>
+                Back
+              </button>
+              <button mat-raised-button color="primary" matStepperNext>
+                Next
+                <mat-icon>arrow_forward</mat-icon>
+              </button>
+            </div>
+          </form>
+        </div>
+      </mat-step>
+
+      <!-- Step 4: Resources & Staff (optional) -->
+      <mat-step label="Resources & Staff" [optional]="true">
+        <div class="step-content">
+          <div class="step-header">
+            <mat-icon>inventory_2</mat-icon>
+            <div>
+              <h3>Resources & Team</h3>
+              <p>Assign resources and staff members (optional)</p>
+            </div>
+          </div>
+
+          <form [formGroup]="itemForm">
+            <div class="form-grid">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Required Resources</mat-label>
+                <mat-select multiple placeholder="Select resources">
+                  <mat-option value="projector">Projector</mat-option>
+                  <mat-option value="microphone">Microphone</mat-option>
+                  <mat-option value="chairs">Chairs & Tables</mat-option>
+                  <mat-option value="av">AV Equipment</mat-option>
+                  <mat-option value="catering">Catering</mat-option>
+                  <mat-option value="stage">Stage Setup</mat-option>
+                </mat-select>
+                <mat-icon matPrefix>inventory</mat-icon>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Assign Staff Members</mat-label>
+                <mat-select multiple placeholder="Select staff">
+                  <mat-option value="1">John Doe - Event Coordinator</mat-option>
+                  <mat-option value="2">Jane Smith - Tech Support</mat-option>
+                  <mat-option value="3">Mike Johnson - Catering Manager</mat-option>
+                </mat-select>
+                <mat-icon matPrefix>badge</mat-icon>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Special Requirements</mat-label>
+                <textarea matInput placeholder="Any special notes or requirements" rows="3"></textarea>
+                <mat-icon matPrefix>note</mat-icon>
+              </mat-form-field>
+            </div>
+
+            <div class="step-actions">
+              <button mat-button matStepperPrevious>
+                <mat-icon>arrow_back</mat-icon>
+                Back
+              </button>
+              <button mat-raised-button color="primary" matStepperNext>
+                Next
+                <mat-icon>arrow_forward</mat-icon>
+              </button>
+            </div>
+          </form>
+        </div>
+      </mat-step>
+
+      <!-- Step 5: Review & Submit -->
+      <mat-step label="Review & Submit">
+        <div class="step-content">
+          <div class="step-header">
+            <mat-icon>checklist</mat-icon>
+            <div>
+              <h3>Review Your Event</h3>
+              <p>Please review all details before submitting</p>
+            </div>
+          </div>
+
+          <div class="review-section">
+            <!-- Basic Information -->
+            <mat-card class="review-card">
+              <mat-card-header>
+                <mat-card-title>
+                  <mat-icon>info</mat-icon>
+                  Basic Information
+                </mat-card-title>
+                <button mat-button color="primary" (click)="stepper.selectedIndex = 0">
+                  Edit
+                </button>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="review-item">
+                  <span class="review-label">Title:</span>
+                  <span class="review-value">{{ itemForm.get('title')?.value || 'Not set' }}</span>
+                </div>
+                <div class="review-item">
+                  <span class="review-label">Description:</span>
+                  <span class="review-value">{{ itemForm.get('description')?.value || 'Not set' }}</span>
+                </div>
+              </mat-card-content>
+            </mat-card>
+
+            <!-- Date & Location -->
+            <mat-card class="review-card">
+              <mat-card-header>
+                <mat-card-title>
+                  <mat-icon>schedule</mat-icon>
+                  Date & Location
+                </mat-card-title>
+                <button mat-button color="primary" (click)="stepper.selectedIndex = 1">
+                  Edit
+                </button>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="review-item">
+                  <span class="review-label">Date & Time:</span>
+                  <span class="review-value">{{ itemForm.get('dateTime')?.value || 'Not set' }}</span>
+                </div>
+                <div class="review-item">
+                  <span class="review-label">Location:</span>
+                  <span class="review-value">{{ itemForm.get('location')?.value || 'Not set' }}</span>
+                </div>
+              </mat-card-content>
+            </mat-card>
+
+            <!-- Status Selection -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Event Status</mat-label>
+              <mat-select formControlName="status">
+                <mat-option value="Scheduled">Scheduled</mat-option>
+                <mat-option value="Cancelled">Cancelled</mat-option>
+                <mat-option value="Completed">Completed</mat-option>
+              </mat-select>
+              <mat-icon matPrefix>flag</mat-icon>
+              <mat-error *ngIf="itemForm.get('status')?.hasError('required')">
+                Status is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="step-actions final-actions">
+            <button mat-button matStepperPrevious>
+              <mat-icon>arrow_back</mat-icon>
+              Back
+            </button>
+            <div class="action-group">
+              <button mat-button routerLink="/dashboard">Cancel</button>
+              <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!itemForm.valid">
+                <mat-icon>check_circle</mat-icon>
+                Create Event
+              </button>
+            </div>
+          </div>
+        </div>
+      </mat-step>
+
+    </mat-stepper>
+  </mat-card>
+
+  <!-- Existing Events List -->
+  <mat-card class="events-list-card" *ngIf="eventList.length > 0">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>list</mat-icon>
+        Your Events
+      </mat-card-title>
+      <div class="header-actions">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Search events</mat-label>
+          <input matInput [(ngModel)]="searchQuery" (input)="onSearch()" placeholder="Search by ID or title">
+          <mat-icon matPrefix>search</mat-icon>
+        </mat-form-field>
+      </div>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="events-grid">
+        <mat-card class="event-item-card" *ngFor="let event of paginatedEvents">
+          <mat-card-header>
+            <mat-card-title>{{ event.title }}</mat-card-title>
+            <span class="event-status" [ngClass]="{
+              'status-scheduled': event.status === 'Scheduled',
+              'status-completed': event.status === 'Completed',
+              'status-cancelled': event.status === 'Cancelled'
+            }">
+              {{ event.status }}
+            </span>
+          </mat-card-header>
+          <mat-card-content>
+            <p>{{ event.description }}</p>
+            <div class="event-meta">
+              <span class="meta-item">
+                <mat-icon>event</mat-icon>
+                {{ event.dateTime | date: 'MMM dd, yyyy' }}
+              </span>
+              <span class="meta-item">
+                <mat-icon>location_on</mat-icon>
+                {{ event.location }}
+              </span>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination" *ngIf="totalPages > 1">
+        <button mat-icon-button [disabled]="currentPage === 1" (click)="previousPage()">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
+        <button mat-icon-button [disabled]="currentPage === totalPages" (click)="nextPage()">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -32,7 +32,7 @@ export class CreateEventComponent implements OnInit {
   searchResults: any[] = [];
 
   constructor(
-    private router: Router,
+    public router: Router,
     private httpService: HttpService,
     private formBuilder: FormBuilder,
     private authService: AuthService

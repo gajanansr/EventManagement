@@ -1,18 +1,37 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpService } from '../../services/http.service';
 import { AuthService } from '../../services/auth.service';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 
 @Component({
   selector: 'app-view-events',
   templateUrl: './view-events.component.html',
-  styleUrls: ['./view-events.component.scss']
+  styleUrls: ['./view-events.component.scss'],
+  animations: [
+    trigger('cardAnimation', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(20px)' }),
+        animate('300ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
+      ])
+    ]),
+    trigger('fadeInOut', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(-10px)' }),
+        animate('200ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
+      ]),
+      transition(':leave', [
+        animate('200ms ease-in', style({ opacity: 0, transform: 'translateY(-10px)' }))
+      ])
+    ])
+  ]
 })
 
 export class ViewEventsComponent  implements OnInit{
   itemForm!: FormGroup;
+  searchControl = new FormControl('');
   showError : boolean = false;
   errorMessage : string = "";
   eventObj: any;
@@ -26,8 +45,12 @@ export class ViewEventsComponent  implements OnInit{
 
   paginatedEvents: any[] = [];
   currentPage: number = 1;
-  itemsPerPage: number = 3;
+  itemsPerPage: number = 6;
   totalPages: number = 1;
+
+  // Filter and sort properties
+  selectedFilter: string = 'all';
+  selectedSort: string = 'id';
 
   // New properties for staff assignment and messaging
   roleName: string = '';
@@ -72,11 +95,56 @@ export class ViewEventsComponent  implements OnInit{
     this.initForm();
     this.getEvents();
     
+    // Setup search subscription
+    this.searchControl.valueChanges.subscribe(value => {
+      this.performSearch(value || '');
+    });
+    
     // Load staff list if user is a planner
     if (this.roleName === 'PLANNER') {
       this.loadStaffList();
     }
   }
+
+  // Get event image (placeholder for now, can be replaced with actual event images)
+  getEventImage(event: any): string {
+    const eventImages = [
+      'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800',
+      'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800',
+      'https://images.unsplash.com/photo-1511578314322-379afb476865?w=800',
+      'https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=800',
+      'https://images.unsplash.com/photo-1505236858219-8359eb29e329?w=800',
+      'https://images.unsplash.com/photo-1478147427282-58a87a120781?w=800'
+    ];
+    const index = event.eventID % eventImages.length;
+    return eventImages[index];
+  }
+
+  // Clear search
+  clearSearch(): void {
+    this.searchControl.setValue('');
+  }
+
+  // Perform search
+  performSearch(searchTerm: string): void {
+    if (!searchTerm.trim()) {
+      this.setPaginatedEvents();
+      return;
+    }
+    
+    const filtered = this.eventList.filter(event => 
+      event.eventID.toString().includes(searchTerm) ||
+      event.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    
+    // Update pagination with filtered results
+    this.totalPages = Math.ceil(filtered.length / this.itemsPerPage);
+    this.currentPage = 1;
+    const startIndex = 0;
+    const endIndex = this.itemsPerPage;
+    this.paginatedEvents = filtered.slice(startIndex, endIndex);
+  }
+
   initForm() {
     this.itemForm = this.formBuilder.group({
       searchTerm : [''],

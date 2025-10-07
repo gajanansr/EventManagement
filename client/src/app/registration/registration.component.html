@@ -1,149 +1,188 @@
-<div class="registration-container">
-  <div class="registration-content">
-    <!-- Left Section - Welcome -->
-    <div class="welcome-section">
-      <div class="welcome-content">
-        <h1 class="brand-title text-gradient">Join Us Today</h1>
-        <p class="brand-subtitle">Start planning amazing events</p>
-        <div class="feature-list">
-          <div class="feature-item">
-            <i class="bi bi-calendar-check"></i>
-            <span>Manage Events Effortlessly</span>
+<div class="auth-container">
+  <!-- Left Section - Brand & Graphics -->
+  <div class="auth-visual">
+    <div class="visual-background">
+      <div class="gradient-blob blob-1"></div>
+      <div class="gradient-blob blob-2"></div>
+      <div class="gradient-blob blob-3"></div>
+    </div>
+    
+    <div class="visual-content">
+      <div class="brand-section">
+        <mat-icon class="brand-icon">celebration</mat-icon>
+        <h1 class="brand-title">Join EventManage</h1>
+        <p class="brand-tagline">Start Planning Extraordinary Events Today</p>
+      </div>
+
+      <div class="features-showcase">
+        <div class="feature-showcase-item" *ngFor="let feature of features">
+          <div class="feature-icon-wrapper">
+            <mat-icon>{{ feature.icon }}</mat-icon>
           </div>
-          <div class="feature-item">
-            <i class="bi bi-people"></i>
-            <span>Collaborate with Teams</span>
-          </div>
-          <div class="feature-item">
-            <i class="bi bi-graph-up"></i>
-            <span>Track Progress in Real-time</span>
+          <div class="feature-text">
+            <h3>{{ feature.title }}</h3>
+            <p>{{ feature.description }}</p>
           </div>
         </div>
       </div>
+
+      <div class="stats-section">
+        <div class="stat-item">
+          <div class="stat-value">10K+</div>
+          <div class="stat-label">Active Users</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">50K+</div>
+          <div class="stat-label">Events Created</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">99.9%</div>
+          <div class="stat-label">Uptime</div>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <!-- Right Section - Registration Form -->
-    <div class="form-section">
-      <div class="form-card">
-        <div class="form-header">
-          <h2>Create Account</h2>
-          <p>Fill in your details to get started</p>
-        </div>
+  <!-- Right Section - Registration Form -->
+  <div class="auth-form">
+    <div class="form-wrapper">
+      <!-- Back to Home Link -->
+      <a routerLink="/" class="back-link">
+        <mat-icon>arrow_back</mat-icon>
+        Back to Home
+      </a>
 
-        <!-- Alert Messages -->
-        <div *ngIf="showMessage" class="alert alert-success fade-in">
-          {{responseMessage}}
-        </div>
-        <div *ngIf="showError" class="alert alert-danger fade-in">
-          {{errorMessage}}
-        </div>
+      <!-- Form Header -->
+      <div class="form-header">
+        <h2>Create Your Account</h2>
+        <p>Join thousands of event professionals</p>
+      </div>
 
-        <!-- Registration Form -->
-        <form [formGroup]="itemForm" (ngSubmit)="onRegister()" class="registration-form">
-          <div class="form-group">
-            <label class="form-label">Username <span class="required-asterisk">*</span></label>
-            <input 
-              type="text" 
-              id="username" 
-              formControlName="username"
-              class="form-control" 
-              placeholder="Choose a username"
-              [ngClass]="{
-                'is-invalid': itemForm.get('username')?.invalid && itemForm.get('username')?.touched,
-                'is-valid': itemForm.get('username')?.valid && itemForm.get('username')?.touched
-              }">
-            <small *ngIf="itemForm.get('username')?.hasError('required') && itemForm.get('username')?.touched"
-              class="error-text">
-              <i class="bi bi-exclamation-circle"></i> Username is required
-            </small>
-            <small *ngIf="itemForm.get('username')?.hasError('pattern') && itemForm.get('username')?.touched"
-              class="error-text">
-              <i class="bi bi-exclamation-circle"></i> Username should only contain lowercase letters
-            </small>
-            <small *ngIf="itemForm.get('username')?.hasError('notUnique') && itemForm.get('username')?.touched"
-              class="error-text">
-              <i class="bi bi-exclamation-circle"></i> Username already exists
-            </small>
-          </div>
+      <!-- Alert Messages -->
+      <div *ngIf="showMessage" class="alert-message alert-success" [@fadeInOut]>
+        <mat-icon>check_circle</mat-icon>
+        <span>{{ responseMessage }}</span>
+      </div>
 
-          <div class="form-group">
-            <label class="form-label">Email<span class="required-asterisk">*</span></label>
-            <input 
-              type="email" 
-              id="email" 
-              formControlName="email"
-              class="form-control" 
-              placeholder="Enter your email"
-              [ngClass]="{
-                'is-invalid': itemForm.get('email')?.invalid && itemForm.get('email')?.touched,
-                'is-valid': itemForm.get('email')?.valid && itemForm.get('email')?.touched
-              }">
-            <small *ngIf="itemForm.get('email')?.hasError('required') && itemForm.get('email')?.touched"
-              class="error-text">
-              <i class="bi bi-exclamation-circle"></i> Email is required
-            </small>
-            <small *ngIf="itemForm.get('email')?.hasError('invalidEmailFormat') && itemForm.get('email')?.touched"
-              class="error-text">
-              <i class="bi bi-exclamation-circle"></i> Please enter a valid email address
-            </small>
-          </div>
+      <div *ngIf="showError" class="alert-message alert-error" [@fadeInOut]>
+        <mat-icon>error</mat-icon>
+        <span>{{ errorMessage }}</span>
+      </div>
 
-          <div class="form-group">
-            <label class="form-label">Password<span class="required-asterisk">*</span></label>
-            <input 
-              type="password" 
-              id="password" 
-              formControlName="password"
-              class="form-control" 
-              placeholder="Create a strong password"
-              [ngClass]="{
-                'is-invalid': itemForm.get('password')?.invalid && itemForm.get('password')?.touched,
-                'is-valid': itemForm.get('password')?.valid && itemForm.get('password')?.touched
-              }">
-            <small *ngIf="itemForm.get('password')?.hasError('required') && itemForm.get('password')?.touched"
-              class="error-text">
-              <i class="bi bi-exclamation-circle"></i> Password is required
-            </small>
-            <small *ngIf="itemForm.get('password')?.hasError('pattern') && itemForm.get('password')?.touched"
-              class="error-text">
-              <i class="bi bi-exclamation-circle"></i> Password must contain at least one number, one uppercase and lowercase letter, one special character, and be 8-20 characters long
-            </small>
-          </div>
+      <!-- Registration Form -->
+      <form [formGroup]="itemForm" (ngSubmit)="onRegister()" class="registration-form">
+        <!-- Username Field -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Username</mat-label>
+          <input 
+            matInput 
+            type="text" 
+            formControlName="username"
+            placeholder="Choose a unique username">
+          <mat-icon matPrefix>person</mat-icon>
+          <mat-hint>Only lowercase letters allowed</mat-hint>
+          <mat-error *ngIf="itemForm.get('username')?.hasError('required')">
+            Username is required
+          </mat-error>
+          <mat-error *ngIf="itemForm.get('username')?.hasError('pattern')">
+            Username must contain only lowercase letters
+          </mat-error>
+          <mat-error *ngIf="itemForm.get('username')?.hasError('notUnique')">
+            Username already exists
+          </mat-error>
+        </mat-form-field>
 
-          <div class="form-group">
-            <label class="form-label">Role <span class="required-asterisk">*</span></label>
-            <select 
-              id="role" 
-              formControlName="role" 
-              class="form-control"
-              [ngClass]="{
-                'is-invalid': itemForm.get('role')?.invalid && itemForm.get('role')?.touched,
-                'is-valid': itemForm.get('role')?.valid && itemForm.get('role')?.touched
-              }">
-              <option value="">Select Your Role</option>
-              <option value="STAFF">Staff Member</option>
-              <option value="PLANNER">Event Planner</option>
-              <option value="CLIENT">Client</option>
-            </select>
-            <small *ngIf="itemForm.get('role')?.hasError('required') && itemForm.get('role')?.touched"
-              class="error-text">
-              <i class="bi bi-exclamation-circle"></i> Please select a role
-            </small>
-          </div>
+        <!-- Email Field -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <input 
+            matInput 
+            type="email" 
+            formControlName="email"
+            placeholder="your.email@example.com">
+          <mat-icon matPrefix>email</mat-icon>
+          <mat-error *ngIf="itemForm.get('email')?.hasError('required')">
+            Email is required
+          </mat-error>
+          <mat-error *ngIf="itemForm.get('email')?.hasError('email')">
+            Please enter a valid email address
+          </mat-error>
+        </mat-form-field>
 
+        <!-- Password Field -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Password</mat-label>
+          <input 
+            matInput 
+            [type]="hidePassword ? 'password' : 'text'"
+            formControlName="password"
+            placeholder="Create a strong password">
+          <mat-icon matPrefix>lock</mat-icon>
           <button 
-            type="submit" 
-            class="btn btn-primary btn-register" 
-            [disabled]="itemForm.invalid">
-            <span *ngIf="!itemForm.pending">Create Account</span>
-            <span *ngIf="itemForm.pending" class="spinner-border spinner-border-sm"></span>
+            mat-icon-button 
+            matSuffix 
+            type="button"
+            (click)="hidePassword = !hidePassword"
+            [attr.aria-label]="'Hide password'" 
+            [attr.aria-pressed]="hidePassword">
+            <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
           </button>
-        </form>
+          <mat-hint>Min 8 characters with uppercase, lowercase, number & symbol</mat-hint>
+          <mat-error *ngIf="itemForm.get('password')?.hasError('required')">
+            Password is required
+          </mat-error>
+          <mat-error *ngIf="itemForm.get('password')?.hasError('pattern')">
+            Password must be 8-20 chars with uppercase, lowercase, number & special character
+          </mat-error>
+        </mat-form-field>
 
-        <!-- Footer -->
-        <div class="form-footer">
-          <p>Already have an account? <a [routerLink]="['/login']" class="link-primary">Sign In</a></p>
+        <!-- Role Selection -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Select Your Role</mat-label>
+          <mat-select formControlName="role" placeholder="Choose your role">
+            <mat-option value="PLANNER">
+              <mat-icon>event_note</mat-icon>
+              Event Planner
+            </mat-option>
+            <mat-option value="STAFF">
+              <mat-icon>badge</mat-icon>
+              Staff Member
+            </mat-option>
+            <mat-option value="CLIENT">
+              <mat-icon>person</mat-icon>
+              Client
+            </mat-option>
+          </mat-select>
+          <mat-icon matPrefix>work</mat-icon>
+          <mat-error *ngIf="itemForm.get('role')?.hasError('required')">
+            Please select a role
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Terms & Conditions -->
+        <div class="terms-section">
+          <mat-checkbox color="primary">
+            I agree to the <a href="#" class="link">Terms & Conditions</a> and <a href="#" class="link">Privacy Policy</a>
+          </mat-checkbox>
         </div>
+
+        <!-- Submit Button -->
+        <button 
+          mat-raised-button 
+          color="primary" 
+          type="submit" 
+          class="submit-btn"
+          [disabled]="itemForm.invalid || isLoading">
+          <span *ngIf="!isLoading">Create Account</span>
+          <mat-spinner *ngIf="isLoading" diameter="20"></mat-spinner>
+        </button>
+      </form>
+
+      <!-- Sign In Link -->
+      <div class="form-footer">
+        <p>Already have an account? 
+          <a routerLink="/login" class="signin-link">Sign In</a>
+        </p>
       </div>
     </div>
   </div>
