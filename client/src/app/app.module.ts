@@ -23,14 +23,28 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { MatOptionModule } from '@angular/material/core';
+import { MatOptionModule, MatRippleModule } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { MatListModule } from '@angular/material/list';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
-import {MatRadioModule} from '@angular/material/radio';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LandingComponent } from './landing/landing.component'
 
 @NgModule({
@@ -49,6 +63,7 @@ import { LandingComponent } from './landing/landing.component'
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     CommonModule,
     AppRoutingModule,
     FormsModule,
@@ -65,7 +80,21 @@ import { LandingComponent } from './landing/landing.component'
     MatDialogModule,
     MatToolbarModule,
     MatIconModule,
-    MatRadioModule
+    MatRadioModule,
+    MatSidenavModule,
+    MatMenuModule,
+    MatBadgeModule,
+    MatChipsModule,
+    MatGridListModule,
+    MatProgressSpinnerModule,
+    MatSnackBarModule,
+    MatTooltipModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatStepperModule,
+    MatTabsModule,
+    MatSlideToggleModule,
+    MatRippleModule
   ],
   providers: [HttpService,HttpClientModule ],
   bootstrap: [AppComponent]

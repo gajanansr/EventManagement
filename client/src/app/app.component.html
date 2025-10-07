@@ -1,61 +1,175 @@
 <nav class="modern-navbar" *ngIf="isLoggedIn">
   <div class="navbar-container">
+    <!-- Brand Logo -->
     <div class="navbar-brand">
       <span class="brand-icon">🎉</span>
-      <a class="brand-text" [routerLink]="['/dashboard']" routerLinkActive="router-link-active" >EventOO.io</a>
+      <a class="brand-text" [routerLink]="['/dashboard']">Dashboard</a>
     </div>
 
-    <div class="navbar-menu">
-      <!-- Role-based navigation -->
-      <ng-container *ngIf="roleName === 'PLANNER'">
-        <!-- <button class="nav-btn" routerLink="/create-event" routerLinkActive="active">
-          <span class="btn-icon">📅</span>
-          <span class="btn-text">Create Event</span>
-        </button> -->
-        <button class="nav-btn" routerLink="/view-events" routerLinkActive="active">
-          <span class="btn-icon">🎉</span>
-          <span class="btn-text">View Events</span>
-        </button>
-        <!-- <button class="nav-btn" routerLink="/add-resource" routerLinkActive="active">
-          <span class="btn-icon">📦</span>
-          <span class="btn-text">Add Resource</span>
-        </button>
-        <button class="nav-btn" routerLink="/resource-allocate" routerLinkActive="active">
-          <span class="btn-icon">🎯</span>
-          <span class="btn-text">Allocate Resource</span>
-        </button> -->
-      </ng-container>
-
-      <ng-container *ngIf="roleName === 'STAFF'">
-        <button class="nav-btn" routerLink="/view-events" routerLinkActive="active">
-          <span class="btn-icon">👁️</span>
-          <span class="btn-text">View Events</span>
-        </button>
-      </ng-container>
-
-      <ng-container *ngIf="roleName === 'CLIENT'">
-        <button class="nav-btn" routerLink="/booking-details" routerLinkActive="active">
-          <span class="btn-icon">📋</span>
-          <span class="btn-text">My Bookings</span>
-        </button>
-      </ng-container>
+    <!-- Search Bar (Center) -->
+    <div class="navbar-search" *ngIf="roleName === 'PLANNER' || roleName === 'CLIENT'">
+      <mat-icon class="search-icon">search</mat-icon>
+      <input type="text" placeholder="Search event or anything" class="search-input">
     </div>
 
+    <!-- Right Actions -->
     <div class="navbar-actions">
-      <!-- Profile & Logout - Only show when logged in -->
-      <button class="nav-btn nav-btn-profile" [routerLink]="['/profile']" routerLinkActive="active">
-        <span class="btn-icon">👤</span>
-        <span class="btn-text">Profile</span>
+      <!-- Add Event Button (Planner Only) -->
+      <button *ngIf="roleName === 'PLANNER'" class="add-event-btn" routerLink="/create-event" mat-raised-button color="primary">
+        <mat-icon>add</mat-icon>
+        Add Event
       </button>
-      <button class="nav-btn nav-btn-logout" (click)="logout()">
-        <span class="btn-icon">🚪</span>
-        <span class="btn-text">Logout</span>
+
+      <!-- Notifications -->
+      <button class="icon-btn" mat-icon-button [matMenuTriggerFor]="notificationMenu">
+        <mat-icon matBadge="3" matBadgeColor="warn" matBadgeSize="small">notifications</mat-icon>
+      </button>
+
+      <!-- User Profile -->
+      <button class="profile-btn" mat-button [matMenuTriggerFor]="userMenu">
+        <div class="user-avatar">
+          <img src="https://ui-avatars.com/api/?name={{roleName}}&background=4f46e5&color=fff" alt="User">
+        </div>
+        <span class="user-name">Maria Soniatha</span>
+        <mat-icon>expand_more</mat-icon>
       </button>
     </div>
   </div>
+
+  <!-- Notification Menu -->
+  <mat-menu #notificationMenu="matMenu" class="notification-menu">
+    <div class="notification-header">
+      <h3>Notifications</h3>
+      <button mat-button class="mark-read">Mark all read</button>
+    </div>
+    <mat-divider></mat-divider>
+    <button mat-menu-item class="notification-item">
+      <mat-icon class="notification-icon success">check_circle</mat-icon>
+      <div class="notification-content">
+        <p class="notification-title">Event Created Successfully</p>
+        <span class="notification-time">2 minutes ago</span>
+      </div>
+    </button>
+    <button mat-menu-item class="notification-item">
+      <mat-icon class="notification-icon info">info</mat-icon>
+      <div class="notification-content">
+        <p class="notification-title">New booking request</p>
+        <span class="notification-time">5 minutes ago</span>
+      </div>
+    </button>
+    <button mat-menu-item class="notification-item">
+      <mat-icon class="notification-icon warning">warning</mat-icon>
+      <div class="notification-content">
+        <p class="notification-title">Resource allocation pending</p>
+        <span class="notification-time">10 minutes ago</span>
+      </div>
+    </button>
+    <mat-divider></mat-divider>
+    <button mat-menu-item class="view-all">View all notifications</button>
+  </mat-menu>
+
+  <!-- User Menu -->
+  <mat-menu #userMenu="matMenu" class="user-menu">
+    <div class="user-menu-header">
+      <div class="user-avatar-large">
+        <img src="https://ui-avatars.com/api/?name={{roleName}}&background=4f46e5&color=fff" alt="User">
+      </div>
+      <div class="user-info">
+        <h4>Maria Soniatha</h4>
+        <p>{{roleName | titlecase}}</p>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+    <button mat-menu-item routerLink="/profile">
+      <mat-icon>person</mat-icon>
+      <span>My Profile</span>
+    </button>
+    <button mat-menu-item routerLink="/dashboard">
+      <mat-icon>dashboard</mat-icon>
+      <span>Dashboard</span>
+    </button>
+    <button mat-menu-item *ngIf="roleName === 'CLIENT'" routerLink="/booking-details">
+      <mat-icon>event</mat-icon>
+      <span>My Bookings</span>
+    </button>
+    <mat-divider></mat-divider>
+    <button mat-menu-item (click)="logout()">
+      <mat-icon>logout</mat-icon>
+      <span>Logout</span>
+    </button>
+  </mat-menu>
 </nav>
 
-<main class="main-content">
+<!-- Sidebar for Navigation (Mobile & Desktop) -->
+<mat-sidenav-container class="app-container" *ngIf="isLoggedIn">
+  <mat-sidenav #sidenav mode="side" opened class="app-sidenav">
+    <div class="sidenav-header">
+      <span class="brand-icon-large">🎉</span>
+      <h2>EventOO.io</h2>
+    </div>
+    
+    <nav class="sidenav-nav">
+      <!-- Planner Navigation -->
+      <ng-container *ngIf="roleName === 'PLANNER'">
+        <a mat-button routerLink="/dashboard" routerLinkActive="active" class="nav-link">
+          <mat-icon>dashboard</mat-icon>
+          <span>Dashboard</span>
+        </a>
+        <a mat-button routerLink="/view-events" routerLinkActive="active" class="nav-link">
+          <mat-icon>event</mat-icon>
+          <span>Events</span>
+        </a>
+        <a mat-button routerLink="/add-resource" routerLinkActive="active" class="nav-link">
+          <mat-icon>inventory</mat-icon>
+          <span>Resources</span>
+        </a>
+        <a mat-button routerLink="/resource-allocate" routerLinkActive="active" class="nav-link">
+          <mat-icon>assignment</mat-icon>
+          <span>Allocations</span>
+        </a>
+        <a mat-button routerLink="/booking-details" routerLinkActive="active" class="nav-link">
+          <mat-icon>book_online</mat-icon>
+          <span>Bookings</span>
+        </a>
+      </ng-container>
+
+      <!-- Staff Navigation -->
+      <ng-container *ngIf="roleName === 'STAFF'">
+        <a mat-button routerLink="/dashboard" routerLinkActive="active" class="nav-link">
+          <mat-icon>dashboard</mat-icon>
+          <span>Dashboard</span>
+        </a>
+        <a mat-button routerLink="/view-events" routerLinkActive="active" class="nav-link">
+          <mat-icon>event</mat-icon>
+          <span>My Events</span>
+        </a>
+      </ng-container>
+
+      <!-- Client Navigation -->
+      <ng-container *ngIf="roleName === 'CLIENT'">
+        <a mat-button routerLink="/dashboard" routerLinkActive="active" class="nav-link">
+          <mat-icon>dashboard</mat-icon>
+          <span>Dashboard</span>
+        </a>
+        <a mat-button routerLink="/view-events" routerLinkActive="active" class="nav-link">
+          <mat-icon>explore</mat-icon>
+          <span>Browse Events</span>
+        </a>
+        <a mat-button routerLink="/booking-details" routerLinkActive="active" class="nav-link">
+          <mat-icon>confirmation_number</mat-icon>
+          <span>My Bookings</span>
+        </a>
+      </ng-container>
+    </nav>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="app-content">
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+<!-- No Sidenav for logged out users -->
+<div class="app-content-full" *ngIf="!isLoggedIn">
   <router-outlet></router-outlet>
-</main>
+</div>
 
