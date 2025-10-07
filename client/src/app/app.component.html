@@ -8,22 +8,22 @@
     <div class="navbar-menu">
       <!-- Role-based navigation -->
       <ng-container *ngIf="roleName === 'PLANNER'">
-        <button class="nav-btn" routerLink="/create-event" routerLinkActive="active">
+        <!-- <button class="nav-btn" routerLink="/create-event" routerLinkActive="active">
           <span class="btn-icon">📅</span>
           <span class="btn-text">Create Event</span>
-        </button>
+        </button> -->
         <button class="nav-btn" routerLink="/view-events" routerLinkActive="active">
           <span class="btn-icon">🎉</span>
           <span class="btn-text">View Events</span>
         </button>
-        <button class="nav-btn" routerLink="/add-resource" routerLinkActive="active">
+        <!-- <button class="nav-btn" routerLink="/add-resource" routerLinkActive="active">
           <span class="btn-icon">📦</span>
           <span class="btn-text">Add Resource</span>
         </button>
         <button class="nav-btn" routerLink="/resource-allocate" routerLinkActive="active">
           <span class="btn-icon">🎯</span>
           <span class="btn-text">Allocate Resource</span>
-        </button>
+        </button> -->
       </ng-container>
 
       <ng-container *ngIf="roleName === 'STAFF'">

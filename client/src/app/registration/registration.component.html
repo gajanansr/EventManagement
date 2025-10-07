@@ -41,7 +41,7 @@
         <!-- Registration Form -->
         <form [formGroup]="itemForm" (ngSubmit)="onRegister()" class="registration-form">
           <div class="form-group">
-            <label class="form-label">Username</label>
+            <label class="form-label">Username <span class="required-asterisk">*</span></label>
             <input 
               type="text" 
               id="username" 
@@ -67,7 +67,7 @@
           </div>
 
           <div class="form-group">
-            <label class="form-label">Email</label>
+            <label class="form-label">Email<span class="required-asterisk">*</span></label>
             <input 
               type="email" 
               id="email" 
@@ -89,7 +89,7 @@
           </div>
 
           <div class="form-group">
-            <label class="form-label">Password</label>
+            <label class="form-label">Password<span class="required-asterisk">*</span></label>
             <input 
               type="password" 
               id="password" 
@@ -111,7 +111,7 @@
           </div>
 
           <div class="form-group">
-            <label class="form-label">Role</label>
+            <label class="form-label">Role <span class="required-asterisk">*</span></label>
             <select 
               id="role" 
               formControlName="role" 

@@ -39,7 +39,7 @@
         <!-- Login Form -->
         <form [formGroup]="itemForm" (ngSubmit)="onLogin()" class="login-form">
           <div class="form-group">
-            <label class="form-label">Username</label>
+            <label class="form-label">Username<span class="required-asterisk">*</span></label>
             <input 
               type="text" 
               id="username" 
@@ -57,7 +57,7 @@
           </div>
 
           <div class="form-group">
-            <label class="form-label">Password</label>
+            <label class="form-label">Password<span class="required-asterisk">*</span></label> 
             <input 
               type="password" 
               id="password" 
