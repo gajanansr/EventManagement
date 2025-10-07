@@ -384,6 +384,47 @@ button {
   border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
+// Bootstrap replacement utility classes
+.py-4 { padding-top: 2rem !important; padding-bottom: 2rem !important; }
+.mb-3 { margin-bottom: 1rem !important; }
+.mb-4 { margin-bottom: 1.5rem !important; }
+.mt-3 { margin-top: 1rem !important; }
+.me-1 { margin-right: 0.25rem !important; }
+.me-2 { margin-right: 0.5rem !important; }
+.mb-0 { margin-bottom: 0 !important; }
+.d-flex { display: flex !important; }
+.flex-wrap { flex-wrap: wrap !important; }
+.justify-content-between { justify-content: space-between !important; }
+.justify-content-center { justify-content: center !important; }
+.justify-content-end { justify-content: flex-end !important; }
+.align-items-center { align-items: center !important; }
+.gap-2 { gap: 0.5rem !important; }
+.d-inline-block { display: inline-block !important; }
+.w-auto { width: auto !important; }
+.table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.table-light thead { background: #f8f9fa; }
+.table-hover tbody tr:hover { background-color: rgba(0, 0, 0, 0.075); }
+.text-center { text-align: center !important; }
+.text-muted { color: #6c757d !important; }
+.text-white { color: white !important; }
+.text-white-50 { color: rgba(255, 255, 255, 0.5) !important; }
+.text-danger { color: #dc3545 !important; }
+.small { font-size: 0.875rem; }
+.fst-italic { font-style: italic; }
+.fw-bold { font-weight: 700 !important; }
+.display-5 { font-size: 2.5rem; font-weight: 300; }
+.input-group { display: flex; position: relative; }
+.input-group .form-control { flex: 1; }
+.input-group .btn { border-top-left-radius: 0; border-bottom-left-radius: 0; }
+.input-group .form-control { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+.btn-sm { padding: 0.4rem 0.8rem; font-size: 0.875rem; }
+.btn-info {
+  background: linear-gradient(135deg, #0dcaf0 0%, #0891b2 100%);
+  color: white;
+  &:hover { background: linear-gradient(135deg, #31d2f2 0%, #06b6d4 100%); }
+}
+.text-primary { color: #667eea !important; }
+
 // Loading spinner
 .spinner-border {
   border: 3px solid rgba(102, 126, 234, 0.1);

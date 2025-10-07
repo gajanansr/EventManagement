@@ -1,5 +1,5 @@
 <div class="container py-4">
-    <h1 class="display-5 fw-bold text-center mb-4 text-primary">Manage Events</h1>
+    <h1 class="text-center mb-4 text-primary">Manage Events</h1>
  
     <!-- Search Form -->
     <div class="card shadow-sm mb-4">
@@ -18,10 +18,10 @@
         role="alert">
         {{ message.text }}
     </div>
-    <!-- Events Table -->
+    <!-- Events Grid -->
     <div class="card shadow-sm">
         <div class="card-body">
-            <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
                 <h4 class="card-title mb-0">Events</h4>
                 <div class="d-flex flex-wrap gap-2 align-items-center">
                     <!-- Bookings button for PLANNER -->
@@ -49,114 +49,145 @@
                 </div>
             </div>
 
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead class="table-light">
-                        <tr>
-                            <th scope="col">ID</th>
-                            <th scope="col">Title</th>
-                            <th scope="col">Description</th>
-                            <th scope="col">Date</th>
-                            <th scope="col">Location</th>
-                            <th scope="col">Status</th>
-                            <th scope="col">Allocated Resources</th>
-                            <th scope="col" *ngIf="roleName === 'PLANNER'">Assigned Staff</th>
-                            <th scope="col" *ngIf="roleName === 'PLANNER' || roleName === 'CLIENT' || roleName === 'STAFF'">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let event of paginatedEvents">
-                            <td>{{ event.eventID }}</td>
-                            <td>{{ event.title }}</td>
-                            <td>{{ event.description }}</td>
-                            <td>{{ event.dateTime | date:'medium' }}</td>
-                            <td>{{ event.location }}</td>
-                            <td>
-                                <span class="badge" 
-                                    [ngClass]="{
-                                        'bg-success': event.status === 'Scheduled',
-                                        'bg-danger': event.status === 'Cancelled',
-                                        'bg-secondary': event.status === 'Completed'
-                                    }">
-                                    {{ event.status }}
-                                </span>
-                            </td>
-                            <td>
-                                <div *ngIf="event.allocations && event.allocations.length > 0; else noResources">
-                                    <div *ngFor="let allocation of event.allocations" class="mb-1">
-                                        <small class="text-muted">
-                                            <i class="bi bi-box-seam"></i>
-                                            {{ allocation.resource?.name || 'N/A' }} 
-                                            <span class="badge bg-info text-dark">Qty: {{ allocation.quantity }}</span>
-                                        </small>
+            <!-- Events Cards Grid -->
+            <div class="events-grid">
+                <div *ngFor="let event of paginatedEvents" class="event-card">
+                    <div class="event-card-header">
+                        <div class="event-header-top">
+                            <span class="event-id">#{{ event.eventID }}</span>
+                            <span class="badge event-status" 
+                                [ngClass]="{
+                                    'bg-success': event.status === 'Scheduled',
+                                    'bg-danger': event.status === 'Cancelled',
+                                    'bg-secondary': event.status === 'Completed'
+                                }">
+                                {{ event.status }}
+                            </span>
+                        </div>
+                        <h3 class="event-title">{{ event.title }}</h3>
+                    </div>
+
+                    <div class="event-card-body">
+                        <p class="event-description">{{ event.description }}</p>
+                        
+                        <div class="event-info-grid">
+                            <div class="info-item">
+                                <span class="info-icon">📅</span>
+                                <div class="info-content">
+                                    <span class="info-label">Date & Time</span>
+                                    <span class="info-value">{{ event.dateTime | date:'medium' }}</span>
+                                </div>
+                            </div>
+
+                            <div class="info-item">
+                                <span class="info-icon">📍</span>
+                                <div class="info-content">
+                                    <span class="info-label">Location</span>
+                                    <span class="info-value">{{ event.location }}</span>
+                                </div>
+                            </div>
+
+                            <div class="info-item" *ngIf="event.allocations && event.allocations.length > 0">
+                                <span class="info-icon">📦</span>
+                                <div class="info-content">
+                                    <span class="info-label">Resources</span>
+                                    <div class="resources-list">
+                                        <div *ngFor="let allocation of event.allocations" class="resource-item">
+                                            <span class="resource-name">{{ allocation.resource?.name || 'N/A' }}</span>
+                                            <span class="badge bg-info">{{ allocation.quantity }}</span>
+                                        </div>
                                     </div>
                                 </div>
-                                <ng-template #noResources>
-                                    <small class="text-muted fst-italic">No resources allocated</small>
-                                </ng-template>
-                            </td>
-                            <td *ngIf="roleName === 'PLANNER'">
-                                <span *ngIf="event.assignedStaff; else noStaff" class="badge bg-primary">
-                                    {{ event.assignedStaff.fullName || event.assignedStaff.username }}
-                                </span>
-                                <ng-template #noStaff>
-                                    <button class="btn btn-sm btn-secondary" 
+                            </div>
+
+                            <div class="info-item" *ngIf="!event.allocations || event.allocations.length === 0">
+                                <span class="info-icon">📦</span>
+                                <div class="info-content">
+                                    <span class="info-label">Resources</span>
+                                    <span class="info-value text-muted fst-italic">No resources allocated</span>
+                                </div>
+                            </div>
+
+                            <div class="info-item" *ngIf="roleName === 'PLANNER'">
+                                <span class="info-icon">👤</span>
+                                <div class="info-content">
+                                    <span class="info-label">Assigned Staff</span>
+                                    <span *ngIf="event.assignedStaff" class="badge bg-primary">
+                                        {{ event.assignedStaff.fullName || event.assignedStaff.username }}
+                                    </span>
+                                    <button *ngIf="!event.assignedStaff" class="btn btn-sm btn-secondary" 
                                             (click)="openStaffAssignment(event)">
                                         Assign Staff
                                     </button>
-                                </ng-template>
-                            </td>
-                            <td *ngIf="roleName === 'PLANNER'">
-                                <button class="btn btn-sm btn-primary me-1" (click)="edit(event)" 
-                                        data-bs-toggle="modal" data-bs-target="#updateModal">
-                                    Update
-                                </button>
-                                <button class="btn btn-sm btn-info" 
-                                        (click)="openMessaging(event)">
-                                    Messages
-                                </button>
-                            </td>
-                            <td *ngIf="roleName === 'CLIENT'">
-                                <button class="btn btn-sm btn-success me-1" 
-                                        (click)="openBookingForm(event)">
-                                    Book Event
-                                </button>
-                                <button class="btn btn-sm btn-info" 
-                                        (click)="openMessaging(event)">
-                                    Messages
-                                </button>
-                            </td>
-                            <td *ngIf="roleName === 'STAFF'">
-                                <button class="btn btn-sm btn-info" 
-                                        (click)="openMessaging(event)">
-                                    Messages
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="event-card-footer">
+                        <!-- PLANNER Actions -->
+                        <div *ngIf="roleName === 'PLANNER'" class="action-buttons">
+                            <button class="btn btn-primary" (click)="openUpdateModal(event)">
+                                ✏️ Update
+                            </button>
+                            <button class="btn btn-info" (click)="openMessaging(event)">
+                                💬 Messages
+                            </button>
+                        </div>
+
+                        <!-- CLIENT Actions -->
+                        <div *ngIf="roleName === 'CLIENT'" class="action-buttons">
+                            <button class="btn btn-success" (click)="openBookingForm(event)">
+                                ✅ Book Event
+                            </button>
+                            <button class="btn btn-info" (click)="openMessaging(event)">
+                                💬 Messages
+                            </button>
+                        </div>
+
+                        <!-- STAFF Actions -->
+                        <div *ngIf="roleName === 'STAFF'" class="action-buttons">
+                            <button class="btn btn-info" (click)="openMessaging(event)">
+                                💬 Messages
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Empty State -->
+                <div *ngIf="paginatedEvents.length === 0" class="empty-state">
+                    <div class="empty-icon">📅</div>
+                    <h3>No Events Found</h3>
+                    <p>There are no events matching your criteria.</p>
+                </div>
             </div>
 
-            <div class="d-flex justify-content-between align-items-center mt-3">
-                <button class="btn btn-outline-primary" (click)="previousPage()" [disabled]="currentPage === 1">Previous</button>
-                <span class="text-muted">Page {{ currentPage }} of {{ totalPages }}</span>
-                <button class="btn btn-outline-primary" (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
+            <!-- Pagination -->
+            <div class="pagination-controls">
+                <button class="btn btn-outline-primary" (click)="previousPage()" [disabled]="currentPage === 1">
+                    ← Previous
+                </button>
+                <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
+                <button class="btn btn-outline-primary" (click)="nextPage()" [disabled]="currentPage === totalPages">
+                    Next →
+                </button>
             </div>
         </div>
     </div>
 </div>
+
 <!-- Update Modal -->
-<div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
-                <h5 class="modal-title" id="updateModalLabel">{{ isUpdate ? 'Update Event' : 'Create Event' }}</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+<div class="custom-modal-overlay" *ngIf="showUpdateModal" (click)="closeUpdateModal()">
+    <div class="custom-modal-dialog" (click)="$event.stopPropagation()">
+        <div class="custom-modal-content">
+            <div class="custom-modal-header">
+                <h5>{{ isUpdate ? 'Update Event' : 'Create Event' }}</h5>
+                <button type="button" class="btn-close" (click)="closeUpdateModal()">&times;</button>
             </div>
-            <div class="modal-body">
+            <div class="custom-modal-body">
                 <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
                     
-                    <div class="mb-3">
+                    <div class="form-group mb-3">
                         <label for="title" class="form-label">Title:</label>
                         <input type="text" id="title" formControlName="title" class="form-control" />
                         <div *ngIf="itemForm.get('title')?.hasError('required') && itemForm.get('title')?.touched"
@@ -164,7 +195,7 @@
                             Title is required.
                         </div>
                     </div>
-                    <div class="mb-3">
+                    <div class="form-group mb-3">
                         <label for="description" class="form-label">Description:</label>
                         <textarea id="description" formControlName="description" class="form-control" rows="3"></textarea>
                         <div *ngIf="itemForm.get('description')?.hasError('required') && itemForm.get('description')?.touched"
@@ -172,7 +203,7 @@
                             Description is required.
                         </div>
                     </div>
-                    <div class="mb-3">
+                    <div class="form-group mb-3">
                         <label for="dateTime" class="form-label">Date Time:</label>
                         <input type="datetime-local" id="dateTime" formControlName="dateTime" class="form-control" />
                         <div *ngIf="itemForm.get('dateTime')?.hasError('required') && itemForm.get('dateTime')?.touched"
@@ -180,7 +211,7 @@
                             Date and Time are required.
                         </div>
                     </div>
-                    <div class="mb-3">
+                    <div class="form-group mb-3">
                         <label for="location" class="form-label">Location:</label>
                         <input type="text" id="location" formControlName="location" class="form-control" />
                         <div *ngIf="itemForm.get('location')?.hasError('required') && itemForm.get('location')?.touched"
@@ -188,7 +219,7 @@
                             Location is required.
                         </div>
                     </div>
-                    <div class="mb-3">
+                    <div class="form-group mb-3">
                         <label for="status" class="form-label">Status:</label>
                         <select id="status" class="form-select" formControlName="status">
                             <option value="" disabled selected>Select status</option>
@@ -203,8 +234,8 @@
                     </div>
                 </form>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <div class="custom-modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="closeUpdateModal()">Close</button>
                 <button type="button" class="btn btn-primary" (click)="onSubmit()">
                     {{ isUpdate ? 'Update Event' : 'Create Event' }}
                 </button>
@@ -214,20 +245,19 @@
 </div>
 
 <!-- Staff Assignment Modal -->
-<!-- Staff Assignment Modal -->
-<div class="custom-modal" *ngIf="showStaffAssignModal" (click)="closeStaffAssignModal()">
+<div class="custom-modal-overlay" *ngIf="showStaffAssignModal" (click)="closeStaffAssignModal()">
     <div class="custom-modal-dialog" (click)="$event.stopPropagation()">
         <div class="custom-modal-content">
             <div class="custom-modal-header">
                 <h5>Assign Staff to Event</h5>
-                <button type="button" class="btn-close" (click)="closeStaffAssignModal()"></button>
+                <button type="button" class="btn-close" (click)="closeStaffAssignModal()">&times;</button>
             </div>
             <div class="custom-modal-body">
                 <div *ngIf="selectedEventForStaff">
                     <h6>Event: {{ selectedEventForStaff.title }}</h6>
                     <p class="text-muted small">{{ selectedEventForStaff.location }} - {{ selectedEventForStaff.dateTime | date:'medium' }}</p>
                     
-                    <div class="mb-3">
+                    <div class="form-group mb-3">
                         <label for="staffSelect" class="form-label">Select Staff Member:</label>
                         <select id="staffSelect" class="form-select" [(ngModel)]="selectedStaffId">
                             <option value="" disabled selected>Choose staff...</option>
@@ -254,12 +284,12 @@
 </div>
 
 <!-- Messaging Modal -->
-<div class="custom-modal" *ngIf="showMessagingModal" (click)="closeMessagingModal()">
+<div class="custom-modal-overlay" *ngIf="showMessagingModal" (click)="closeMessagingModal()">
     <div class="custom-modal-dialog custom-modal-lg" (click)="$event.stopPropagation()">
         <div class="custom-modal-content">
             <div class="custom-modal-header">
                 <h5>Event Messages</h5>
-                <button type="button" class="btn-close" (click)="closeMessagingModal()"></button>
+                <button type="button" class="btn-close" (click)="closeMessagingModal()">&times;</button>
             </div>
             <div class="custom-modal-body">
                 <div *ngIf="selectedEventForMessaging">
@@ -306,12 +336,12 @@
 </div>
 
 <!-- Booking Modal (for CLIENT) -->
-<div class="custom-modal" *ngIf="showBookingModal" (click)="closeBookingModal()">
+<div class="custom-modal-overlay" *ngIf="showBookingModal" (click)="closeBookingModal()">
     <div class="custom-modal-dialog" (click)="$event.stopPropagation()">
         <div class="custom-modal-content">
             <div class="custom-modal-header">
                 <h5>Book Event</h5>
-                <button type="button" class="btn-close" (click)="closeBookingModal()"></button>
+                <button type="button" class="btn-close" (click)="closeBookingModal()">&times;</button>
             </div>
             <div class="custom-modal-body">
                 <div *ngIf="selectedEventForBooking">
