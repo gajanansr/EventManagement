@@ -130,6 +130,20 @@
     margin-bottom: 0.5rem;
     font-size: 0.95rem;
   }
+
+  .password-requirements{
+    margin-top: 10px;
+    ul {
+      margin: 0;
+      padding: 0 1.5rem;
+      list-style: disc;
+      color: #ef4444;
+      font-size: 0.96rem;
+    }
+    li.satisfied {
+      display: none;
+    }
+  }
   
   .form-control {
     width: 100%;
