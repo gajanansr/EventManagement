@@ -15,7 +15,23 @@ export class RegistrationComponent implements OnInit {
   responseMessage: any;
   namePattern = '^[a-zA-Z]+$';
   usernamePattern = '^[a-z]+$';
+
   passwordPattern = '^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,20}$';
+
+  usernameRules = [
+    { key: "required", label: "Username required", satisfied: false },
+    { key: "minLength", label: "Username should be at least 3 characters", satisfied: false},
+    { key: "lowerCase", label: "Username can only lowercase characters"}
+  ]
+
+  passwordRules = [
+    { key: "required", label: "Password required", satisfied: false },
+    { key: "capital", label: "Password should have a capital letter", satisfied: false },
+    { key: "special", label: "Password should have a special character", satisfied: false },
+    { key: "number", label: "Password should have a number", satisfied: false },
+    { key: "minLength", label: "Password should be of 8 characters at least", satisfied: false }
+  ]
+
   users$: Observable<any> = of([]);
   showError: boolean = false;
   errorMessage: any;
@@ -31,6 +47,7 @@ export class RegistrationComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.pattern(this.passwordPattern)]],
       role: ['', [Validators.required]],
+      
     });
   }
 
@@ -41,6 +58,35 @@ export class RegistrationComponent implements OnInit {
         localStorage.setItem('abcd', JSON.stringify(data));
       }
     });
+
+    this.itemForm.get('username')?.valueChanges.subscribe(value => {
+      this.checkUsernameRules(value || '')
+    })
+    this.itemForm.get('password')?.valueChanges.subscribe(value => {
+      this.checkPasswordRules(value || '')
+    })
+  }
+
+  checkUsernameRules(username: string){
+    this.usernameRules[0].satisfied = username.length > 0
+    this.usernameRules[1].satisfied = username.length > 3
+    this.usernameRules[2].satisfied = /[a-z]/.test(username)
+  }
+
+  checkPasswordRules(password: string){
+    this.passwordRules[0].satisfied = password.length > 0
+    this.passwordRules[1].satisfied = /[A-Z]/.test(password)
+    this.passwordRules[2].satisfied = /[@#$%^&+=]/.test(password)
+    this.passwordRules[3].satisfied = /[0-9]/.test(password)
+    this.passwordRules[4].satisfied = password.length >= 8
+  }
+
+  get showUsernameRequirements(): boolean {
+    return this.usernameRules?.some( rule => !rule.satisfied)
+  }
+
+  get showPasswordRequirements(): boolean {
+    return this.passwordRules?.some(rule => !rule.satisfied)
   }
 
   uniqueValidator(control: AbstractControl): Promise<ValidationErrors | null> {

@@ -52,18 +52,13 @@
                 'is-invalid': itemForm.get('username')?.invalid && itemForm.get('username')?.touched,
                 'is-valid': itemForm.get('username')?.valid && itemForm.get('username')?.touched
               }">
-            <small *ngIf="itemForm.get('username')?.hasError('required') && itemForm.get('username')?.touched"
-              class="error-text">
-              <i class="bi bi-exclamation-circle"></i> Username is required
-            </small>
-            <small *ngIf="itemForm.get('username')?.hasError('pattern') && itemForm.get('username')?.touched"
-              class="error-text">
-              <i class="bi bi-exclamation-circle"></i> Username should only contain lowercase letters
-            </small>
-            <small *ngIf="itemForm.get('username')?.hasError('notUnique') && itemForm.get('username')?.touched"
-              class="error-text">
-              <i class="bi bi-exclamation-circle"></i> Username already exists
-            </small>
+              <div class="password-requirements" *ngIf="showUsernameRequirements && itemForm.get('username')?.touched">
+                <ul>
+                  <li *ngFor="let rule of usernameRules" [class.satisfied]="rule.satisfied" [hidden]="rule.satisfied">
+                    <small>{{ rule.label }}</small>
+                  </li>
+                </ul>
+              </div>
           </div>
 
           <div class="form-group">
@@ -123,14 +118,13 @@
                 'is-invalid': itemForm.get('password')?.invalid && itemForm.get('password')?.touched,
                 'is-valid': itemForm.get('password')?.valid && itemForm.get('password')?.touched
               }">
-            <small *ngIf="itemForm.get('password')?.hasError('required') && itemForm.get('password')?.touched"
-              class="error-text">
-              <i class="bi bi-exclamation-circle"></i> Password is required
-            </small>
-            <small *ngIf="itemForm.get('password')?.hasError('pattern') && itemForm.get('password')?.touched"
-              class="error-text">
-              <i class="bi bi-exclamation-circle"></i> Password must contain at least one number, one uppercase and lowercase letter, one special character, and be 8-20 characters long
-            </small>
+              <div class="password-requirements" *ngIf="showPasswordRequirements && itemForm.get('password')?.touched">
+                <ul>
+                  <li *ngFor="let rule of passwordRules" [class.satisfied]="rule.satisfied" [hidden]="rule.satisfied">
+                    <small>{{ rule.label }}</small>
+                  </li>
+                </ul>
+              </div>
           </div>
 
           <div class="form-group">
