@@ -14,6 +14,7 @@ export class LoginComponent implements OnInit {
   showMessage: boolean = false;
   showError: boolean = false;
   responseMessage: string = '';
+  
 
   usernamePattern = '^[a-z]{3,}$';
   passwordPattern = '^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,64}$';
