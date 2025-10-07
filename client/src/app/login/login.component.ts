@@ -15,8 +15,22 @@ export class LoginComponent implements OnInit {
   showError: boolean = false;
   responseMessage: string = '';
 
-  usernamePattern = '^[a-z]+$';
+  usernamePattern = '^[a-z]{3,}$';
   passwordPattern = '^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,64}$';
+
+  usernameRules = [
+    { key: "required", label: "Username required", satisfied: false },
+    { key: "minLength", label: "Username should be at least 3 characters", satisfied: false},
+    { key: "lowerCase", label: "Username can only lowercase characters"}
+  ]
+
+  passwordRules = [
+    { key: "required", label: "Password required", satisfied: false },
+    { key: "capital", label: "Password should have a capital letter", satisfied: false },
+    { key: "special", label: "Password should have a special character", satisfied: false },
+    { key: "number", label: "Password should have a number", satisfied: false },
+    { key: "minLength", label: "Password should be of 8 characters at least", satisfied: false }
+  ]
 
   constructor(
     private router: Router,
@@ -28,8 +42,37 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.itemForm = this.formBuilder.group({
       username: ['', [Validators.required, Validators.pattern(this.usernamePattern)]],
-      password: ['', [Validators.required]]
+      password: ['', [Validators.required, Validators.pattern(this.passwordPattern)]]
     });
+
+    this.itemForm.get('username')?.valueChanges.subscribe(value => {
+      this.checkUsernameRules(value || '')
+    })
+    this.itemForm.get('password')?.valueChanges.subscribe(value => {
+      this.checkPasswordRules(value || '')
+    })
+  }
+
+  checkUsernameRules(username: string){
+    this.usernameRules[0].satisfied = username.length > 0
+    this.usernameRules[1].satisfied = username.length > 3
+    this.usernameRules[2].satisfied = /[a-z]/.test(username)
+  }
+
+  checkPasswordRules(password: string){
+    this.passwordRules[0].satisfied = password.length > 0
+    this.passwordRules[1].satisfied = /[A-Z]/.test(password)
+    this.passwordRules[2].satisfied = /[@#$%^&+=]/.test(password)
+    this.passwordRules[3].satisfied = /[0-9]/.test(password)
+    this.passwordRules[4].satisfied = password.length >= 8
+  }
+
+  get showUsernameRequirements(): boolean {
+    return this.usernameRules?.some( rule => !rule.satisfied)
+  }
+
+  get showPasswordRequirements(): boolean {
+    return this.passwordRules?.some(rule => !rule.satisfied)
   }
 
   onLogin() {
