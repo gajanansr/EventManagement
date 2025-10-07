@@ -8,36 +8,38 @@
 }
 
 body {
-  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background: linear-gradient(135deg, #f8f9ff 0%, #e8ebf9 100%);
   min-height: 100vh;
-  color: #2c3e50;
+  color: #1a202c;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
 }
 
 // Typography
 h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
-  color: #2c3e50;
-  letter-spacing: -0.5px;
+  color: #1a202c;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
 }
 
 h1 {
-  font-size: 2.5rem;
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
   font-weight: 700;
 }
 
 h2 {
-  font-size: 2rem;
+  font-size: clamp(1.5rem, 3.5vw, 1.875rem);
 }
 
 h3 {
-  font-size: 1.75rem;
+  font-size: clamp(1.25rem, 3vw, 1.5rem);
 }
 
 h4 {
-  font-size: 1.5rem;
+  font-size: clamp(1.125rem, 2.5vw, 1.25rem);
 }
 
 // Modern Button Styles
@@ -49,45 +51,50 @@ button {
 }
 
 .btn {
-  border-radius: 12px;
-  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  padding: 0.625rem 1.25rem;
   font-weight: 500;
-  font-size: 1rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 0.9375rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  white-space: nowrap;
   
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
   
-  &:active {
+  &:active:not(:disabled) {
     transform: translateY(0);
   }
   
   &:disabled {
-    opacity: 0.6;
+    opacity: 0.5;
     cursor: not-allowed;
     transform: none !important;
   }
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
   color: white;
   
-  &:hover {
-    background: linear-gradient(135deg, #7690ff 0%, #8659b8 100%);
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+  &:hover:not(:disabled) {
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
   }
 }
 
 .btn-secondary {
-  background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+  background: linear-gradient(135deg, #64748b 0%, #475569 100%);
   color: white;
   
-  &:hover {
-    background: linear-gradient(135deg, #7d8591 0%, #5a6268 100%);
+  &:hover:not(:disabled) {
+    background: linear-gradient(135deg, #475569 0%, #334155 100%);
   }
 }
 
@@ -95,8 +102,8 @@ button {
   background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   color: white;
   
-  &:hover {
-    background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+  &:hover:not(:disabled) {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
   }
 }
 
@@ -104,89 +111,118 @@ button {
   background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
   color: white;
   
-  &:hover {
-    background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
+  &:hover:not(:disabled) {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  }
+}
+
+.btn-outline {
+  background: transparent;
+  border: 2px solid #6366f1;
+  color: #6366f1;
+  
+  &:hover:not(:disabled) {
+    background: #6366f1;
+    color: white;
   }
 }
 
 // Shadow utilities with modern approach
 .shadow-sm {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
 }
 
 .shadow {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12) !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1) !important;
 }
 
 .shadow-lg {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16) !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1) !important;
 }
 
 .shadow-xl {
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2) !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
 }
 
 // Modern Card Design
 .card {
   background: white;
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 16px;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 12px;
   overflow: hidden;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
   
   &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
   }
   
   .card-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
     color: white;
     font-weight: 600;
-    padding: 1.25rem 1.5rem;
+    padding: 1rem 1.25rem;
     border-bottom: none;
+    
+    h3, h4 {
+      color: white;
+      margin: 0;
+      font-size: 1.125rem;
+    }
   }
   
   .card-body {
-    padding: 1.5rem;
+    padding: 1.25rem;
   }
   
   .card-footer {
-    background: #f8f9fa;
-    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+    padding: 1rem 1.25rem;
   }
 }
 
 // Modern Table Design
 .table {
-  border-radius: 12px;
+  border-radius: 10px;
   overflow: hidden;
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
   
   thead {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
     color: white;
     
     th {
       font-weight: 600;
-      padding: 1rem;
+      padding: 0.875rem 1rem;
       border: none;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
   }
   
   tbody {
     tr {
-      transition: all 0.2s ease;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      transition: all 0.15s ease;
+      border-bottom: 1px solid #e2e8f0;
       
       &:hover {
-        background: linear-gradient(90deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
-        transform: scale(1.01);
+        background: #f8fafc;
+      }
+      
+      &:last-child {
+        border-bottom: none;
       }
       
       td {
-        padding: 1rem;
+        padding: 0.875rem 1rem;
         vertical-align: middle;
+        font-size: 0.9375rem;
       }
     }
   }
@@ -194,16 +230,33 @@ button {
 
 // Modern Form Controls
 .form-control, .form-select {
-  border-radius: 10px;
-  border: 2px solid #e0e7ff;
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
-  transition: all 0.3s ease;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  padding: 0.625rem 0.875rem;
+  font-size: 0.9375rem;
+  transition: all 0.2s ease;
+  background: white;
   
   &:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
     outline: none;
+  }
+  
+  &.is-invalid {
+    border-color: #ef4444;
+    
+    &:focus {
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+    }
+  }
+  
+  &.is-valid {
+    border-color: #10b981;
+    
+    &:focus {
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
   }
   
   &::placeholder {
@@ -213,9 +266,10 @@ button {
 
 .form-label {
   font-weight: 500;
-  color: #4b5563;
+  color: #374151;
   margin-bottom: 0.5rem;
-  font-size: 0.95rem;
+  font-size: 0.9375rem;
+  display: block;
 }
 
 // Modern Badge Design
@@ -244,54 +298,88 @@ button {
 }
 
 .bg-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%) !important;
 }
 
 .bg-secondary {
-  background: linear-gradient(135deg, #6c757d 0%, #495057 100%) !important;
+  background: linear-gradient(135deg, #64748b 0%, #475569 100%) !important;
 }
 
 // Modern Alert Design
 .alert {
-  border-radius: 12px;
+  border-radius: 10px;
   border: none;
-  padding: 1rem 1.25rem;
+  padding: 0.875rem 1.125rem;
   font-weight: 500;
+  font-size: 0.9375rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   
   &.alert-success {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%);
+    background: rgba(16, 185, 129, 0.1);
     color: #059669;
-    border-left: 4px solid #10b981;
+    border-left: 3px solid #10b981;
   }
   
   &.alert-danger {
-    background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%);
+    background: rgba(239, 68, 68, 0.1);
     color: #dc2626;
-    border-left: 4px solid #ef4444;
+    border-left: 3px solid #ef4444;
   }
   
   &.alert-warning {
-    background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(217, 119, 6, 0.1) 100%);
+    background: rgba(245, 158, 11, 0.1);
     color: #d97706;
-    border-left: 4px solid #f59e0b;
+    border-left: 3px solid #f59e0b;
   }
   
   &.alert-info {
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.1) 100%);
+    background: rgba(59, 130, 246, 0.1);
     color: #2563eb;
-    border-left: 4px solid #3b82f6;
+    border-left: 3px solid #3b82f6;
   }
 }
 
 // Smooth Animations
 .fade-in {
-  animation: fadeIn 0.4s ease-in;
+  animation: fadeIn 0.3s ease-out;
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.4s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-down {
+  animation: fadeInDown 0.4s ease-out;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
   }
   to {
     opacity: 1;
@@ -314,11 +402,35 @@ button {
   }
 }
 
+.scale-in {
+  animation: scaleIn 0.3s ease-out;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
 // Container improvements
 .container {
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1.5rem;
 }
 
 // Responsive utilities
@@ -328,60 +440,86 @@ button {
   }
   
   h1 {
-    font-size: 1.75rem;
-  }
-  
-  h2 {
     font-size: 1.5rem;
   }
   
-  h3 {
+  h2 {
     font-size: 1.25rem;
   }
   
+  h3 {
+    font-size: 1.125rem;
+  }
+  
   .card {
-    margin-bottom: 1rem;
+    margin-bottom: 0.875rem;
+    
+    .card-body {
+      padding: 1rem;
+    }
   }
   
   .btn {
-    padding: 0.625rem 1.25rem;
-    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+  }
+  
+  .table {
+    font-size: 0.875rem;
+    
+    thead th {
+      padding: 0.625rem 0.75rem;
+    }
+    
+    tbody td {
+      padding: 0.625rem 0.75rem;
+    }
   }
 }
 
 // Modern Scrollbar
 ::-webkit-scrollbar {
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track {
   background: #f1f5f9;
-  border-radius: 10px;
+  border-radius: 8px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 10px;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  border-radius: 8px;
   border: 2px solid #f1f5f9;
   
   &:hover {
-    background: linear-gradient(135deg, #7690ff 0%, #8659b8 100%);
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
   }
 }
 
 // Utility classes
 .text-gradient {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  display: inline-block;
 }
 
 .glassmorphism {
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.hover-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  }
 }
 
 // Bootstrap replacement utility classes
