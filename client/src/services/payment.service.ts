@@ -78,13 +78,8 @@ export class PaymentService {
    * Calculate booking amount based on event details
    */
   calculateBookingAmount(event: any): number {
-    // Base price for event booking
-    let basePrice = event.basePrice || 5000;
-    
-    // You can add additional calculations based on event type, duration, etc.
-    if (event.eventType === 'Premium') {
-      basePrice *= 1.5;
-    }
+    // Use event amount if set by planner, otherwise use default
+    let basePrice = event.amount || event.basePrice || 5000;
     
     // Add taxes (e.g., 18% GST)
     const tax = basePrice * 0.18;
