@@ -77,7 +77,7 @@
               class="error-text">
               <i class="bi bi-exclamation-circle"></i> Email is required
             </small>
-            <small *ngIf="itemForm.get('email')?.hasError('invalid') && (itemForm.get('email')?.touched || itemForm.get('email')?.dirty)"
+            <small *ngIf="itemForm.get('email')?.hasError('email') && (itemForm.get('email')?.touched || itemForm.get('email')?.dirty)"
               class="error-text">
               <i class="bi bi-exclamation-circle"></i> Email is invalid
             </small>
