@@ -48,3 +48,6 @@ coverage/
 # Temporary files
 *.tmp
 *.temp
+
+check-testcases.txt
+trying.js
