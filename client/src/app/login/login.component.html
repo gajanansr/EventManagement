@@ -50,7 +50,7 @@
                 'is-invalid': itemForm.get('username')?.invalid && itemForm.get('username')?.touched,
                 'is-valid': itemForm.get('username')?.valid && itemForm.get('username')?.touched
               }">
-              <div class="password-requirements" *ngIf="showUsernameRequirements && itemForm.get('username')?.touched">
+              <div class="password-requirements" *ngIf="showUsernameRequirements && itemForm.get('username')?.dirty">
                 <ul>
                   <li *ngFor="let rule of usernameRules" [class.satisfied]="rule.satisfied" [hidden]="rule.satisfied">
                     <small>{{ rule.label }}</small>
@@ -71,7 +71,7 @@
                 'is-invalid': itemForm.get('password')?.invalid && itemForm.get('password')?.touched,
                 'is-valid': itemForm.get('password')?.valid && itemForm.get('password')?.touched
               }">
-              <div class="password-requirements" *ngIf="showPasswordRequirements && itemForm.get('password')?.touched">
+              <div class="password-requirements" *ngIf="showPasswordRequirements && itemForm.get('password')?.dirty">
                 <ul>
                   <li *ngFor="let rule of passwordRules" [class.satisfied]="rule.satisfied" [hidden]="rule.satisfied">
                     <small>{{ rule.label }}</small>

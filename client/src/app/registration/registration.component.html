@@ -52,7 +52,7 @@
                 'is-invalid': itemForm.get('username')?.invalid && itemForm.get('username')?.touched,
                 'is-valid': itemForm.get('username')?.valid && itemForm.get('username')?.touched
               }">
-              <div class="password-requirements" *ngIf="showUsernameRequirements && itemForm.get('username')?.touched">
+              <div class="password-requirements" *ngIf="showUsernameRequirements && itemForm.get('username')?.dirty">
                 <ul>
                   <li *ngFor="let rule of usernameRules" [class.satisfied]="rule.satisfied" [hidden]="rule.satisfied">
                     <small>{{ rule.label }}</small>
@@ -73,13 +73,13 @@
                 'is-invalid': itemForm.get('email')?.invalid && itemForm.get('email')?.touched,
                 'is-valid': itemForm.get('email')?.valid && itemForm.get('email')?.touched
               }">
-            <small *ngIf="itemForm.get('email')?.hasError('required') && itemForm.get('email')?.touched"
+            <small *ngIf="itemForm.get('email')?.hasError('required') && (itemForm.get('email')?.touched || itemForm.get('email')?.dirty)"
               class="error-text">
               <i class="bi bi-exclamation-circle"></i> Email is required
             </small>
-            <small *ngIf="itemForm.get('email')?.hasError('invalidEmailFormat') && itemForm.get('email')?.touched"
+            <small *ngIf="itemForm.get('email')?.hasError('invalid') && (itemForm.get('email')?.touched || itemForm.get('email')?.dirty)"
               class="error-text">
-              <i class="bi bi-exclamation-circle"></i> Please enter a valid email address
+              <i class="bi bi-exclamation-circle"></i> Email is invalid
             </small>
           </div>
 
@@ -118,7 +118,7 @@
                 'is-invalid': itemForm.get('password')?.invalid && itemForm.get('password')?.touched,
                 'is-valid': itemForm.get('password')?.valid && itemForm.get('password')?.touched
               }">
-              <div class="password-requirements" *ngIf="showPasswordRequirements && itemForm.get('password')?.touched">
+              <div class="password-requirements" *ngIf="showPasswordRequirements && itemForm.get('password')?.dirty">
                 <ul>
                   <li *ngFor="let rule of passwordRules" [class.satisfied]="rule.satisfied" [hidden]="rule.satisfied">
                     <small>{{ rule.label }}</small>

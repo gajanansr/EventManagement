@@ -14,9 +14,8 @@ export class RegistrationComponent implements OnInit {
   showMessage: boolean = false;
   responseMessage: any;
   namePattern = '^[a-zA-Z]+$';
-  usernamePattern = '^[a-z]+$';
-
-  passwordPattern = '^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,20}$';
+  usernamePattern = '^[a-z]{3,}$';
+  passwordPattern = '^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,27}$';
 
   usernameRules = [
     { key: "required", label: "Username required", satisfied: false },
@@ -62,6 +61,7 @@ export class RegistrationComponent implements OnInit {
     this.itemForm.get('username')?.valueChanges.subscribe(value => {
       this.checkUsernameRules(value || '')
     })
+
     this.itemForm.get('password')?.valueChanges.subscribe(value => {
       this.checkPasswordRules(value || '')
     })
@@ -69,7 +69,7 @@ export class RegistrationComponent implements OnInit {
 
   checkUsernameRules(username: string){
     this.usernameRules[0].satisfied = username.length > 0
-    this.usernameRules[1].satisfied = username.length > 3
+    this.usernameRules[1].satisfied = username.length >= 3
     this.usernameRules[2].satisfied = /[a-z]/.test(username)
   }
 
