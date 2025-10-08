@@ -46,6 +46,11 @@ public class StaffController {
         return ResponseEntity.status(200).body(eventService.getEventsById(eventId));
     }
 
+    @GetMapping("/api/staff/event-detailsbyTitle/{title}")
+    public ResponseEntity<List<Event>> getEventDetailsByTitle(@PathVariable String title){
+        return ResponseEntity.status(200).body(eventService.findEventByTitle(title));
+    }
+
     @PutMapping("/api/staff/update-setup/{eventId}")
     public ResponseEntity<Event> updateEventSetup(@RequestBody Event updatedEvent, @PathVariable Long eventId) {
         // update the event setup and return the updated event with status code 200 ok
