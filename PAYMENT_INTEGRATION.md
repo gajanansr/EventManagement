@@ -11,6 +11,64 @@ This document explains the payment gateway integration added to the Event Manage
 - ✅ User-friendly payment modal
 - ✅ GST calculation (18%)
 
+## 🔐 API Keys Setup - IMPORTANT!
+
+### Where to Save Razorpay API Keys
+
+#### For Development (Local Testing):
+Store keys in `server/src/main/resources/application.properties`:
+```properties
+razorpay.key.id=rzp_test_YOUR_KEY_ID_HERE
+razorpay.key.secret=YOUR_KEY_SECRET_HERE
+razorpay.currency=INR
+```
+
+⚠️ **SECURITY WARNING**: Never commit actual API keys to Git! The file in this repo has placeholder values only.
+
+#### For Production (Recommended - Environment Variables):
+
+**Option 1: Linux/Mac**
+```bash
+export RAZORPAY_KEY_ID=rzp_live_XXXXX
+export RAZORPAY_KEY_SECRET=your_secret_here
+```
+
+**Option 2: Windows (Command Prompt)**
+```cmd
+set RAZORPAY_KEY_ID=rzp_live_XXXXX
+set RAZORPAY_KEY_SECRET=your_secret_here
+```
+
+**Option 3: Windows (PowerShell)**
+```powershell
+$env:RAZORPAY_KEY_ID="rzp_live_XXXXX"
+$env:RAZORPAY_KEY_SECRET="your_secret_here"
+```
+
+Then update `application.properties` to read from environment:
+```properties
+razorpay.key.id=${RAZORPAY_KEY_ID}
+razorpay.key.secret=${RAZORPAY_KEY_SECRET}
+razorpay.currency=INR
+```
+
+#### Cloud Deployment:
+- **AWS Elastic Beanstalk**: Configuration → Software → Environment properties
+- **Heroku**: Settings → Config Vars
+- **Azure App Service**: Configuration → Application settings
+- **Docker**: Use environment variables in docker-compose or `-e` flags
+
+#### Frontend Configuration:
+Update `client/src/environments/environment.ts` (safe to commit - Key ID is public):
+```typescript
+export const environment = {
+  production: false,
+  razorpayKeyId: 'rzp_test_YOUR_KEY_ID_HERE' // Public key - safe to expose
+};
+```
+
+For production, use `environment.prod.ts` with live keys.
+
 ## Setup Instructions
 
 ### 1. Backend Setup (Required)
