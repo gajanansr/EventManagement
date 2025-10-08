@@ -100,7 +100,6 @@ export class RegistrationComponent implements OnInit {
           this.errorMessage = error.error.message;
         }
       );
-      // ok
     } else {
       this.itemForm.markAllAsTouched();
     }

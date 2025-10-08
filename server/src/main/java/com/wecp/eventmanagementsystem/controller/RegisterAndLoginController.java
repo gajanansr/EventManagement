@@ -29,8 +29,11 @@ public class RegisterAndLoginController {
     @PostMapping("/api/user/register")
     public ResponseEntity<User> registerUser(@RequestBody User user) {
        // register user and return the registered user with status code 201 created
-       User registeredUser = userService.registerUser(user);
-       return new ResponseEntity<>(registeredUser,HttpStatus.CREATED);
+        User registeredUser = userService.registerUser(user);
+        if (registeredUser == null){
+            throw new ResponseStatusException(HttpStatus.CONFLICT,"Username already exists");
+        }
+        return new ResponseEntity<>(registeredUser,HttpStatus.CREATED);
     }
 
     @PostMapping("/api/user/login")
