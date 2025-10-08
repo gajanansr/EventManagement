@@ -99,10 +99,11 @@
               class="error-text">
               <i class="bi bi-exclamation-circle"></i> Name is required
             </small>
-            <!-- <small *ngIf="itemForm.get('name')?.hasError('name') && itemForm.get('name')?.touched"
-              class="error-text">
-              <i class="bi bi-exclamation-circle"></i> Please enter a valid name
-            </small> -->
+            <small *ngIf="itemForm.get('name')?.hasError('pattern') && itemForm.get('name')?.touched"
+                     class="error-text">
+                <i class="bi bi-exclamation-circle"></i> Name should contain only letters and spaces 
+              </small>
+              <!-- ok -->
           </div>
 
           <div class="form-group">
