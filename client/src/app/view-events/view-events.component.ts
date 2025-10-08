@@ -199,6 +199,7 @@ export class ViewEventsComponent  implements OnInit{
         
         searchObservable.subscribe(
           (response) => {
+            console.log(response);
             this.handleSearchResponse(response);
             if(response && Object.keys(response).length !== 0){
               // Handle array or single object response
