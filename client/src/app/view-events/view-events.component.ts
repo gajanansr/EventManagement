@@ -20,6 +20,7 @@ export class ViewEventsComponent  implements OnInit{
   responseMessage: string = '';
   isUpdate: boolean = false;
   eventList: any[] = [];
+  originalEventList: any[] = [];
   minDate: string;
   message: {type: 'success' | 'error', text: string } | null = null;
   searchPerformed : boolean = false;
@@ -155,6 +156,7 @@ export class ViewEventsComponent  implements OnInit{
     eventsObservable.subscribe(
       (data) => {
         this.eventList = data;
+        this.originalEventList = [...data]
         this.totalPages = Math.ceil(this.eventList.length / this.itemsPerPage);
         this.setPaginatedEvents();
       },
@@ -346,18 +348,18 @@ export class ViewEventsComponent  implements OnInit{
   }
   filterPastEvents(): void{
     const currentDate = new Date();
-    this.eventList = this.eventList.filter(event => new Date(event.dateTime) < currentDate);
+    this.eventList = this.originalEventList.filter(event => new Date(event.dateTime) < currentDate);
   }
   filterTodayEvents(): void{
     const currentDate = new Date();
-    this.eventList = this.eventList.filter(event => {
+    this.eventList = this.originalEventList.filter(event => {
       const eventDate = new Date(event.dateTime);
       return eventDate.toDateString() === currentDate.toDateString();
     });
   }
   filterFutureEvents(): void{
     const currentDate = new Date();
-    this.eventList = this.eventList.filter(event => new Date(event.dateTime) > currentDate);
+    this.eventList = this.originalEventList.filter(event => new Date(event.dateTime) > currentDate);
   }
 
   viewAllEvents(): void{
