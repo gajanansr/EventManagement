@@ -1,5 +1,5 @@
 <div class="container py-4">
-    <h1 class="text-center mb-4 text-primary">Manage Events</h1>
+    <h1 class="text-center mb-4 text-primary">Events</h1>
  
     <!-- Search Form -->
     <div class="card shadow-sm mb-4">
@@ -136,7 +136,7 @@
                         </div>
 
                         <!-- CLIENT Actions -->
-                        <div *ngIf="roleName === 'CLIENT'" class="action-buttons">
+                        <div *ngIf="roleName === 'CLIENT' && event.status !== 'Cancelled' && event.status !== 'Completed'" class="action-buttons">
                             <button class="btn btn-success" (click)="openBookingForm(event)">
                                 ✅ Book Event
                             </button>

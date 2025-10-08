@@ -27,7 +27,7 @@ export class AddResourceComponent implements OnInit {
     this.itemForm = this.formBuilder.group({
       name: ['', Validators.required],
       type: ['', Validators.required],
-      availability: [true, Validators.required]
+      availability: [true]
     });
   }
 

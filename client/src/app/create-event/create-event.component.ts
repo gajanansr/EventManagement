@@ -48,7 +48,7 @@ export class CreateEventComponent implements OnInit {
       description: ['', Validators.required],
       dateTime: ['', [Validators.required, this.dateTimeValidator.bind(this)]],
       location: ['', Validators.required],
-      status: ['', Validators.required]
+      status: ['Scheduled']
     });
   
     this.searchQuery = '';
