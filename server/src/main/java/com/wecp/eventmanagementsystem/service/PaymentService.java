@@ -120,8 +120,10 @@ public class PaymentService {
             // Get current user
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String username = authentication.getName();
-            User client = userRepository.findByUsername(username)
-                .orElseThrow(() -> new Exception("User not found"));
+            User client = userRepository.findByUsername(username);
+            if (client == null) {
+                throw new Exception("User not found");
+            }
             
             // Get event
             Event event = eventRepository.findById(request.getEventId())
