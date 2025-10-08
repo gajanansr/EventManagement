@@ -3,6 +3,7 @@ import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators }
 import { Router } from '@angular/router';
 import { HttpService } from '../../services/http.service';
 import { AuthService } from '../../services/auth.service';
+import { PaymentService } from '../../services/payment.service';
 
 
 @Component({
@@ -46,6 +47,8 @@ export class ViewEventsComponent  implements OnInit{
   bookingRequirements: string = '';
   bookingMessage: string = '';
   bookingSuccess: boolean = false;
+  bookingAmount: number = 0;
+  isProcessingPayment: boolean = false;
 
   // Planner booking management
   allBookings: any[] = [];
@@ -63,7 +66,8 @@ export class ViewEventsComponent  implements OnInit{
 
   constructor(private httpService: HttpService,
     private formBuilder: FormBuilder,private router: Router,
-    private authService: AuthService){
+    private authService: AuthService,
+    private paymentService: PaymentService){
       this.minDate = this.getTomorrowDate();
       this.roleName = this.authService.getRole || '';
     }
@@ -530,6 +534,9 @@ export class ViewEventsComponent  implements OnInit{
       this.bookingRequirements = '';
       this.bookingMessage = '';
       this.bookingSuccess = false;
+      this.isProcessingPayment = false;
+      // Calculate booking amount
+      this.bookingAmount = this.paymentService.calculateBookingAmount(event) / 100; // Convert paise to rupees
       this.showBookingModal = true;
     }
 
@@ -538,24 +545,76 @@ export class ViewEventsComponent  implements OnInit{
         return;
       }
 
+      this.isProcessingPayment = true;
+      this.bookingMessage = 'Processing your payment...';
+
       const bookingData = {
         eventId: this.selectedEventForBooking.eventID,
-        clientRequirements: this.bookingRequirements || 'No specific requirements'
+        clientRequirements: this.bookingRequirements || 'No specific requirements',
+        amount: this.bookingAmount
       };
 
-      this.httpService.createBooking(bookingData).subscribe({
-        next: (response: any) => {
-          this.bookingMessage = response.message || 'Booking created successfully!';
-          this.bookingSuccess = true;
-          
-          setTimeout(() => {
-            this.closeBookingModal();
-            // Optionally refresh the events list or navigate to bookings page
-          }, 2000);
+      // Create payment order first
+      this.paymentService.createPaymentOrder(bookingData).subscribe({
+        next: (orderResponse: any) => {
+          // Initialize Razorpay payment
+          const paymentOptions = {
+            key: orderResponse.razorpayKeyId || 'rzp_test_your_key_id', // Replace with actual key
+            amount: orderResponse.amount,
+            currency: orderResponse.currency || 'INR',
+            name: 'Event.io',
+            description: `Booking for ${this.selectedEventForBooking.title}`,
+            order_id: orderResponse.orderId,
+            prefill: {
+              name: localStorage.getItem('username') || '',
+              email: localStorage.getItem('email') || '',
+              contact: ''
+            },
+            theme: {
+              color: '#6366f1'
+            }
+          };
+
+          // Open Razorpay payment modal
+          this.paymentService.initiateRazorpayPayment(paymentOptions)
+            .then((paymentResponse: any) => {
+              // Payment successful, verify and create booking
+              const verificationData = {
+                orderId: orderResponse.orderId,
+                paymentId: paymentResponse.razorpay_payment_id,
+                signature: paymentResponse.razorpay_signature,
+                eventId: this.selectedEventForBooking.eventID,
+                clientRequirements: this.bookingRequirements
+              };
+
+              this.paymentService.verifyPayment(verificationData).subscribe({
+                next: (verifyResponse: any) => {
+                  this.bookingMessage = 'Payment successful! Booking confirmed.';
+                  this.bookingSuccess = true;
+                  this.isProcessingPayment = false;
+                  
+                  setTimeout(() => {
+                    this.closeBookingModal();
+                    this.getEvents(); // Refresh events
+                  }, 2500);
+                },
+                error: (error) => {
+                  this.bookingMessage = 'Payment verification failed. Please contact support.';
+                  this.bookingSuccess = false;
+                  this.isProcessingPayment = false;
+                }
+              });
+            })
+            .catch((error) => {
+              this.bookingMessage = error.error || 'Payment cancelled or failed';
+              this.bookingSuccess = false;
+              this.isProcessingPayment = false;
+            });
         },
         error: (error) => {
-          this.bookingMessage = error.error?.message || 'Failed to create booking';
+          this.bookingMessage = error.error?.message || 'Failed to initiate payment';
           this.bookingSuccess = false;
+          this.isProcessingPayment = false;
         }
       });
     }
