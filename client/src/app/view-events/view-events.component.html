@@ -136,8 +136,8 @@
                         </div>
 
                         <!-- CLIENT Actions -->
-                        <div *ngIf="roleName === 'CLIENT' && event.status !== 'Cancelled' && event.status !== 'Completed'" class="action-buttons">
-                            <button class="btn btn-success" (click)="openBookingForm(event)">
+                        <div *ngIf="roleName === 'CLIENT'" class="action-buttons">
+                            <button class="btn btn-success" (click)="openBookingForm(event)" *ngIf="event.status !== 'Cancelled' && event.status !== 'Completed'">
                                 ✅ Book Event
                             </button>
                             <button class="btn btn-info" (click)="openMessaging(event)">
