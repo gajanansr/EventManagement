@@ -116,14 +116,21 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="newPassword" class="form-label">New Password</label>
-                            <input type="password" id="newPassword" formControlName="newPassword" 
-                                   class="form-control" placeholder="Enter new password (min 6 characters)">
-                            <div *ngIf="passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched" 
-                                 class="text-danger small mt-1">
-                                Password must be at least 6 characters
-                            </div>
+                            <label for="password" class="form-label">New Password</label>
+                            <input type="password" id="password" formControlName="password" 
+                                   class="form-control" placeholder="Enter new password (min 6 characters)" [ngClass]="{
+                                    'is-invalid': passwordForm.get('password')?.invalid && passwordForm.get('password')?.touched,
+                                    'is-valid': passwordForm.get('password')?.valid && passwordForm.get('password')?.touched
+                            }">
+                                <div class="password-requirements" *ngIf="showPasswordRequirements && passwordForm.get('password')?.dirty">
+                                    <ul>
+                                      <li *ngFor="let rule of passwordRules" [class.satisfied]="rule.satisfied" [hidden]="rule.satisfied">
+                                        <small>{{ rule.label }}</small>
+                                      </li>
+                                    </ul>
+                                </div>
                         </div>
+
 
                         <div class="mb-3">
                             <label for="confirmPassword" class="form-label">Confirm New Password</label>
