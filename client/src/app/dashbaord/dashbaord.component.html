@@ -172,8 +172,12 @@
       <div class="welcome-content">
         <h3>👋 Welcome Back!</h3>
         <p>You can search for events, view your bookings, and manage your event requests. We're here to make your event experience unforgettable!</p>
-        <button class="btn btn-primary" (click)="scrollToEvents()">
-          <span class="icon">🎉</span> Browse Available Events
+        <button class="btn btn-primary mx-4" routerLink="/booking-details" routerLinkActive="active">
+          <span class="icon">📋</span> Browse Available Events
+        </button>
+        <span class="span-empty"></span>
+        <button class="btn btn-primary btn-margin" (click)="scrollToEvents()">
+          <span class="icon">🎉</span> Browse Your Bookings
         </button>
       </div>
       <div class="welcome-illustration">🎊</div>
