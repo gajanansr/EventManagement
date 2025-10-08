@@ -20,7 +20,7 @@ export class PaymentService {
       'Authorization': `Bearer ${localStorage.getItem('token')}`
     });
     
-    return this.http.post(`${this.apiUrl}/payment/create-order`, bookingData, { headers });
+    return this.http.post(`${this.apiUrl}/api/payment/create-order`, bookingData, { headers });
   }
 
   /**
