@@ -16,7 +16,7 @@ export class RegistrationComponent implements OnInit {
   namePattern = '^[a-zA-Z]+$';
   usernamePattern = '^[a-z]{3,}$';
   passwordPattern = '^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,27}$';
-
+  // emailPattern = '^[a-zA-Z0-9._+-%]+@[a-zA-Z0-9.-]+\.[a-zA-z]{2,}+$';
   usernameRules = [
     { key: "required", label: "Username required", satisfied: false },
     { key: "minLength", label: "Username should be at least 3 characters", satisfied: false},
@@ -43,7 +43,7 @@ export class RegistrationComponent implements OnInit {
     this.itemForm = this.formBuilder.group({
       name:['',[Validators.required,Validators.pattern(this.namePattern)]],
       username: ['', [Validators.required, Validators.pattern(this.usernamePattern)], [this.uniqueValidator.bind(this)]],
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9_+-.%]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)]],
       password: ['', [Validators.required, Validators.pattern(this.passwordPattern)]],
       role: ['', [Validators.required]],
       
