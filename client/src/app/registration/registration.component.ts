@@ -19,8 +19,8 @@ export class RegistrationComponent implements OnInit {
   // emailPattern = '^[a-zA-Z0-9._+-%]+@[a-zA-Z0-9.-]+\.[a-zA-z]{2,}+$';
   usernameRules = [
     { key: "required", label: "Username required", satisfied: false },
-    { key: "minLength", label: "Username should be at least 3 characters", satisfied: false},
-    { key: "lowerCase", label: "Username can only lowercase characters"}
+    { key: "minLength", label: "Username should be at least 3 characters", satisfied: false },
+    { key: "lowerCase", label: "Username can only have lowercase characters", satisfied: false },
   ]
 
   passwordRules = [
@@ -51,13 +51,6 @@ export class RegistrationComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.users$ = this.httpService.GetAllUsers();
-    this.users$.subscribe(data => {
-      if (data) {
-        localStorage.setItem('abcd', JSON.stringify(data));
-      }
-    });
-
     this.itemForm.get('username')?.valueChanges.subscribe(value => {
       this.checkUsernameRules(value || '')
     })
@@ -70,7 +63,7 @@ export class RegistrationComponent implements OnInit {
   checkUsernameRules(username: string){
     this.usernameRules[0].satisfied = username.length > 0
     this.usernameRules[1].satisfied = username.length >= 3
-    this.usernameRules[2].satisfied = /[a-z]/.test(username)
+    this.usernameRules[2].satisfied = /^[a-z]+$/.test(username)
   }
 
   checkPasswordRules(password: string){
@@ -89,24 +82,6 @@ export class RegistrationComponent implements OnInit {
     return this.passwordRules?.some(rule => !rule.satisfied)
   }
 
-  uniqueValidator(control: AbstractControl): Promise<ValidationErrors | null> {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const v = control.value;
-        let users = JSON.parse(localStorage.getItem('abcd') || '[]');
-        if (Array.isArray(users)) {
-          const usernames = users.map((user: any) => user.username);
-          if (usernames.includes(v)) {
-            resolve({ notUnique: true });
-          } else {
-            resolve(null);
-          }
-        } else {
-          resolve(null);
-        }
-      }, 300);
-    });
-  }
 
   onRegister(): void {
     if (this.itemForm.valid) {
@@ -122,7 +97,7 @@ export class RegistrationComponent implements OnInit {
         },
         error => {
           this.showError = true;
-          this.errorMessage = error.error;
+          this.errorMessage = error.error.message;
         }
       );
     } else {

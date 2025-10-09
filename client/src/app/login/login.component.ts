@@ -22,7 +22,7 @@ export class LoginComponent implements OnInit {
   usernameRules = [
     { key: "required", label: "Username required", satisfied: false },
     { key: "minLength", label: "Username should be at least 3 characters", satisfied: false},
-    { key: "lowerCase", label: "Username can only lowercase characters"}
+    { key: "lowerCase", label: "Username can only lowercase characters", satisfied: false}
   ]
 
   passwordRules = [
@@ -58,7 +58,7 @@ export class LoginComponent implements OnInit {
   checkUsernameRules(username: string){
     this.usernameRules[0].satisfied = username.length > 0
     this.usernameRules[1].satisfied = username.length >= 3
-    this.usernameRules[2].satisfied = /[a-z]/.test(username)
+    this.usernameRules[2].satisfied = /^[a-z]$/.test(username)
   }
 
   checkPasswordRules(password: string){
