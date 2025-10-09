@@ -120,7 +120,7 @@
                   'is-valid': itemForm.get('password')?.valid && itemForm.get('password')?.touched
                 }">
               <button type="button" class="password-toggle-btn" (click)="togglePasswordVisibility()">
-                <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+                👁️‍🗨️
               </button>
             </div>
             <div class="password-requirements" *ngIf="showPasswordRequirements && itemForm.get('password')?.dirty">
@@ -192,7 +192,7 @@
                 <span class="captcha-question-mark">?</span>
               </div>
               <button type="button" class="btn btn-sm btn-outline-secondary refresh-btn" (click)="refreshCaptcha()">
-                <i class="bi bi-arrow-clockwise"></i>
+                🔄️
               </button>
             </div>
             <input 
@@ -207,7 +207,7 @@
               }">
             <small *ngIf="itemForm.get('captchaAnswer')?.hasError('required') && itemForm.get('captchaAnswer')?.touched"
               class="error-text">
-              <i class="bi bi-exclamation-circle"></i> Please solve the math problem
+              ❗ Please solve the math problem
             </small>
           </div>
 

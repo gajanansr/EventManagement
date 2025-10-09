@@ -412,7 +412,7 @@
     border: none;
     color: #6b7280;
     cursor: pointer;
-    padding: 0.5rem;
+    padding: 0.2rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -427,9 +427,6 @@
       outline: none;
     }
     
-    i {
-      font-size: 1.125rem;
-    }
   }
   
   .form-control {

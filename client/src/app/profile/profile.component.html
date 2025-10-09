@@ -100,7 +100,7 @@
                 <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
                     <h4 class="mb-0">Security</h4>
                     <button class="btn btn-light btn-sm" (click)="togglePasswordChange()" *ngIf="!isChangingPassword">
-                        <i class="bi bi-key"></i> Change Password
+                        🗝️ Change Password
                     </button>
                 </div>
                 <div class="card-body">
@@ -112,7 +112,7 @@
                                        id="currentPassword" formControlName="currentPassword" 
                                        class="form-control" placeholder="Enter current password">
                                 <button type="button" class="password-toggle-btn" (click)="toggleCurrentPasswordVisibility()">
-                                    <i class="bi" [ngClass]="showCurrentPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+                                    👁️‍🗨️
                                 </button>
                             </div>
                             <div *ngIf="passwordForm.get('currentPassword')?.invalid && passwordForm.get('currentPassword')?.touched" 
@@ -131,7 +131,7 @@
                                         'is-valid': passwordForm.get('password')?.valid && passwordForm.get('password')?.touched
                                 }">
                                 <button type="button" class="password-toggle-btn" (click)="toggleNewPasswordVisibility()">
-                                    <i class="bi" [ngClass]="showNewPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+                                    👁️‍🗨️
                                 </button>
                             </div>
                             <div class="password-requirements" *ngIf="showPasswordRequirements && passwordForm.get('password')?.dirty">
