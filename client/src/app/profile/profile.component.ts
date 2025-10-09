@@ -18,6 +18,15 @@ export class ProfileComponent implements OnInit {
   errorMessage: string = '';
   isEditMode: boolean = false;
   isChangingPassword: boolean = false;
+  passwordPattern = '^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,27}$';
+
+  passwordRules = [
+    { key: "required", label: "Password required", satisfied: false },
+    { key: "capital", label: "Password should have a capital letter", satisfied: false },
+    { key: "special", label: "Password should have a special character", satisfied: false },
+    { key: "number", label: "Password should have a number", satisfied: false },
+    { key: "minLength", label: "Password should be of 8 characters at least", satisfied: false }
+  ]
 
   constructor(
     private formBuilder: FormBuilder,
@@ -28,6 +37,9 @@ export class ProfileComponent implements OnInit {
   ngOnInit(): void {
     this.initForms();
     this.loadProfile();
+    this.passwordForm.get('password')?.valueChanges.subscribe(value => {
+      this.checkPasswordRules(value || '')
+    })
   }
 
   initForms() {
@@ -40,9 +52,21 @@ export class ProfileComponent implements OnInit {
 
     this.passwordForm = this.formBuilder.group({
       currentPassword: ['', Validators.required],
-      newPassword: ['', [Validators.required, Validators.minLength(6)]],
+      password: ['', [Validators.required, Validators.pattern(this.passwordPattern)]],
       confirmPassword: ['', Validators.required]
     }, { validator: this.passwordMatchValidator });
+  }
+
+  checkPasswordRules(password: string){
+    this.passwordRules[0].satisfied = password.length > 0
+    this.passwordRules[1].satisfied = /[A-Z]/.test(password)
+    this.passwordRules[2].satisfied = /[@#$%^&+=]/.test(password)
+    this.passwordRules[3].satisfied = /[0-9]/.test(password)
+    this.passwordRules[4].satisfied = password.length >= 8
+  }
+
+  get showPasswordRequirements(): boolean {
+    return this.passwordRules?.some(rule => !rule.satisfied)
   }
 
   passwordMatchValidator(g: FormGroup) {
