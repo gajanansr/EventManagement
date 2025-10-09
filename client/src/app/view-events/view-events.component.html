@@ -86,6 +86,17 @@
                                     <span class="info-value">{{ event.location }}</span>
                                 </div>
                             </div>
+                            
+                            <!-- Display Cost for all roles -->
+                            <div class="info-item">
+                                <span class="info-icon">💰</span>
+                                <div class="info-content">
+                                    <span class="info-label">Cost</span>
+                                    <span class="info-value fw-bold text-success">
+                                        ₹{{ event.amount ? event.amount.toFixed(2) : '5,000.00' }}
+                                    </span>
+                                </div>
+                            </div>
 
                             <div class="info-item" *ngIf="event.allocations && event.allocations.length > 0">
                                 <span class="info-icon">📦</span>
@@ -137,8 +148,15 @@
 
                         <!-- CLIENT Actions -->
                         <div *ngIf="roleName === 'CLIENT'" class="action-buttons">
-                            <button class="btn btn-success" (click)="openBookingForm(event)" *ngIf="event.status !== 'Cancelled' && event.status !== 'Completed'">
+                            <button *ngIf="!isEventBooked(event.eventID) && event.status !== 'Cancelled' && event.status !== 'Completed'" 
+                                    class="btn btn-success" 
+                                    (click)="openBookingForm(event)">
                                 ✅ Book Event
+                            </button>
+                            <button *ngIf="isEventBooked(event.eventID)" 
+                                    class="btn btn-secondary" 
+                                    disabled>
+                                ✓ Already Booked
                             </button>
                             <button class="btn btn-info" (click)="openMessaging(event)">
                                 💬 Messages
@@ -340,36 +358,59 @@
     <div class="custom-modal-dialog" (click)="$event.stopPropagation()">
         <div class="custom-modal-content">
             <div class="custom-modal-header">
-                <h5>Book Event</h5>
+                <h5>📅 Book Event</h5>
                 <button type="button" class="btn-close" (click)="closeBookingModal()">&times;</button>
             </div>
             <div class="custom-modal-body">
                 <div *ngIf="selectedEventForBooking">
-                    <h6>{{ selectedEventForBooking.title }}</h6>
-                    <p class="text-muted small">
+                    <h6 class="text-primary">{{ selectedEventForBooking.title }}</h6>
+                    <p class="text-muted small mb-3">
                         <i class="bi bi-calendar"></i> {{ selectedEventForBooking.dateTime | date:'medium' }}<br>
                         <i class="bi bi-geo-alt"></i> {{ selectedEventForBooking.location }}
                     </p>
                     <p class="mb-3">{{ selectedEventForBooking.description }}</p>
                     
+                    <!-- Payment Information -->
+                    <div class="payment-info-card mb-3">
+                        <h6 class="mb-2"><i class="bi bi-credit-card"></i> Payment Details</h6>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-muted">Booking Amount:</span>
+                            <span class="h5 mb-0 text-success">₹{{ bookingAmount.toFixed(2) }}</span>
+                        </div>
+                        <small class="text-muted d-block mt-1">
+                            <i class="bi bi-shield-check"></i> Secure payment via Razorpay
+                        </small>
+                    </div>
+                    
                     <div class="mb-3">
                         <label for="clientRequirements" class="form-label">Your Requirements:</label>
                         <textarea id="clientRequirements" class="form-control" rows="4" 
                                   [(ngModel)]="bookingRequirements" 
+                                  [disabled]="isProcessingPayment"
                                   placeholder="Please describe your specific requirements or preferences for this event..."></textarea>
                         <small class="text-muted">Optional: Add any special requests or requirements</small>
                     </div>
                     
-                    <div *ngIf="bookingMessage" class="alert" 
-                         [ngClass]="{'alert-success': bookingSuccess, 'alert-danger': !bookingSuccess}">
+                    <div *ngIf="bookingMessage" class="alert alert-custom" 
+                         [ngClass]="{'alert-success': bookingSuccess, 'alert-danger': !bookingSuccess, 'alert-info': isProcessingPayment}">
+                        <span *ngIf="isProcessingPayment" class="spinner-border spinner-border-sm me-2"></span>
                         {{ bookingMessage }}
+                    </div>
+                    
+                    <div class="alert alert-info alert-custom" *ngIf="!isProcessingPayment && !bookingSuccess">
+                        <i class="bi bi-info-circle"></i> Click "Proceed to Payment" to complete your booking securely.
                     </div>
                 </div>
             </div>
             <div class="custom-modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="closeBookingModal()">Cancel</button>
-                <button type="button" class="btn btn-success" (click)="submitBooking()">
-                    Confirm Booking
+                <button type="button" class="btn btn-secondary" (click)="closeBookingModal()" [disabled]="isProcessingPayment">
+                    Cancel
+                </button>
+                <button type="button" class="btn btn-success" (click)="submitBooking()" 
+                        [disabled]="isProcessingPayment || bookingSuccess">
+                    <i class="bi bi-lock-fill me-1"></i>
+                    <span *ngIf="!isProcessingPayment">Proceed to Payment</span>
+                    <span *ngIf="isProcessingPayment">Processing...</span>
                 </button>
             </div>
         </div>

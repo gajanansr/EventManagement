@@ -17,6 +17,7 @@ public class Event {
     private Date dateTime;
     private String location;
     private String status;
+    private Double amount; // Event price in rupees (e.g., 5000.0)
  
     @ManyToOne
     @JoinColumn(name = "assignedStaffId", referencedColumnName = "userId")
@@ -100,6 +101,14 @@ public class Event {
     
     public void setAssignedStaff(User assignedStaff) {
         this.assignedStaff = assignedStaff;
+    }
+    
+    public Double getAmount() {
+        return amount;
+    }
+    
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
    
 }
