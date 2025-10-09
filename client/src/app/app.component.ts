@@ -8,23 +8,30 @@ import { Router } from '@angular/router';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  IsLoggin:any=false;
-  roleName: string | null;
-  constructor(private authService: AuthService, private router:Router)
-  {
-   
-    this.IsLoggin=authService.getLoginStatus;
-    this.roleName=authService.getRole;
-    if(this.IsLoggin==false)
-    {
-      this.router.navigateByUrl('/login'); 
+  isLoggedIn: boolean = false;
+  roleName: string | null = null;
+  
+  constructor(private authService: AuthService, private router: Router) {
+    this.checkAuthStatus();
+  }
+  
+  checkAuthStatus(): void {
+    this.isLoggedIn = this.authService.getLoginStatus;
+    this.roleName = this.authService.getRole;
     
+    // Don't redirect to login if user is on landing page, login page, or registration page
+    const publicRoutes = ['/', '/login', '/registration'];
+    const currentRoute = this.router.url;
+    
+    if (!this.isLoggedIn && !publicRoutes.includes(currentRoute)) {
+      this.router.navigateByUrl('/login');
     }
   }
-  logout()
-{
-  this.authService.logout();
-  window.location.reload();
-}
-
+  
+  logout(): void {
+    this.authService.logout();
+    this.isLoggedIn = false;
+    this.roleName = null;
+    this.router.navigateByUrl('/login');
+  }
 }

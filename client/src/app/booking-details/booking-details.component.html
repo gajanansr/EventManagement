@@ -1,1 +1,108 @@
-//todo: complete missing code.
+<div class="bookings-container">
+  <!-- Search Box -->
+  <div class="search-section mb-4">
+    <form [formGroup]="itemForm" (ngSubmit)="searchBookings()">
+      <div class="input-group">
+        <input 
+          type="text" 
+          formControlName="searchTerm" 
+          class="form-control" 
+          placeholder="Search bookings by event name or booking ID...">
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-search"></i> Search
+        </button>
+        <button 
+          type="button" 
+          class="btn btn-secondary" 
+          (click)="clearSearch()" 
+          *ngIf="searchPerformed">
+          Clear
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Alert Messages -->
+  <div *ngIf="message" class="alert" 
+       [ngClass]="{'alert-success': message.type === 'success', 'alert-danger': message.type === 'error'}" 
+       role="alert">
+    {{ message.text }}
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loadingBookings" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-3 text-muted">Loading your bookings...</p>
+  </div>
+
+  <!-- Bookings Table -->
+  <div *ngIf="!loadingBookings && displayedBookings.length > 0" class="card shadow-sm">
+    <div class="card-body">
+      <h5 class="card-title mb-4">
+        <i class="fas fa-calendar-check text-primary"></i> My Event Bookings
+        <span class="badge bg-primary ms-2">{{ displayedBookings.length }}</span>
+      </h5>
+      
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead class="table-light">
+            <tr>
+              <th>Booking ID</th>
+              <th>Event Title</th>
+              <th>Event Date & Time</th>
+              <th>Location</th>
+              <th>Booking Date</th>
+              <th>Status</th>
+              <th>Requirements</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let booking of displayedBookings">
+              <td><strong>#{{ booking.bookingId }}</strong></td>
+              <td>
+                <strong>{{ booking.event?.title || 'N/A' }}</strong>
+              </td>
+              <td>
+                <i class="far fa-clock text-muted"></i>
+                {{ booking.event?.dateTime | date:'medium' }}
+              </td>
+              <td>
+                <i class="fas fa-map-marker-alt text-muted"></i>
+                {{ booking.event?.location || 'N/A' }}
+              </td>
+              <td>{{ booking.bookingDate | date:'short' }}</td>
+              <td>
+                <span class="badge" [ngClass]="getBookingStatusClass(booking.status)">
+                  {{ booking.status }}
+                </span>
+              </td>
+              <td>
+                <small class="text-muted">{{ booking.clientRequirements || 'None' }}</small>
+              </td>
+              <td>
+                <small class="text-muted">{{ booking.notes || '-' }}</small>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loadingBookings && displayedBookings.length === 0" class="empty-state card shadow-sm">
+    <div class="card-body text-center py-5">
+      <div class="empty-icon">📅</div>
+      <h4 class="mt-3">No Bookings Found</h4>
+      <p class="text-muted">
+        {{ searchPerformed ? 'No bookings match your search criteria.' : 'You haven\'t made any event bookings yet.' }}
+      </p>
+      <button class="btn btn-primary mt-3" routerLink="/dashboard" *ngIf="!searchPerformed">
+        <i class="fas fa-calendar-plus"></i> Browse Available Events
+      </button>
+    </div>
+  </div>
+</div>

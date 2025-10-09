@@ -1,1 +1,110 @@
-//todo: complete missing code..
+<div class="resource-allocate-container">
+    <div class="container">
+        <h1 class="text-center mb-4 text-primary">Allocate Resources</h1>
+        
+        <div class="alert-container" *ngIf="showMessage || showError">
+            <div class="alert fade-in" [ngClass]="{'alert-success': isSuccess, 'alert-danger': !isSuccess}">
+                {{ showMessage ? responseMessage : errorMessage }}
+            </div>
+        </div>
+        
+        <div class="cards-wrapper">
+            <div class="row justify-content-center g-4">
+        <div class="col-md-5 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Add Resource Allocation</h4>
+                </div>
+                <div class="card-body">
+                    <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
+                        <div class="mb-3">
+                            <label for="eventId" class="form-label">Event</label>
+                            <select id="eventId" formControlName="eventId" class="form-select">
+                                <option value="" disabled selected>Select Event</option>
+                                <option *ngFor="let item of eventList" [value]="item.eventID">
+                                    {{item.eventID}} - {{item.title}}
+                                </option>
+                            </select>
+                            <div *ngIf="itemForm.controls['eventId'].invalid && (itemForm.controls['eventId'].dirty || itemForm.controls['eventId'].touched)" 
+                                class="text-danger small mt-1">
+                                Event is required.
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="resourceId" class="form-label">Resource</label>
+                            <select id="resourceId" formControlName="resourceId" class="form-select" (change)="onResourceSelect($event)">
+                                <option value="" disabled selected>Select Resource</option>
+                                <option *ngFor="let item of resourceList" [value]="item.resourceID" [disabled]="!item.availability">
+                                    {{item.resourceID}} - {{item.name}} 
+                                    <span *ngIf="!item.availability">(Unavailable)</span>
+                                </option>
+                            </select>
+                            <div *ngIf="itemForm.controls['resourceId'].invalid && (itemForm.controls['resourceId'].dirty || itemForm.controls['resourceId'].touched)" 
+                                class="text-danger small mt-1">
+                                Resource is required.
+                            </div>
+                            <div *ngIf="selectedResourceUnavailable" class="text-warning small mt-1">
+                                ⚠️ This resource is currently unavailable for allocation.
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="quantity" class="form-label">Quantity</label>
+                            <input type="number" id="quantity" formControlName="quantity" placeholder="Quantity" class="form-control" min="1">
+                            <div *ngIf="itemForm.controls['quantity'].invalid && (itemForm.controls['quantity'].dirty || itemForm.controls['quantity'].touched)"
+                                class="text-danger small mt-1">
+                                Quantity must be at least 1.
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary" [disabled]="selectedResourceUnavailable">
+                                Submit Allocation
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-secondary text-white">
+                    <h4 class="mb-0">Resource Information</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm" *ngIf="paginatedResources && paginatedResources.length > 0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let resource of paginatedResources">
+                                    <td>{{ resource.resourceID }}</td>
+                                    <td>{{ resource.name }}</td>
+                                    <td>
+                                        <span class="badge" [ngClass]="resource.availability ? 'bg-success' : 'bg-danger'">
+                                            {{ resource.availability ? 'Available' : 'Unavailable' }}
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div *ngIf="paginatedResources && paginatedResources.length === 0" class="text-center text-muted py-3">
+                        No resources found.
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <button class="btn btn-sm btn-outline-secondary" (click)="previousPage()" [disabled]="currentPage === 1">Previous</button>
+                        <span class="text-muted">Page {{ currentPage }} of {{ totalPages }}</span>
+                        <button class="btn btn-sm btn-outline-secondary" (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>

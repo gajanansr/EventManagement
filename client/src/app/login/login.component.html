@@ -1,1 +1,103 @@
-//todo: complete missing code.
+<div class="login-container">
+  <div class="login-content">
+    <!-- Left Section - Welcome -->
+    <div class="welcome-section">
+      <div class="welcome-content">
+        <h1 class="brand-title text-gradient">Event Management</h1>
+        <p class="brand-subtitle">Crafting Unforgettable Experiences</p>
+        <div class="feature-list">
+          <div class="feature-item">
+            <i class="bi bi-check-circle-fill"></i>
+            <span>Seamless Event Planning</span>
+          </div>
+          <div class="feature-item">
+            <i class="bi bi-check-circle-fill"></i>
+            <span>Resource Allocation</span>
+          </div>
+          <div class="feature-item">
+            <i class="bi bi-check-circle-fill"></i>
+            <span>Real-time Collaboration</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Section - Login Form -->
+    <div class="form-section">
+      <div class="form-card">
+        <div class="form-header">
+          <h2>Welcome Back</h2>
+          <p>Sign in to continue to your account</p>
+        </div>
+  
+        <!-- Alert Messages -->
+        <div *ngIf="showMessage" class="alert fade-in"
+          [ngClass]="{'alert-success': !showError, 'alert-danger': showError}">
+          {{responseMessage}}
+        </div> 
+
+        <!-- Login Form -->
+        <form [formGroup]="itemForm" (ngSubmit)="onLogin()" class="login-form">
+          <div class="form-group">
+            <label class="form-label">Username<span class="required-asterisk">*</span></label>
+            <input 
+              type="text" 
+              id="username" 
+              formControlName="username"
+              class="form-control" 
+              placeholder="Enter your username"
+              [ngClass]="{
+                'is-invalid': itemForm.get('username')?.invalid && itemForm.get('username')?.touched,
+                'is-valid': itemForm.get('username')?.valid && itemForm.get('username')?.touched
+              }">
+              <div class="password-requirements" *ngIf="showUsernameRequirements && itemForm.get('username')?.dirty">
+                <ul>
+                  <li *ngFor="let rule of usernameRules" [class.satisfied]="rule.satisfied" [hidden]="rule.satisfied">
+                    <small>{{ rule.label }}</small>
+                  </li>
+                </ul>
+              </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Password<span class="required-asterisk">*</span></label> 
+            <div class="password-input-wrapper">
+              <input 
+                [type]="showPassword ? 'text' : 'password'" 
+                id="password" 
+                formControlName="password"
+                class="form-control" 
+                placeholder="Enter your password"
+                [ngClass]="{
+                  'is-invalid': itemForm.get('password')?.invalid && itemForm.get('password')?.touched,
+                  'is-valid': itemForm.get('password')?.valid && itemForm.get('password')?.touched
+                }">
+              <button type="button" class="password-toggle-btn" (click)="togglePasswordVisibility()">
+                👁️‍🗨️
+              </button>
+            </div>
+            <div class="password-requirements" *ngIf="showPasswordRequirements && itemForm.get('password')?.dirty">
+              <ul>
+                <li *ngFor="let rule of passwordRules" [class.satisfied]="rule.satisfied" [hidden]="rule.satisfied">
+                  <small>{{ rule.label }}</small>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <button 
+            type="submit" 
+            class="btn btn-primary btn-login" 
+            [disabled]="itemForm.invalid">
+            <span *ngIf="!itemForm.pending">Sign In</span>
+            <span *ngIf="itemForm.pending" class="spinner-border spinner-border-sm"></span>
+          </button>
+        </form>
+
+        <!-- Footer  -->
+        <div class="form-footer">
+          <p>Don't have an account? <a [routerLink]="['/registration']" class="link-primary">Create Account</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

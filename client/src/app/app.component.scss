@@ -1,0 +1,204 @@
+// Modern Glossy Navbar Styling
+.modern-navbar {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+a {
+  text-decoration: none;
+}
+
+.navbar-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  gap: 2rem;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  
+  .brand-icon {
+    font-size: 1.75rem;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  
+  .brand-text {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: white;
+    letter-spacing: 0.5px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.navbar-menu {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  justify-content: center;
+}
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  color: white;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+  white-space: nowrap;
+  
+  .btn-icon {
+    font-size: 1.25rem;
+    transition: transform 0.3s ease;
+  }
+  
+  .btn-text {
+    font-weight: 500;
+    letter-spacing: 0.3px;
+  }
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    
+    .btn-icon {
+      transform: scale(1.2);
+    }
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+  
+  &.active {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.nav-btn-profile {
+  background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
+  border: none;
+  
+  &:hover {
+    background: linear-gradient(135deg, #00d4ff 0%, #0080ff 100%);
+    box-shadow: 0 6px 25px rgba(0, 114, 255, 0.4);
+  }
+}
+
+.nav-btn-logout {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+  border: none;
+  
+  &:hover {
+    background: linear-gradient(135deg, #ff7b7b 0%, #ff6a7f 100%);
+    box-shadow: 0 6px 25px rgba(238, 90, 111, 0.4);
+  }
+}
+
+// Animations
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+// Main Content
+.main-content {
+  min-height: calc(100vh - 80px);
+  padding-top: 0;
+}
+
+// Responsive Design
+@media (max-width: 1024px) {
+  .navbar-container {
+    gap: 1rem;
+    padding: 0.75rem 1rem;
+  }
+  
+  .nav-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    
+    .btn-text {
+      display: none;
+    }
+    
+    .btn-icon {
+      font-size: 1.5rem;
+    }
+  }
+  
+  .navbar-brand .brand-text {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar-container {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .navbar-menu {
+    order: 3;
+    width: 100%;
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding: 0.5rem 0;
+    gap: 0.4rem;
+    
+    &::-webkit-scrollbar {
+      height: 4px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 2px;
+    }
+  }
+  
+  .navbar-actions {
+    gap: 0.4rem;
+  }
+  
+  .nav-btn {
+    padding: 0.4rem 0.8rem;
+    border-radius: 10px;
+  }
+  
+  .navbar-brand .brand-text {
+    font-size: 0.9rem;
+  }
+}

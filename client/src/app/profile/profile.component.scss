@@ -1,0 +1,125 @@
+// Profile component styling
+.container {
+  max-width: 1000px;
+}
+
+.alert-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  max-width: 400px;
+  
+  .alert {
+    border-radius: 8px;
+    border: none;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.card {
+  border: none;
+  border-radius: 12px;
+  
+  .card-header {
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    font-weight: 600;
+    padding: 1rem 1.5rem;
+  }
+}
+
+.form-label.fw-bold {
+  color: #495057;
+  font-size: 0.95rem;
+}
+
+.password-requirements{
+  margin-top: 10px;
+  ul {
+    margin: 0;
+    padding: 0 1.5rem;
+    list-style: disc;
+    color: #ef4444;
+    font-size: 0.96rem;
+  }
+  li.satisfied {
+    display: none;
+  }
+}
+
+.form-label {
+  display: block;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.5rem;
+  font-size: 0.9375rem;
+}
+
+.form-control-plaintext {
+  color: #212529;
+  padding-left: 0;
+}
+
+.btn {
+  border-radius: 8px;
+  padding: 0.5rem 1.25rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.badge {
+  font-size: 0.9rem;
+  padding: 0.4rem 0.8rem;
+}
+
+// Password toggle button
+.password-input-wrapper {
+  position: relative;
+  
+  .password-toggle-btn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #6b7280;
+    cursor: pointer;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease;
+    z-index: 10;
+    
+    &:hover {
+      color: #6366f1;
+    }
+    
+    &:focus {
+      outline: none;
+    }
+    
+    i {
+      font-size: 1.125rem;
+    }
+  }
+  
+  .form-control {
+    padding-right: 2.75rem; // Make room for the toggle button
+  }
+}
+
+@media (max-width: 768px) {
+  .alert-container {
+    left: 20px;
+    right: 20px;
+    max-width: calc(100% - 40px);
+  }
+}

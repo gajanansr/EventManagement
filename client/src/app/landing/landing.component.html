@@ -1,0 +1,107 @@
+<div class="landing-container">
+
+  <!-- Animated Background Particles -->
+  <div class="particles">
+    <div class="particle" *ngFor="let i of particles" [style.left.%]="i.x" [style.top.%]="i.y" [style.animation-delay.s]="i.delay"></div>
+  </div>
+
+  <!-- Floating Event Icons -->
+  <div class="floating-icons">
+    <div class="icon icon-1">🎉</div>
+    <div class="icon icon-2">🎪</div>
+    <div class="icon icon-3">🎭</div>
+    <div class="icon icon-4">🎨</div>
+    <div class="icon icon-5">🎵</div>
+    <div class="icon icon-6">✨</div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="content-wrapper">
+    <!-- Navigation -->
+    <nav class="navbar-brand">
+      <div class="nav-brand" >
+        <span class="brand-icon">🎉</span>
+        <span class="brand-text">Event.io</span>        
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="hero-content">
+        <div class="hero-title">
+            <span class="something">JOIN US FOR THE ULTIMATE EVENT AND TAKE THE FIRST STEP TOWARD ACHIEVING YOUR DREAMS</span>
+        </div>
+
+        <p class="hero-subtitle fade-in">
+          Experience the future of event planning with our cutting-edge platform.
+          Create, manage, and execute unforgettable events with ease.
+        </p>
+
+        <div class="center-btn">
+          <button class="cta-buttons" (click)="navigateToRegister()">
+            <span>GET STARTED</span>
+            <i class="arrow">→</i>
+          </button>
+          
+          <button class="cta-buttons" (click)="navigateToLogin()">
+            <span>SIGN IN</span>
+            <i class="arrow">→</i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Animated 3D Event Visual -->
+      <div class="hero-visual">
+        <div class="visual-container">
+          <div class="event-sphere"></div>
+          <div class="orbit orbit-1"></div>
+          <div class="orbit orbit-2"></div>
+          <div class="orbit orbit-3"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section">
+      <h2 class="section-title">
+        <span class="title-accent">Why Choose Us</span>
+      </h2>
+      <div class="features-grid">
+        <div class="feature-card" *ngFor="let feature of features; let i = index" [style.animation-delay.s]="i * 0.1">
+          <div class="feature-icon">{{ feature.icon }}</div>
+          <h3 class="feature-title">{{ feature.title }}</h3>
+          <p class="feature-description">{{ feature.description }}</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+      <div class="stats-grid">
+        <div class="stat-card" *ngFor="let stat of stats">
+          <div class="stat-value">{{ stat.value }}</div>
+          <div class="stat-label">{{ stat.label }}</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="final-cta">
+      <div class="cta-content">
+        <h2 class="cta-title">Ready to Create Amazing Events?</h2>
+        <p class="cta-subtitle">Join thousands of event planners who trust our platform</p>
+        <div class="center-btn">
+          <button class="cta-buttons" (click)="navigateToRegister()">
+            <span>START YOUR JOURNEY</span>
+            <i class="arrow">→</i>
+          </button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Gradient Overlays -->
+  <div class="gradient-overlay gradient-1"></div>
+  <div class="gradient-overlay gradient-2"></div>
+  <div class="gradient-overlay gradient-3"></div>
+</div>

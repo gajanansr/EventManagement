@@ -1,3 +1,214 @@
-<div class="row text-center">
-<h1 class="text-capitalize">Event Management System</h1>
+<div class="dashboard-container">
+
+  <!-- PLANNER DASHBOARD -->
+  <div *ngIf="roleName === 'PLANNER'" class="planner-dashboard">
+    <div class="dashboard-header">
+      <h1 class="text-gradient">📋 Event Planner Dashboard</h1>
+      <p class="subtitle">Manage events, resources, and allocations</p>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="stats-grid">
+      <div class="stat-card card">
+        <div class="stat-icon">📅</div>
+        <div class="stat-content">
+          <h3>{{ totalEvents || 0 }}</h3>
+          <p>Total Events</p>
+        </div>
+      </div>
+      <div class="stat-card card">
+        <div class="stat-icon">📦</div>
+        <div class="stat-content">
+          <h3>{{ totalResources || 0 }}</h3>
+          <p>Total Resources</p>
+        </div>
+      </div>
+      <div class="stat-card card">
+        <div class="stat-icon">🎯</div>
+        <div class="stat-content">
+          <h3>{{ totalAllocations || 0 }}</h3>
+          <p>Allocations</p>
+        </div>
+      </div>
+      <!-- <div class="stat-card card">
+        <div class="stat-icon">✅</div>
+        <div class="stat-content">
+          <h3>{{ activeEvents || 0 }}</h3>
+          <p>Active Events</p>
+        </div>
+      </div> -->
+      <div class="stat-card card">
+        <div class="stat-icon">🔔</div>
+        <div class="stat-content">
+          <h3>{{ upcomingEvents || 0 }}</h3>
+          <p>Upcoming (30 days)</p>
+        </div>
+      </div>
+      <div class="stat-card card">
+        <div class="stat-icon">🏁</div>
+        <div class="stat-content">
+          <h3>{{ completedEvents || 0 }}</h3>
+          <p>Completed</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions card">
+      <h3>⚡ Quick Actions</h3>
+      <div class="action-buttons">
+        <button class="btn btn-primary" routerLink="/view-events">
+          <span class="icon">📋</span> View Events
+        </button>
+        <button class="btn btn-primary" routerLink="/create-event">
+          <span class="icon">➕</span> Create Event
+        </button>
+        <button class="btn btn-success" routerLink="/add-resource">
+          <span class="icon">📦</span> Add Resource
+        </button>
+        <button class="btn btn-secondary" routerLink="/resource-allocate">
+          <span class="icon">🎯</span> Allocate Resources
+        </button>
+      </div>
+    </div>
+
+    <!-- Events List -->
+    <div class="card">
+      <div class="card-header">
+        <h3>📋 All Events</h3>
+      </div>
+      <div class="card-body">
+        <app-view-events></app-view-events>
+      </div>
+    </div>
+  </div>
+
+  <!-- STAFF DASHBOARD -->
+  <div *ngIf="roleName === 'STAFF'" class="staff-dashboard">
+    <div class="dashboard-header">
+      <h1 class="text-gradient">👷 Staff Dashboard</h1>
+      <p class="subtitle">View and manage assigned events</p>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="stats-grid">
+      <div class="stat-card card">
+        <div class="stat-icon">📅</div>
+        <div class="stat-content">
+          <h3>{{ totalEvents || 0 }}</h3>
+          <p>Total Events</p>
+        </div>
+      </div>
+      <div class="stat-card card">
+        <div class="stat-icon">⏳</div>
+        <div class="stat-content">
+          <h3>{{ scheduledEvents || 0 }}</h3>
+          <p>Scheduled</p>
+        </div>
+      </div>
+      <div class="stat-card card">
+        <div class="stat-icon">✅</div>
+        <div class="stat-content">
+          <h3>{{ completedEvents || 0 }}</h3>
+          <p>Completed</p>
+        </div>
+      </div>
+      <div class="stat-card card">
+        <div class="stat-icon">🔔</div>
+        <div class="stat-content">
+          <h3>{{ upcomingEvents || 0 }}</h3>
+          <p>Upcoming</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Info Card -->
+    <div class="info-card card">
+      <div class="info-icon">ℹ️</div>
+      <div class="info-content">
+        <h4>Welcome to Staff Portal!</h4>
+        <p>You can view all events, check event details, and track schedules. Use the search feature below to find specific events.</p>
+      </div>
+    </div>
+
+    <!-- Events List -->
+    <div class="card">
+      <div class="card-header">
+        <h3>📋 Event Schedule</h3>
+      </div>
+      <div class="card-body">
+        <app-view-events></app-view-events>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLIENT DASHBOARD -->
+  <div *ngIf="roleName === 'CLIENT'" class="client-dashboard">
+    <div class="dashboard-header">
+      <h1 class="text-gradient">🎉 Client Dashboard</h1>
+      <p class="subtitle">Manage your event bookings and requests</p>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="stats-grid">
+      <div class="stat-card card">
+        <div class="stat-icon">📋</div>
+        <div class="stat-content">
+          <h3>{{ totalBookings || 0 }}</h3>
+          <p>My Bookings</p>
+        </div>
+      </div>
+      <div class="stat-card card">
+        <div class="stat-icon">✅</div>
+        <div class="stat-content">
+          <h3>{{ confirmedBookings || 0 }}</h3>
+          <p>Confirmed</p>
+        </div>
+      </div>
+      <div class="stat-card card">
+        <div class="stat-icon">🎯</div>
+        <div class="stat-content">
+          <h3>{{ upcomingBookings || 0 }}</h3>
+          <p>Upcoming</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Welcome Card -->
+    <div class="welcome-card card">
+      <div class="welcome-content">
+        <h3>👋 Welcome Back!</h3>
+        <p>You can search for events, view your bookings, and manage your event requests. We're here to make your event experience unforgettable!</p>
+        <button class="btn btn-primary mx-4" routerLink="/booking-details" routerLinkActive="active">
+          <span class="icon">📋</span> Browse Your Bookings
+        </button>
+        <span class="span-empty"></span>
+        <button class="btn btn-primary btn-margin" (click)="scrollToEvents()">
+          <span class="icon">🎉</span> Browse Available Events
+        </button>
+      </div>
+      <div class="welcome-illustration">🎊</div>
+    </div>
+
+    <!-- Available Events Section -->
+    <div class="card" id="events-section">
+      <div class="card-header">
+        <h3>🎉 Available Events to Book</h3>
+        <p class="text-muted">Browse and book events that interest you</p>
+      </div>
+      <div class="card-body">
+        <app-view-events></app-view-events>
+      </div>
+    </div>
+
+    <!-- Bookings List -->
+    <div class="card" id="bookings-section">
+      <div class="card-header">
+        <h3>📋 My Event Bookings</h3>
+      </div>
+      <div class="card-body">
+        <app-booking-details></app-booking-details>
+      </div>
+    </div>
+  </div>
 </div>
