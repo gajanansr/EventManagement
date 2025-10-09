@@ -10,6 +10,7 @@ import com.wecp.eventmanagementsystem.service.BookingService;
 import com.wecp.eventmanagementsystem.service.EventService;
 import com.wecp.eventmanagementsystem.service.MessageService;
 import com.wecp.eventmanagementsystem.service.ResourceService;
+import com.wecp.eventmanagementsystem.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,16 +36,27 @@ public class EventPlannerController {
     @Autowired
     private BookingService bookingService;
 
+    @Autowired
+    private UserService userService;
+
     @PostMapping("/api/planner/event")
-    public ResponseEntity<Event> createEvent(@RequestBody Event event) {
+    public ResponseEntity<Event> createEvent(@RequestBody Event event, Authentication authentication) {
         // create event and return created event with status code 201 (CREATED)
-        return new ResponseEntity<>(eventService.createEvent(event), HttpStatus.CREATED);
+        // Link event to the logged-in planner
+        String username = authentication.getName();
+        User planner = userService.getUserByUsername(username);
+        Event createdEvent = eventService.createEventByPlanner(event, planner.getUserId());
+        return new ResponseEntity<>(createdEvent, HttpStatus.CREATED);
     }
 
     @GetMapping("/api/planner/events")
-    public ResponseEntity<List<Event>> getAllEvents() {
+    public ResponseEntity<List<Event>> getAllEvents(Authentication authentication) {
         // get all events and return the list with status code 200 (OK)
-        return new ResponseEntity<List<Event>>(eventService.getAllEvents(), HttpStatus.OK);
+        // Filter events by logged-in planner
+        String username = authentication.getName();
+        User planner = userService.getUserByUsername(username);
+        List<Event> plannerEvents = eventService.getEventsForPlanner(planner.getUserId());
+        return new ResponseEntity<>(plannerEvents, HttpStatus.OK);
     }
 
     @PostMapping("/api/planner/resource")
