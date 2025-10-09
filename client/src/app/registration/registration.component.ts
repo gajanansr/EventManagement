@@ -49,7 +49,6 @@ export class RegistrationComponent implements OnInit {
       
     });
   }
-  /home/ubuntu/root/client/src/app/registration/registration.component.ts
   ngOnInit(): void {
     this.itemForm.get('username')?.valueChanges.subscribe(value => {
       this.checkUsernameRules(value || '')
@@ -106,3 +105,4 @@ export class RegistrationComponent implements OnInit {
   }
 
 }
+
