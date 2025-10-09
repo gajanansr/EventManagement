@@ -81,5 +81,21 @@ public class EventService {
     public List<Event> getEventsForStaff(Long staffId) {
         return eventRepository.findByAssignedStaffUserId(staffId);
     }
+    
+    public List<Event> getEventsForPlanner(Long plannerId) {
+        return eventRepository.findByCreatedByPlannerUserId(plannerId);
+    }
+    
+    public Event createEventByPlanner(Event event, Long plannerId) {
+        User planner = userRepository.findById(plannerId)
+            .orElseThrow(() -> new EntityNotFoundException("Planner not found"));
+        
+        if (!"PLANNER".equals(planner.getRole())) {
+            throw new IllegalArgumentException("User is not a planner");
+        }
+        
+        event.setCreatedByPlanner(planner);
+        return eventRepository.save(event);
+    }
 }
 

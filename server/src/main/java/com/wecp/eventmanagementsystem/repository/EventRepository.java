@@ -14,4 +14,5 @@ public interface EventRepository extends JpaRepository<Event, Long>{
     @Query("SELECT e from Event e WHERE LOWER(e.title) LIKE LOWER(CONCAT('%',:title, '%'))")
     public List<Event> findEventByTitle(String title);
     List<Event> findByAssignedStaffUserId(Long staffId);
+    List<Event> findByCreatedByPlannerUserId(Long plannerId);
 }

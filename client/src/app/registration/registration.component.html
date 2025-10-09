@@ -148,6 +148,59 @@
             </small>
           </div>
 
+          <!-- Access Key Field (Only for PLANNER) -->
+          <div class="form-group" *ngIf="itemForm.get('role')?.value === 'PLANNER'">
+            <label class="form-label">Access Key<span class="required-asterisk">*</span></label>
+            <input 
+              type="password" 
+              id="accessKey" 
+              formControlName="accessKey"
+              class="form-control" 
+              placeholder="Enter planner access key"
+              [ngClass]="{
+                'is-invalid': itemForm.get('accessKey')?.invalid && itemForm.get('accessKey')?.touched,
+                'is-valid': itemForm.get('accessKey')?.valid && itemForm.get('accessKey')?.touched
+              }">
+            <small class="form-text text-muted">
+              <i class="bi bi-info-circle"></i> Contact administrator for access key
+            </small>
+            <small *ngIf="itemForm.get('accessKey')?.hasError('required') && itemForm.get('accessKey')?.touched"
+              class="error-text">
+              <i class="bi bi-exclamation-circle"></i> Access key is required for PLANNER role
+            </small>
+          </div>
+
+          <!-- CAPTCHA Field -->
+          <div class="form-group captcha-container">
+            <label class="form-label">Security Check<span class="required-asterisk">*</span></label>
+            <div class="captcha-box">
+              <div class="captcha-question">
+                <span class="captcha-num">{{ captchaNum1 }}</span>
+                <span class="captcha-operator">+</span>
+                <span class="captcha-num">{{ captchaNum2 }}</span>
+                <span class="captcha-equals">=</span>
+                <span class="captcha-question-mark">?</span>
+              </div>
+              <button type="button" class="btn btn-sm btn-outline-secondary refresh-btn" (click)="refreshCaptcha()">
+                <i class="bi bi-arrow-clockwise"></i>
+              </button>
+            </div>
+            <input 
+              type="number" 
+              id="captchaAnswer" 
+              formControlName="captchaAnswer"
+              class="form-control mt-2" 
+              placeholder="Enter the answer"
+              [ngClass]="{
+                'is-invalid': itemForm.get('captchaAnswer')?.invalid && itemForm.get('captchaAnswer')?.touched,
+                'is-valid': itemForm.get('captchaAnswer')?.valid && itemForm.get('captchaAnswer')?.touched
+              }">
+            <small *ngIf="itemForm.get('captchaAnswer')?.hasError('required') && itemForm.get('captchaAnswer')?.touched"
+              class="error-text">
+              <i class="bi bi-exclamation-circle"></i> Please solve the math problem
+            </small>
+          </div>
+
           <button 
             type="submit" 
             class="btn btn-primary btn-register" 
