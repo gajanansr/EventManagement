@@ -42,14 +42,14 @@ export class RegistrationComponent implements OnInit {
   ) {
     this.itemForm = this.formBuilder.group({
       name:['',[Validators.required,Validators.pattern(/^[a-zA-Z\s]{2,50}$/)]],
-      username: ['', [Validators.required, Validators.pattern(this.usernamePattern)], [this.uniqueValidator.bind(this)]],
+      username: ['', [Validators.required, Validators.pattern(this.usernamePattern)]],
       email: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9_+-.%]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)]],
       password: ['', [Validators.required, Validators.pattern(this.passwordPattern)]],
       role: ['', [Validators.required]],
       
     });
   }
-
+  /home/ubuntu/root/client/src/app/registration/registration.component.ts
   ngOnInit(): void {
     this.itemForm.get('username')?.valueChanges.subscribe(value => {
       this.checkUsernameRules(value || '')
