@@ -49,6 +49,7 @@ export class ViewEventsComponent  implements OnInit{
   bookingSuccess: boolean = false;
   bookingAmount: number = 0;
   isProcessingPayment: boolean = false;
+  userBookings: any[] = []; // Track user's existing bookings
 
   // Planner booking management
   allBookings: any[] = [];
@@ -79,6 +80,11 @@ export class ViewEventsComponent  implements OnInit{
     // Load staff list if user is a planner
     if (this.roleName === 'PLANNER') {
       this.loadStaffList();
+    }
+    
+    // Load user's bookings if user is a client
+    if (this.roleName === 'CLIENT') {
+      this.loadUserBookings();
     }
   }
   initForm() {
@@ -167,6 +173,28 @@ export class ViewEventsComponent  implements OnInit{
         this.errorMessage = error.message || 'Failed to load events';
       }
     );
+  }
+  
+  // Load user's bookings to check which events are already booked
+  loadUserBookings(): void {
+    this.httpService.getMyBookings().subscribe({
+      next: (bookings: any) => {
+        this.userBookings = bookings;
+      },
+      error: (error) => {
+        console.error('Error loading bookings:', error);
+      }
+    });
+  }
+  
+  // Check if an event is already booked by the user
+  isEventBooked(eventId: number): boolean {
+    return this.userBookings.some(booking => booking.event?.eventID === eventId);
+  }
+  
+  // Get booking details for an event
+  getBookingForEvent(eventId: number): any {
+    return this.userBookings.find(booking => booking.event?.eventID === eventId);
   }
   setPaginatedEvents() {
     const startIndex = (this.currentPage -1) * this.itemsPerPage;
@@ -530,13 +558,20 @@ export class ViewEventsComponent  implements OnInit{
 
     // Booking Methods (for CLIENT)
     openBookingForm(event: any): void {
+      // Check if event is already booked
+      if (this.isEventBooked(event.eventID)) {
+        alert('You have already booked this event!');
+        return;
+      }
+      
       this.selectedEventForBooking = event;
       this.bookingRequirements = '';
       this.bookingMessage = '';
       this.bookingSuccess = false;
       this.isProcessingPayment = false;
-      // Calculate booking amount
-      this.bookingAmount = this.paymentService.calculateBookingAmount(event) / 100; // Convert paise to rupees
+      // Calculate booking amount in paise (don't divide by 100 here)
+      const amountInPaise = this.paymentService.calculateBookingAmount(event);
+      this.bookingAmount = amountInPaise / 100; // For display only (in rupees)
       this.showBookingModal = true;
     }
 
@@ -548,10 +583,13 @@ export class ViewEventsComponent  implements OnInit{
       this.isProcessingPayment = true;
       this.bookingMessage = 'Processing your payment...';
 
+      // Calculate amount in paise (multiply back by 100)
+      const amountInPaise = Math.round(this.bookingAmount * 100);
+
       const bookingData = {
         eventId: this.selectedEventForBooking.eventID,
         clientRequirements: this.bookingRequirements || 'No specific requirements',
-        amount: this.bookingAmount
+        amount: amountInPaise // Send amount in paise
       };
 
       // Create payment order first
@@ -592,6 +630,9 @@ export class ViewEventsComponent  implements OnInit{
                   this.bookingMessage = 'Payment successful! Booking confirmed.';
                   this.bookingSuccess = true;
                   this.isProcessingPayment = false;
+                  
+                  // Reload user bookings to update the list
+                  this.loadUserBookings();
                   
                   setTimeout(() => {
                     this.closeBookingModal();
