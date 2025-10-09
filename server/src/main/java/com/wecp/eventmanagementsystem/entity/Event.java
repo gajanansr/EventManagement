@@ -20,6 +20,10 @@ public class Event {
     private Double amount; // Event price in rupees (e.g., 5000.0)
  
     @ManyToOne
+    @JoinColumn(name = "createdByPlannerId", referencedColumnName = "userId")
+    private User createdByPlanner; // Track which planner created this event
+    
+    @ManyToOne
     @JoinColumn(name = "assignedStaffId", referencedColumnName = "userId")
     private User assignedStaff;
  
@@ -109,6 +113,14 @@ public class Event {
     
     public void setAmount(Double amount) {
         this.amount = amount;
+    }
+    
+    public User getCreatedByPlanner() {
+        return createdByPlanner;
+    }
+    
+    public void setCreatedByPlanner(User createdByPlanner) {
+        this.createdByPlanner = createdByPlanner;
     }
    
 }

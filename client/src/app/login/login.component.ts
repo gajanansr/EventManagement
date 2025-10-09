@@ -14,6 +14,7 @@ export class LoginComponent implements OnInit {
   showMessage: boolean = false;
   showError: boolean = false;
   responseMessage: string = '';
+  showPassword: boolean = false; // For show/hide password toggle
   
 
   usernamePattern = '^[a-z]{3,}$';
@@ -58,7 +59,7 @@ export class LoginComponent implements OnInit {
   checkUsernameRules(username: string){
     this.usernameRules[0].satisfied = username.length > 0
     this.usernameRules[1].satisfied = username.length >= 3
-    this.usernameRules[2].satisfied = /^[a-z]$/.test(username)
+    this.usernameRules[2].satisfied = /^[a-z]+$/.test(username)
   }
 
   checkPasswordRules(password: string){
@@ -114,5 +115,9 @@ export class LoginComponent implements OnInit {
       this.responseMessage = 'Please fill in all required fields correctly.';
       this.itemForm.markAllAsTouched();
     }
+  }
+  
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
   }
 }

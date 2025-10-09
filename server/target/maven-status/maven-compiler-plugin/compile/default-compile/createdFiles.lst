@@ -32,6 +32,7 @@ com/wecp/eventmanagementsystem/repository/ResourceRepository.class
 com/wecp/eventmanagementsystem/service/BookingService.class
 com/wecp/eventmanagementsystem/dto/ProfileUpdateRequest.class
 com/wecp/eventmanagementsystem/controller/StaffController.class
+com/wecp/eventmanagementsystem/scheduler/EventStatusScheduler.class
 com/wecp/eventmanagementsystem/service/EventService.class
 com/wecp/eventmanagementsystem/service/PaymentService.class
 com/wecp/eventmanagementsystem/repository/UserRepository.class

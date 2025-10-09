@@ -19,6 +19,9 @@ export class ProfileComponent implements OnInit {
   isEditMode: boolean = false;
   isChangingPassword: boolean = false;
   passwordPattern = '^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,27}$';
+  showCurrentPassword: boolean = false;
+  showNewPassword: boolean = false;
+  showConfirmPassword: boolean = false;
 
   passwordRules = [
     { key: "required", label: "Password required", satisfied: false },
@@ -70,7 +73,7 @@ export class ProfileComponent implements OnInit {
   }
 
   passwordMatchValidator(g: FormGroup) {
-    return g.get('newPassword')?.value === g.get('confirmPassword')?.value
+    return g.get('password')?.value === g.get('confirmPassword')?.value
       ? null : {'mismatch': true};
   }
 
@@ -154,5 +157,17 @@ export class ProfileComponent implements OnInit {
     setTimeout(() => {
       this.showError = false;
     }, 3000);
+  }
+  
+  toggleCurrentPasswordVisibility() {
+    this.showCurrentPassword = !this.showCurrentPassword;
+  }
+  
+  toggleNewPasswordVisibility() {
+    this.showNewPassword = !this.showNewPassword;
+  }
+  
+  toggleConfirmPasswordVisibility() {
+    this.showConfirmPassword = !this.showConfirmPassword;
   }
 }

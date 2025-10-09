@@ -9,7 +9,7 @@
 
 **A full-stack platform for event planning, resource allocation, staff management, and client collaboration**
 
-[Quick Start](#-quick-start) • [Features](#-features) • [API Docs](#-api-quick-reference) • [Full Documentation](./README_FULL.md)
+[Quick Start](#-quick-start) • [Features](#-features) • [API Docs](#-api-quick-reference) • [Architecture](#️-architecture)
 
 </div>
 
@@ -97,7 +97,7 @@ users (CLIENT) ──► bookings (bookingId, clientId, eventId, requirements, n
 users/events ──► messages (messageId, eventId, senderId, content, timestamp, senderRole)
 ```
 
-**Full ER Diagram**: See [README_FULL.md](./README_FULL.md#database-schema)
+
 
 ---
 
@@ -153,8 +153,6 @@ PUT /api/profile      # Update profile
 
 **Authorization**: All protected endpoints require `Authorization: Bearer <jwt_token>` header
 
-**Complete API Documentation**: See [README_FULL.md](./README_FULL.md#complete-api-reference) for detailed request/response examples
-
 ---
 
 ## 🏗️ Architecture
@@ -175,8 +173,6 @@ PUT /api/profile      # Update profile
 │  Tables: users, events, resources, allocations, bookings... │
 └─────────────────────────────────────────────────────────────┘
 ```
-
-**Detailed Architecture Diagrams**: See [README_FULL.md](./README_FULL.md#architecture-diagrams)
 
 ---
 
@@ -268,8 +264,7 @@ EventManagement/
 │   ├── src/styles.scss              # Global styles
 │   └── package.json                 # npm dependencies
 │
-├── README.md                        # This file
-├── README_FULL.md                   # Complete documentation
+├── README.md                        # Project documentation
 └── .gitignore
 ```
 
@@ -301,17 +296,6 @@ server.port=8081
 # Re-login to get new token (tokens expire after 24 hours)
 # Adjust jwt.expiration in application.properties if needed
 ```
-
----
-
-## 📚 Documentation
-
-- **[README_FULL.md](./README_FULL.md)** - Complete technical documentation
-  - Detailed architecture diagrams
-  - Complete database schema with SQL
-  - Full API reference with request/response examples
-  - Performance metrics
-  - Development best practices
 
 ---
 

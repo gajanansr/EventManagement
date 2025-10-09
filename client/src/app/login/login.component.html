@@ -61,23 +61,28 @@
 
           <div class="form-group">
             <label class="form-label">Password<span class="required-asterisk">*</span></label> 
-            <input 
-              type="password" 
-              id="password" 
-              formControlName="password"
-              class="form-control" 
-              placeholder="Enter your password"
-              [ngClass]="{
-                'is-invalid': itemForm.get('password')?.invalid && itemForm.get('password')?.touched,
-                'is-valid': itemForm.get('password')?.valid && itemForm.get('password')?.touched
-              }">
-              <div class="password-requirements" *ngIf="showPasswordRequirements && itemForm.get('password')?.dirty">
-                <ul>
-                  <li *ngFor="let rule of passwordRules" [class.satisfied]="rule.satisfied" [hidden]="rule.satisfied">
-                    <small>{{ rule.label }}</small>
-                  </li>
-                </ul>
-              </div>
+            <div class="password-input-wrapper">
+              <input 
+                [type]="showPassword ? 'text' : 'password'" 
+                id="password" 
+                formControlName="password"
+                class="form-control" 
+                placeholder="Enter your password"
+                [ngClass]="{
+                  'is-invalid': itemForm.get('password')?.invalid && itemForm.get('password')?.touched,
+                  'is-valid': itemForm.get('password')?.valid && itemForm.get('password')?.touched
+                }">
+              <button type="button" class="password-toggle-btn" (click)="togglePasswordVisibility()">
+                👁️‍🗨️
+              </button>
+            </div>
+            <div class="password-requirements" *ngIf="showPasswordRequirements && itemForm.get('password')?.dirty">
+              <ul>
+                <li *ngFor="let rule of passwordRules" [class.satisfied]="rule.satisfied" [hidden]="rule.satisfied">
+                  <small>{{ rule.label }}</small>
+                </li>
+              </ul>
+            </div>
           </div>
           <button 
             type="submit" 

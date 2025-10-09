@@ -108,23 +108,28 @@
 
           <div class="form-group">
             <label class="form-label">Password<span class="required-asterisk">*</span></label>
-            <input 
-              type="password" 
-              id="password" 
-              formControlName="password"
-              class="form-control" 
-              placeholder="Create a strong password"
-              [ngClass]="{
-                'is-invalid': itemForm.get('password')?.invalid && itemForm.get('password')?.touched,
-                'is-valid': itemForm.get('password')?.valid && itemForm.get('password')?.touched
-              }">
-              <div class="password-requirements" *ngIf="showPasswordRequirements && itemForm.get('password')?.dirty">
-                <ul>
-                  <li *ngFor="let rule of passwordRules" [class.satisfied]="rule.satisfied" [hidden]="rule.satisfied">
-                    <small>{{ rule.label }}</small>
-                  </li>
-                </ul>
-              </div>
+            <div class="password-input-wrapper">
+              <input 
+                [type]="showPassword ? 'text' : 'password'" 
+                id="password" 
+                formControlName="password"
+                class="form-control" 
+                placeholder="Create a strong password"
+                [ngClass]="{
+                  'is-invalid': itemForm.get('password')?.invalid && itemForm.get('password')?.touched,
+                  'is-valid': itemForm.get('password')?.valid && itemForm.get('password')?.touched
+                }">
+              <button type="button" class="password-toggle-btn" (click)="togglePasswordVisibility()">
+                👁️‍🗨️
+              </button>
+            </div>
+            <div class="password-requirements" *ngIf="showPasswordRequirements && itemForm.get('password')?.dirty">
+              <ul>
+                <li *ngFor="let rule of passwordRules" [class.satisfied]="rule.satisfied" [hidden]="rule.satisfied">
+                  <small>{{ rule.label }}</small>
+                </li>
+              </ul>
+            </div>
           </div>
 
           <div class="form-group">
@@ -145,6 +150,64 @@
             <small *ngIf="itemForm.get('role')?.hasError('required') && itemForm.get('role')?.touched"
               class="error-text">
               <i class="bi bi-exclamation-circle"></i> Please select a role
+            </small>
+          </div>
+
+          <!-- Access Key Field (Only for PLANNER) -->
+          <div class="form-group" *ngIf="itemForm.get('role')?.value === 'PLANNER'">
+            <label class="form-label">Access Key<span class="required-asterisk">*</span></label>
+            <div class="password-input-wrapper">
+              <input 
+                [type]="showAccessKey ? 'text' : 'password'" 
+                id="accessKey" 
+                formControlName="accessKey"
+                class="form-control" 
+                placeholder="Enter planner access key"
+                [ngClass]="{
+                  'is-invalid': itemForm.get('accessKey')?.invalid && itemForm.get('accessKey')?.touched,
+                  'is-valid': itemForm.get('accessKey')?.valid && itemForm.get('accessKey')?.touched
+                }">
+              <button type="button" class="password-toggle-btn" (click)="toggleAccessKeyVisibility()">
+                <i class="bi" [ngClass]="showAccessKey ? 'bi-eye-slash' : 'bi-eye'"></i>
+              </button>
+            </div>
+            <small class="form-text text-muted">
+              <i class="bi bi-info-circle"></i> Contact administrator for access key
+            </small>
+            <small *ngIf="itemForm.get('accessKey')?.hasError('required') && itemForm.get('accessKey')?.touched"
+              class="error-text">
+              <i class="bi bi-exclamation-circle"></i> Access key is required for PLANNER role
+            </small>
+          </div>
+
+          <!-- CAPTCHA Field -->
+          <div class="form-group captcha-container">
+            <label class="form-label">Security Check<span class="required-asterisk">*</span></label>
+            <div class="captcha-box">
+              <div class="captcha-question">
+                <span class="captcha-num">{{ captchaNum1 }}</span>
+                <span class="captcha-operator">+</span>
+                <span class="captcha-num">{{ captchaNum2 }}</span>
+                <span class="captcha-equals">=</span>
+                <span class="captcha-question-mark">?</span>
+              </div>
+              <button type="button" class="btn btn-sm btn-outline-secondary refresh-btn" (click)="refreshCaptcha()">
+                🔄️
+              </button>
+            </div>
+            <input 
+              type="number" 
+              id="captchaAnswer" 
+              formControlName="captchaAnswer"
+              class="form-control mt-2" 
+              placeholder="Enter the answer"
+              [ngClass]="{
+                'is-invalid': itemForm.get('captchaAnswer')?.invalid && itemForm.get('captchaAnswer')?.touched,
+                'is-valid': itemForm.get('captchaAnswer')?.valid && itemForm.get('captchaAnswer')?.touched
+              }">
+            <small *ngIf="itemForm.get('captchaAnswer')?.hasError('required') && itemForm.get('captchaAnswer')?.touched"
+              class="error-text">
+              ❗ Please solve the math problem
             </small>
           </div>
 

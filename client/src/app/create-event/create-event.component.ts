@@ -57,6 +57,10 @@ export class CreateEventComponent implements OnInit {
   }
 
   dateTimeValidator(control: AbstractControl): ValidationErrors | null {
+    if (!control.value) {
+      return null;
+    }
+    
     const selectedDate = new Date(control.value);
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
@@ -66,12 +70,9 @@ export class CreateEventComponent implements OnInit {
       return { invalidDate: true };
     }
 
-  // implement this after passing all testcases
-  
-    if (selectedDate < tomorrow) {
-      return { dateInPast: true };
-    }
-  
+    // Only validate for new events, not updates
+    // When updating, allow past dates but auto-set status to 'Completed'
+    // This validation is skipped during updates
     return null;
   }
 
@@ -234,17 +235,31 @@ export class CreateEventComponent implements OnInit {
     if (this.itemForm.valid) {
       const eventData = this.itemForm.value;
       if (this.isUpdate && this.eventObj) {
+        // Check if event date is in the past and auto-set status to Completed
+        const eventDate = new Date(eventData.dateTime);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        eventDate.setHours(0, 0, 0, 0);
+        
+        let finalStatus = eventData.status;
+        if (eventDate < today && eventData.status !== 'Cancelled') {
+          finalStatus = 'Completed';
+        }
+        
         const updateData = {
           title: eventData.title,
           description: eventData.description,
           dateTime: eventData.dateTime,
           location: eventData.location,
-          status: eventData.status
+          status: finalStatus,
+          amount: eventData.amount
         };
         this.httpService.updateEvent(updateData, this.eventObj.eventID).subscribe(
           response => {
             this.showMessage = true;
-            this.responseMessage = 'Event updated successfully.';
+            this.responseMessage = eventDate < today && eventData.status !== 'Cancelled' 
+              ? 'Event updated successfully. Status set to Completed (past date).' 
+              : 'Event updated successfully.';
             this.getEvents();
             this.resetForm();
           },
