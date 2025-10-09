@@ -82,7 +82,7 @@ public class ClientController {
     
     @GetMapping("/api/client/event-detailsbyTitleforClient/{title}")
     public ResponseEntity<List<Event>> getEventsByTitleForClient(@PathVariable String title) {
-        List<Event> events = eventservice.getAllEventByTitle(title);
+        List<Event> events = eventservice.findEventByTitle(title);
         return ResponseEntity.ok(events);
     }
     
