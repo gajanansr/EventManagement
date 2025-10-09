@@ -159,13 +159,6 @@
         </div>
       </div>
       <div class="stat-card card">
-        <div class="stat-icon">⏳</div>
-        <div class="stat-content">
-          <h3>{{ pendingBookings || 0 }}</h3>
-          <p>Pending</p>
-        </div>
-      </div>
-      <div class="stat-card card">
         <div class="stat-icon">✅</div>
         <div class="stat-content">
           <h3>{{ confirmedBookings || 0 }}</h3>
@@ -187,11 +180,11 @@
         <h3>👋 Welcome Back!</h3>
         <p>You can search for events, view your bookings, and manage your event requests. We're here to make your event experience unforgettable!</p>
         <button class="btn btn-primary mx-4" routerLink="/booking-details" routerLinkActive="active">
-          <span class="icon">📋</span> Browse Available Events
+          <span class="icon">📋</span> Browse Your Bookings
         </button>
         <span class="span-empty"></span>
         <button class="btn btn-primary btn-margin" (click)="scrollToEvents()">
-          <span class="icon">🎉</span> Browse Your Bookings
+          <span class="icon">🎉</span> Browse Available Events
         </button>
       </div>
       <div class="welcome-illustration">🎊</div>
