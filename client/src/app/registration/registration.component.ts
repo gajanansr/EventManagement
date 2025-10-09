@@ -39,6 +39,8 @@ export class RegistrationComponent implements OnInit {
   users$: Observable<any> = of([]);
   showError: boolean = false;
   errorMessage: any;
+  showPassword: boolean = false; // For show/hide password toggle
+  showAccessKey: boolean = false; // For show/hide access key toggle
 
   constructor(
     private formBuilder: FormBuilder,
@@ -162,6 +164,14 @@ export class RegistrationComponent implements OnInit {
     } else {
       this.itemForm.markAllAsTouched();
     }
+  }
+  
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
+  
+  toggleAccessKeyVisibility() {
+    this.showAccessKey = !this.showAccessKey;
   }
 
 }

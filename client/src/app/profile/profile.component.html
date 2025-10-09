@@ -107,8 +107,14 @@
                     <form [formGroup]="passwordForm" (ngSubmit)="onSubmitPassword()" *ngIf="isChangingPassword">
                         <div class="mb-3">
                             <label for="currentPassword" class="form-label">Current Password</label>
-                            <input type="password" id="currentPassword" formControlName="currentPassword" 
-                                   class="form-control" placeholder="Enter current password">
+                            <div class="password-input-wrapper">
+                                <input [type]="showCurrentPassword ? 'text' : 'password'" 
+                                       id="currentPassword" formControlName="currentPassword" 
+                                       class="form-control" placeholder="Enter current password">
+                                <button type="button" class="password-toggle-btn" (click)="toggleCurrentPasswordVisibility()">
+                                    <i class="bi" [ngClass]="showCurrentPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+                                </button>
+                            </div>
                             <div *ngIf="passwordForm.get('currentPassword')?.invalid && passwordForm.get('currentPassword')?.touched" 
                                  class="text-danger small mt-1">
                                 Current password is required
@@ -117,25 +123,37 @@
 
                         <div class="mb-3">
                             <label for="password" class="form-label">New Password</label>
-                            <input type="password" id="password" formControlName="password" 
-                                   class="form-control" placeholder="Enter new password (min 6 characters)" [ngClass]="{
-                                    'is-invalid': passwordForm.get('password')?.invalid && passwordForm.get('password')?.touched,
-                                    'is-valid': passwordForm.get('password')?.valid && passwordForm.get('password')?.touched
-                            }">
-                                <div class="password-requirements" *ngIf="showPasswordRequirements && passwordForm.get('password')?.dirty">
-                                    <ul>
-                                      <li *ngFor="let rule of passwordRules" [class.satisfied]="rule.satisfied" [hidden]="rule.satisfied">
-                                        <small>{{ rule.label }}</small>
-                                      </li>
-                                    </ul>
-                                </div>
+                            <div class="password-input-wrapper">
+                                <input [type]="showNewPassword ? 'text' : 'password'" 
+                                       id="password" formControlName="password" 
+                                       class="form-control" placeholder="Enter new password" [ngClass]="{
+                                        'is-invalid': passwordForm.get('password')?.invalid && passwordForm.get('password')?.touched,
+                                        'is-valid': passwordForm.get('password')?.valid && passwordForm.get('password')?.touched
+                                }">
+                                <button type="button" class="password-toggle-btn" (click)="toggleNewPasswordVisibility()">
+                                    <i class="bi" [ngClass]="showNewPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+                                </button>
+                            </div>
+                            <div class="password-requirements" *ngIf="showPasswordRequirements && passwordForm.get('password')?.dirty">
+                                <ul>
+                                  <li *ngFor="let rule of passwordRules" [class.satisfied]="rule.satisfied" [hidden]="rule.satisfied">
+                                    <small>{{ rule.label }}</small>
+                                  </li>
+                                </ul>
+                            </div>
                         </div>
 
 
                         <div class="mb-3">
                             <label for="confirmPassword" class="form-label">Confirm New Password</label>
-                            <input type="password" id="confirmPassword" formControlName="confirmPassword" 
-                                   class="form-control" placeholder="Confirm new password">
+                            <div class="password-input-wrapper">
+                                <input [type]="showConfirmPassword ? 'text' : 'password'" 
+                                       id="confirmPassword" formControlName="confirmPassword" 
+                                       class="form-control" placeholder="Confirm new password">
+                                <button type="button" class="password-toggle-btn" (click)="toggleConfirmPasswordVisibility()">
+                                    <i class="bi" [ngClass]="showConfirmPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+                                </button>
+                            </div>
                             <div *ngIf="passwordForm.hasError('mismatch') && passwordForm.get('confirmPassword')?.touched" 
                                  class="text-danger small mt-1">
                                 Passwords do not match
