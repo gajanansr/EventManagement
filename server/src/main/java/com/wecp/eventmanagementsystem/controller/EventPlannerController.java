@@ -35,6 +35,7 @@ public class EventPlannerController {
     @Autowired
     private BookingService bookingService;
 
+
     @PostMapping("/api/planner/event")
     public ResponseEntity<Event> createEvent(@RequestBody Event event) {
         // create event and return created event with status code 201 (CREATED)
