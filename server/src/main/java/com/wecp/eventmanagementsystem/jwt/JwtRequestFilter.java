@@ -45,7 +45,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 username = jwtUtil.extractUsername(jwt);
             } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException |
                      SecurityException | IllegalArgumentException e) {
-                // Handle invalid tokens here if needed
+               
             }
         }
 

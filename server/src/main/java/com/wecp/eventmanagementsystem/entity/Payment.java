@@ -23,9 +23,9 @@ public class Payment {
     
     private String razorpaySignature;
     
-    private Long amount; // Amount in paise
+    private Long amount; 
     private String currency;
-    private String status; // CREATED, SUCCESS, FAILED, REFUNDED
+    private String status; 
     
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
@@ -51,7 +51,7 @@ public class Payment {
         this.updatedAt = new Date();
     }
     
-    // Getters and Setters
+
     
     public Long getPaymentId() {
         return paymentId;

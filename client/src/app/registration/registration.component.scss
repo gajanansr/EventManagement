@@ -41,7 +41,7 @@
   }
 }
 
-// Left Section - Welcome
+
 .welcome-section {
   color: white;
   padding: 1.5rem;
@@ -115,7 +115,7 @@
   }
 }
 
-// Right Section - Form
+
 .form-section {
   padding: 1.5rem;
 }
@@ -133,7 +133,7 @@
     padding: 1.25rem;
   }
   
-  // Custom scrollbar for form card
+
   &::-webkit-scrollbar {
     width: 6px;
   }
@@ -313,13 +313,13 @@
   }
 }
 
-// Required asterisk
+
 .required-asterisk {
   color: #ef4444;
   margin-left: 0.25rem;
 }
 
-// CAPTCHA Styling
+
 .captcha-container {
   .captcha-box {
     display: flex;
@@ -399,7 +399,7 @@
   }
 }
 
-// Password toggle button
+
 .password-input-wrapper {
   position: relative;
   
@@ -430,11 +430,11 @@
   }
   
   .form-control {
-    padding-right: 2.75rem; // Make room for the toggle button
+    padding-right: 2.75rem; 
   }
 }
 
-// Responsive adjustments
+
 @media (max-width: 968px) {
   .registration-content {
     grid-template-columns: 1fr;

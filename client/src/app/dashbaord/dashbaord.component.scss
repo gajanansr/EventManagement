@@ -1,4 +1,4 @@
-/* Modern Dashboard Styles */
+
 
 .dashboard-container {
   min-height: 100vh;
@@ -17,7 +17,6 @@
   min-width: 5px;
 }
 
-// Dashboard Header
 .dashboard-header {
   text-align: center;
   margin-bottom: 2rem;
@@ -40,7 +39,7 @@
   }
 }
 
-// Statistics Grid
+
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -110,7 +109,7 @@
   }
 }
 
-// Quick Actions
+
 .quick-actions {
   padding: 1.25rem;
   margin-bottom: 1.75rem;
@@ -182,7 +181,6 @@
   }
 }
 
-// Info Card (for Staff)
 .info-card {
   display: flex;
   align-items: center;
@@ -217,7 +215,7 @@
   }
 }
 
-// Welcome Card (for Client)
+
 .welcome-card {
   display: flex;
   align-items: center;
@@ -270,7 +268,7 @@
   }
 }
 
-// Card Enhancements
+
 .card {
   margin-bottom: 2rem;
   animation: fadeInUp 0.6s ease-out 0.4s both;
@@ -295,7 +293,7 @@
   }
 }
 
-// Animations
+
 @keyframes fadeInDown {
   from {
     opacity: 0;
@@ -336,7 +334,7 @@
   }
 }
 
-// Role-specific containers
+
 .planner-dashboard,
 .staff-dashboard,
 .client-dashboard {
@@ -344,7 +342,7 @@
   margin: 0 auto;
 }
 
-// Smooth scroll behavior
+
 html {
   scroll-behavior: smooth;
 }

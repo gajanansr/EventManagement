@@ -31,7 +31,7 @@ export class ViewEventsComponent  implements OnInit{
   itemsPerPage: number = 3;
   totalPages: number = 1;
 
-  // New properties for staff assignment and messaging
+  
   roleName: string = '';
   staffList: any[] = [];
   selectedEventForStaff: any = null;
@@ -43,22 +43,22 @@ export class ViewEventsComponent  implements OnInit{
   messages: any[] = [];
   newMessage: string = '';
 
-  // Booking properties
+  
   selectedEventForBooking: any = null;
   bookingRequirements: string = '';
   bookingMessage: string = '';
   bookingSuccess: boolean = false;
   bookingAmount: number = 0;
   isProcessingPayment: boolean = false;
-  userBookings: any[] = []; // Track user's existing bookings
+  userBookings: any[] = []; 
 
-  // Planner booking management
+  
   allBookings: any[] = [];
   selectedBooking: any = null;
   bookingStatusUpdate: string = '';
   bookingNotes: string = '';
 
-  // Modal visibility flags
+  
   showStaffAssignModal: boolean = false;
   showMessagingModal: boolean = false;
   showBookingModal: boolean = false;
@@ -78,12 +78,12 @@ export class ViewEventsComponent  implements OnInit{
     this.initForm();
     this.getEvents();
     
-    // Load staff list if user is a planner
+    
     if (this.roleName === 'PLANNER') {
       this.loadStaffList();
     }
     
-    // Load user's bookings if user is a client
+    
     if (this.roleName === 'CLIENT') {
       this.loadUserBookings();
     }
@@ -99,7 +99,7 @@ export class ViewEventsComponent  implements OnInit{
     })
   }
 
-  // Modal close methods
+  
   closeStaffAssignModal(): void {
     this.showStaffAssignModal = false;
   }
@@ -151,7 +151,7 @@ export class ViewEventsComponent  implements OnInit{
   }
 
   getEvents() {
-    // Use appropriate endpoint based on user role
+    
     const role = this.authService.getRole;
     let eventsObservable;
     
@@ -160,7 +160,7 @@ export class ViewEventsComponent  implements OnInit{
     } else if (role === 'CLIENT') {
       eventsObservable = this.httpService.GetAlleventsForClient();
     } else {
-      eventsObservable = this.httpService.GetEvents(); // STAFF
+      eventsObservable = this.httpService.GetEvents();
     }
     
     eventsObservable.subscribe(
@@ -177,7 +177,7 @@ export class ViewEventsComponent  implements OnInit{
     );
   }
   
-  // Load user's bookings to check which events are already booked
+  
   loadUserBookings(): void {
     this.httpService.getMyBookings().subscribe({
       next: (bookings: any) => {
@@ -189,12 +189,12 @@ export class ViewEventsComponent  implements OnInit{
     });
   }
   
-  // Check if an event is already booked by the user
+  
   isEventBooked(eventId: number): boolean {
     return this.userBookings.some(booking => booking.event?.eventID === eventId);
   }
   
-  // Get booking details for an event
+  
   getBookingForEvent(eventId: number): any {
     return this.userBookings.find(booking => booking.event?.eventID === eventId);
   }
@@ -221,7 +221,7 @@ export class ViewEventsComponent  implements OnInit{
       const role = this.authService.getRole;
       
       if(isNaN(searchTerm)){
-        // Search by title based on role
+        
         let searchObservable;
         if (role === 'PLANNER') {
           searchObservable = this.httpService.getEventsByTitle(searchTerm);
@@ -236,7 +236,7 @@ export class ViewEventsComponent  implements OnInit{
             console.log(response);
             this.handleSearchResponse(response);
             if(response && Object.keys(response).length !== 0){
-              // Handle array or single object response
+              
               this.eventList = Array.isArray(response) ? response : [response];
               this.totalPages = 1;
               this.currentPage = 1;
@@ -257,7 +257,7 @@ export class ViewEventsComponent  implements OnInit{
           }
         );
       }else{
-        // Search by ID based on role
+        
         let searchObservable;
         if (role === 'PLANNER') {
           searchObservable = this.httpService.getEventById(Number(searchTerm));
@@ -458,7 +458,7 @@ export class ViewEventsComponent  implements OnInit{
       }
     }
 
-    // Staff Assignment Methods
+    
     loadStaffList(): void {
       this.httpService.getAllStaff().subscribe({
         next: (response: any) => {
@@ -488,7 +488,7 @@ export class ViewEventsComponent  implements OnInit{
           this.staffAssignMessage = 'Staff assigned successfully!';
           this.staffAssignSuccess = true;
           
-          // Update the event in the list
+          
           const eventIndex = this.eventList.findIndex(e => e.eventID === this.selectedEventForStaff.eventID);
           if (eventIndex !== -1) {
             const assignedStaff = this.staffList.find(s => s.userId == this.selectedStaffId);
@@ -507,7 +507,7 @@ export class ViewEventsComponent  implements OnInit{
       });
     }
 
-    // Messaging Methods
+    
     openMessaging(event: any): void {
       this.selectedEventForMessaging = event;
       this.messages = [];
@@ -540,11 +540,11 @@ export class ViewEventsComponent  implements OnInit{
 
       this.httpService.sendMessage(messageData).subscribe({
         next: (response: any) => {
-          // Reload messages to get the updated list
+          
           this.loadMessages(this.selectedEventForMessaging.eventID);
           this.newMessage = '';
           
-          // Scroll to bottom of messages
+          
           setTimeout(() => {
             const messagesContainer = document.querySelector('.messages-container');
             if (messagesContainer) {
@@ -559,9 +559,9 @@ export class ViewEventsComponent  implements OnInit{
       });
     }
 
-    // Booking Methods (for CLIENT)
+   
     openBookingForm(event: any): void {
-      // Check if event is already booked
+      
       if (this.isEventBooked(event.eventID)) {
         alert('You have already booked this event!');
         return;
@@ -572,9 +572,9 @@ export class ViewEventsComponent  implements OnInit{
       this.bookingMessage = '';
       this.bookingSuccess = false;
       this.isProcessingPayment = false;
-      // Calculate booking amount in paise (don't divide by 100 here)
+      
       const amountInPaise = this.paymentService.calculateBookingAmount(event);
-      this.bookingAmount = amountInPaise / 100; // For display only (in rupees)
+      this.bookingAmount = amountInPaise / 100; 
       this.showBookingModal = true;
     }
 
@@ -586,21 +586,20 @@ export class ViewEventsComponent  implements OnInit{
       this.isProcessingPayment = true;
       this.bookingMessage = 'Processing your payment...';
 
-      // Calculate amount in paise (multiply back by 100)
+      
       const amountInPaise = Math.round(this.bookingAmount * 100);
 
       const bookingData = {
         eventId: this.selectedEventForBooking.eventID,
         clientRequirements: this.bookingRequirements || 'No specific requirements',
-        amount: amountInPaise // Send amount in paise
+        amount: amountInPaise 
       };
 
-      // Create payment order first
       this.paymentService.createPaymentOrder(bookingData).subscribe({
         next: (orderResponse: any) => {
-          // Initialize Razorpay payment
+          
           const paymentOptions = {
-            key: orderResponse.razorpayKeyId || 'rzp_test_your_key_id', // Replace with actual key
+            key: orderResponse.razorpayKeyId || 'rzp_test_your_key_id', 
             amount: orderResponse.amount,
             currency: orderResponse.currency || 'INR',
             name: 'Event.io',
@@ -616,10 +615,10 @@ export class ViewEventsComponent  implements OnInit{
             }
           };
 
-          // Open Razorpay payment modal
+          
           this.paymentService.initiateRazorpayPayment(paymentOptions)
             .then((paymentResponse: any) => {
-              // Payment successful, verify and create booking
+              
               const verificationData = {
                 orderId: orderResponse.orderId,
                 paymentId: paymentResponse.razorpay_payment_id,
@@ -634,12 +633,12 @@ export class ViewEventsComponent  implements OnInit{
                   this.bookingSuccess = true;
                   this.isProcessingPayment = false;
                   
-                  // Reload user bookings to update the list
+                  
                   this.loadUserBookings();
                   
                   setTimeout(() => {
                     this.closeBookingModal();
-                    this.getEvents(); // Refresh events
+                    this.getEvents(); 
                   }, 2500);
                 },
                 error: (error) => {
@@ -663,7 +662,7 @@ export class ViewEventsComponent  implements OnInit{
       });
     }
 
-    // Booking Management Methods (for PLANNER)
+    
     viewAllBookings(): void {
       this.httpService.getAllBookings().subscribe({
         next: (response: any) => {
@@ -697,7 +696,7 @@ export class ViewEventsComponent  implements OnInit{
         next: (response: any) => {
           alert('Booking status updated successfully!');
           
-          // Update the booking in the list
+          
           const bookingIndex = this.allBookings.findIndex(b => b.bookingId === this.selectedBooking.bookingId);
           if (bookingIndex !== -1) {
             this.allBookings[bookingIndex].status = this.bookingStatusUpdate;

@@ -1,4 +1,4 @@
-// Modern Glossy Navbar Styling
+
 .modern-navbar {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
@@ -124,7 +124,7 @@ a {
   }
 }
 
-// Animations
+
 @keyframes pulse {
   0%, 100% {
     transform: scale(1);
@@ -134,13 +134,12 @@ a {
   }
 }
 
-// Main Content
+
 .main-content {
   min-height: calc(100vh - 80px);
   padding-top: 0;
 }
 
-// Responsive Design
 @media (max-width: 1024px) {
   .navbar-container {
     gap: 1rem;

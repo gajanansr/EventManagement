@@ -17,17 +17,14 @@ public class EventStatusScheduler {
     @Autowired
     private EventRepository eventRepository;
     
-    /**
-     * Automatically update event status to "Completed" for past events
-     * Runs daily at midnight
-     */
-    @Scheduled(cron = "0 0 0 * * ?") // Run at midnight every day
+    
+    @Scheduled(cron = "0 0 0 * * ?") 
     public void updatePastEventsToCompleted() {
         try {
             LocalDateTime now = LocalDateTime.now();
             Date currentDate = Date.from(now.atZone(ZoneId.systemDefault()).toInstant());
             
-            // Find all events that are in the past and not already Completed or Cancelled
+            
             List<Event> allEvents = eventRepository.findAll();
             int updatedCount = 0;
             
@@ -51,9 +48,7 @@ public class EventStatusScheduler {
         }
     }
     
-    /**
-     * Runs on application startup to update any past events
-     */
+    
     public void updatePastEventsOnStartup() {
         System.out.println("EventStatusScheduler: Running initial check on startup...");
         updatePastEventsToCompleted();

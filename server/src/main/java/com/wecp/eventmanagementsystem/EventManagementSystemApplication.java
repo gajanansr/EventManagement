@@ -13,7 +13,7 @@ public class EventManagementSystemApplication {
 	public static void main(String[] args) {
 		ConfigurableApplicationContext context = SpringApplication.run(EventManagementSystemApplication.class, args);
 		
-		// Run initial check on startup
+		
 		EventStatusScheduler scheduler = context.getBean(EventStatusScheduler.class);
 		scheduler.updatePastEventsOnStartup();
 	}

@@ -16,18 +16,18 @@ export class DashbaordComponent implements OnInit {
   stateIdMd: any;
   roleName: string | null;
   
-  // Planner Statistics
+  
   totalEvents: number = 0;
   totalResources: number = 0;
   totalAllocations: number = 0;
   activeEvents: number = 0;
   
-  // Staff Statistics
+  
   scheduledEvents: number = 0;
   completedEvents: number = 0;
   upcomingEvents: number = 0;
   
-  // Client Statistics
+  
   totalBookings: number = 0;
   pendingBookings: number = 0;
   confirmedBookings: number = 0;
@@ -74,7 +74,7 @@ export class DashbaordComponent implements OnInit {
   }
 
   loadPlannerStats() {
-    // Load events
+    
     this.httpService.GetAllevents().subscribe(
       (events: any) => {
         this.totalEvents = events.length;
@@ -82,22 +82,22 @@ export class DashbaordComponent implements OnInit {
           e.status === 'Scheduled' || e.status === 'Active'
         ).length;
         
-        // Count scheduled and completed events
+      
         this.scheduledEvents = events.filter((e: any) => e.status === 'Scheduled').length;
         this.completedEvents = events.filter((e: any) => e.status === 'Completed').length;
         
-        // Upcoming events (scheduled and within next 30 days)
+       
         const today = new Date();
-        today.setHours(0, 0, 0, 0); // Reset to start of day
+        today.setHours(0, 0, 0, 0); 
         const next30Days = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
         this.upcomingEvents = events.filter((e: any) => {
           if (e.status !== 'Scheduled') return false;
           const eventDate = new Date(e.dateTime);
-          eventDate.setHours(0, 0, 0, 0); // Reset to start of day for comparison
+          eventDate.setHours(0, 0, 0, 0); 
           return eventDate >= today && eventDate <= next30Days;
         }).length;
         
-        // Count total allocations
+        
         this.totalAllocations = events.reduce((total: number, event: any) => {
           return total + (event.allocations ? event.allocations.length : 0);
         }, 0);
@@ -105,7 +105,7 @@ export class DashbaordComponent implements OnInit {
       (error: any) => console.error('Error loading events:', error)
     );
 
-    // Load resources
+    
     this.httpService.GetAllResources().subscribe(
       (resources: any) => {
         this.totalResources = resources.length;
@@ -115,12 +115,12 @@ export class DashbaordComponent implements OnInit {
   }
 
   loadStaffStats() {
-    // Load only assigned events for staff
+    
     this.httpService.GetEvents().subscribe(
       (events: any) => {
         this.totalEvents = events.length;
         
-        // Count active events (Scheduled or Active status)
+        
         this.activeEvents = events.filter((e: any) => 
           e.status === 'Scheduled' || e.status === 'Active'
         ).length;
@@ -128,14 +128,14 @@ export class DashbaordComponent implements OnInit {
         this.scheduledEvents = events.filter((e: any) => e.status === 'Scheduled').length;
         this.completedEvents = events.filter((e: any) => e.status === 'Completed').length;
         
-        // Upcoming events (scheduled and within next 30 days)
+        
         const today = new Date();
-        today.setHours(0, 0, 0, 0); // Reset to start of day
+        today.setHours(0, 0, 0, 0); 
         const next30Days = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
         this.upcomingEvents = events.filter((e: any) => {
           if (e.status !== 'Scheduled') return false;
           const eventDate = new Date(e.dateTime);
-          eventDate.setHours(0, 0, 0, 0); // Reset to start of day for comparison
+          eventDate.setHours(0, 0, 0, 0); 
           return eventDate >= today && eventDate <= next30Days;
         }).length;
       },
@@ -144,7 +144,7 @@ export class DashbaordComponent implements OnInit {
   }
 
   loadClientStats() {
-    // Load bookings for client
+    
     this.httpService.getMyBookings().subscribe(
       (bookings: any) => {
         this.totalBookings = bookings.length;
@@ -155,22 +155,22 @@ export class DashbaordComponent implements OnInit {
           b.status === 'CONFIRMED' || b.status === 'Confirmed'
         ).length;
         
-        // Upcoming bookings (confirmed and event date in future)
+        
         const today = new Date();
-        today.setHours(0, 0, 0, 0); // Reset to start of day
+        today.setHours(0, 0, 0, 0); 
         this.upcomingBookings = bookings.filter((b: any) => {
           if (b.status !== 'CONFIRMED' && b.status !== 'Confirmed') return false;
           if (!b.event) return false;
-          // Try both dateTime and date fields
+          
           const eventDate = new Date(b.event.dateTime || b.event.date);
-          if (isNaN(eventDate.getTime())) return false; // Invalid date
-          eventDate.setHours(0, 0, 0, 0); // Reset to start of day for comparison
+          if (isNaN(eventDate.getTime())) return false; 
+          eventDate.setHours(0, 0, 0, 0); 
           return eventDate >= today;
         }).length;
       },
       error => {
         console.error('Error loading bookings:', error);
-        // Set to 0 if error (user might not have bookings yet)
+        
         this.totalBookings = 0;
         this.pendingBookings = 0;
         this.confirmedBookings = 0;

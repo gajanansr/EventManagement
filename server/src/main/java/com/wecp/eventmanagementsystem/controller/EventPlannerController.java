@@ -38,25 +38,25 @@ public class EventPlannerController {
 
     @PostMapping("/api/planner/event")
     public ResponseEntity<Event> createEvent(@RequestBody Event event) {
-        // create event and return created event with status code 201 (CREATED)
+        
         return new ResponseEntity<>(eventService.createEvent(event), HttpStatus.CREATED);
     }
 
     @GetMapping("/api/planner/events")
     public ResponseEntity<List<Event>> getAllEvents() {
-        // get all events and return the list with status code 200 (OK)
+       
         return new ResponseEntity<List<Event>>(eventService.getAllEvents(), HttpStatus.OK);
     }
 
     @PostMapping("/api/planner/resource")
     public ResponseEntity<Resource> addResource(@RequestBody Resource resource) {
-        // add resource and return added resource with status code 201 (CREATED)
+       
         return new ResponseEntity<Resource>(resourceService.addResource(resource), HttpStatus.CREATED);
     }
 
     @GetMapping("/api/planner/resources")
     public ResponseEntity<List<Resource>> getAllResources() {
-        // get all resources and return the list with status code 200 (OK)
+        
         return new ResponseEntity<List<Resource>>(resourceService.getAllResources(), HttpStatus.OK);
     }
 
@@ -76,8 +76,7 @@ public class EventPlannerController {
     public ResponseEntity<String> allocateResources(@RequestParam long eventId, @RequestParam long resourceId,
             @RequestBody Allocation allocation) {
 
-        // allocate resources for the event and return a success message with status
-        // code 201 (CREATED)
+        
         resourceService.allocateResources(eventId, resourceId, allocation);
         return new ResponseEntity<>("{\"message\": \"Resource allocated successfully for Event ID: " + eventId + "\"}",
                 HttpStatus.CREATED);
@@ -116,7 +115,7 @@ public class EventPlannerController {
         }
     }
     
-    // Messaging endpoints for PLANNER
+    
     @PostMapping("/api/planner/send-message")
     public ResponseEntity<Map<String, Object>> sendMessage(
             @RequestBody Map<String, Object> messageRequest,
@@ -148,7 +147,7 @@ public class EventPlannerController {
         return ResponseEntity.ok(messages);
     }
     
-    // Booking management endpoints for PLANNER
+    
     @GetMapping("/api/planner/bookings")
     public ResponseEntity<List<Booking>> getAllBookings() {
         List<Booking> bookings = bookingService.getAllBookings();

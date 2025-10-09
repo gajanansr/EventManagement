@@ -55,7 +55,7 @@ public class UserService implements UserDetailsService {
         Optional<User> userOpt = Optional.ofNullable(userRepository.findByUsername(username));
         User user = userOpt.orElseThrow(() -> new EntityNotFoundException("User not found: " + username));
         
-        // Update basic info
+        
         if (request.getEmail() != null && !request.getEmail().isEmpty()) {
             user.setEmail(request.getEmail());
         }
@@ -69,7 +69,7 @@ public class UserService implements UserDetailsService {
             user.setAddress(request.getAddress());
         }
         
-        // Update password if provided and current password is correct
+        
         if (request.getNewPassword() != null && !request.getNewPassword().isEmpty()) {
             if (request.getCurrentPassword() == null || request.getCurrentPassword().isEmpty()) {
                 throw new IllegalArgumentException("Current password is required to change password");

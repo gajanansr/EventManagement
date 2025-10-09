@@ -97,7 +97,7 @@ export class ProfileComponent implements OnInit {
   toggleEditMode() {
     this.isEditMode = !this.isEditMode;
     if (!this.isEditMode) {
-      this.loadProfile(); // Reset form if cancelled
+      this.loadProfile(); 
     }
   }
 

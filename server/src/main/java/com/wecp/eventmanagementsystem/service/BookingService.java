@@ -37,7 +37,7 @@ public class BookingService {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new EntityNotFoundException("Booking not found: " + bookingId));
         
-        // Verify the booking belongs to the requesting client
+        
         User client = userRepository.findByUsername(username);
         if (client == null || booking.getClient().getUserId() != client.getUserId()) {
             throw new SecurityException("Unauthorized access to booking");

@@ -1,4 +1,3 @@
-// Clean Material Design styles for bookings
 
 .bookings-container {
   padding: 5%;
@@ -182,7 +181,7 @@
   height: 3rem;
 }
 
-// Responsive Design
+
 @media (max-width: 768px) {
   .table-responsive {
     font-size: 0.875rem;
@@ -200,7 +199,7 @@
   }
 }
 
-// Remove all old heavy CSS
+
 html, body, section {
   height: auto;
   margin: 0;

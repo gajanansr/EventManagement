@@ -4,7 +4,7 @@ public class PaymentOrderRequest {
     
     private Long eventId;
     private String clientRequirements;
-    private Long amount; // Amount in paise
+    private Long amount; 
     
     public PaymentOrderRequest() {
     }

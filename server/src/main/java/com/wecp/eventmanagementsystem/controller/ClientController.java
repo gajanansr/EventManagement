@@ -30,8 +30,7 @@ public class ClientController {
 
     @GetMapping("/api/client/booking-details/{eventId}")
     public ResponseEntity<Event> getBookingDetails(@PathVariable Long eventId) {
-        // return null;
-        // get event details by event id and return with status code 200 OK
+        
         return ResponseEntity.status(200).body(eventservice.getEventsById(eventId));
     }
     
@@ -85,8 +84,7 @@ public class ClientController {
         List<Event> events = eventservice.findEventByTitle(title);
         return ResponseEntity.ok(events);
     }
-    
-    // Messaging endpoints
+   
     @PostMapping("/api/client/send-message")
     public ResponseEntity<Map<String, Object>> sendMessage(
             @RequestBody Map<String, Object> messageRequest,

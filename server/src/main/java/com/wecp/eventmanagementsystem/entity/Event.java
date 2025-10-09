@@ -5,7 +5,7 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
  
-@Table(name = "events") // do not change table name
+@Table(name = "events") 
 @Entity
 public class Event {
  
@@ -17,11 +17,11 @@ public class Event {
     private Date dateTime;
     private String location;
     private String status;
-    private Double amount; // Event price in rupees (e.g., 5000.0)
+    private Double amount; 
  
     @ManyToOne
     @JoinColumn(name = "createdByPlannerId", referencedColumnName = "userId")
-    private User createdByPlanner; // Track which planner created this event
+    private User createdByPlanner; 
     
     @ManyToOne
     @JoinColumn(name = "assignedStaffId", referencedColumnName = "userId")

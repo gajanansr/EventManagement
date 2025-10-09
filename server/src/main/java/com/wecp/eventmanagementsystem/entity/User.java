@@ -3,9 +3,9 @@ package com.wecp.eventmanagementsystem.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "users") // do not change table name
+@Table(name = "users") 
 public class User {
-    // implement entity
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long userId;

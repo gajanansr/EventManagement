@@ -125,7 +125,7 @@ export class ResourceAllocateComponent implements OnInit {
           this.showSuccessMessage(data.message);
           this.itemForm.reset();
           this.selectedResourceUnavailable = false;
-          // Refresh resources list to update availability
+
           this.getResources();
         },
         (error: any) => {

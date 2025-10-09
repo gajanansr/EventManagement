@@ -64,15 +64,13 @@ export class CreateEventComponent implements OnInit {
     const selectedDate = new Date(control.value);
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
-    tomorrow.setHours(0, 0, 0, 0); // Set to midnight
+    tomorrow.setHours(0, 0, 0, 0); 
   
     if (isNaN(selectedDate.getTime())) {
       return { invalidDate: true };
     }
 
-    // Only validate for new events, not updates
-    // When updating, allow past dates but auto-set status to 'Completed'
-    // This validation is skipped during updates
+    
     return null;
   }
 
@@ -215,7 +213,7 @@ export class CreateEventComponent implements OnInit {
   autoCloseAlert() {
     setTimeout(() => {
       this.closeAlert();
-    }, 5000); // Auto close after 5 seconds
+    }, 5000); 
   }
   closeAlert() {
     this.showMessage = false;
@@ -235,7 +233,7 @@ export class CreateEventComponent implements OnInit {
     if (this.itemForm.valid) {
       const eventData = this.itemForm.value;
       if (this.isUpdate && this.eventObj) {
-        // Check if event date is in the past and auto-set status to Completed
+        
         const eventDate = new Date(eventData.dateTime);
         const today = new Date();
         today.setHours(0, 0, 0, 0);
@@ -272,7 +270,7 @@ export class CreateEventComponent implements OnInit {
 
       } else {
 
-        // Add logic for creating a new event
+        
         this.httpService.createEvent(eventData).subscribe(
           response => {
             this.showMessage = true;
