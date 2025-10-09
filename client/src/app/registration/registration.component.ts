@@ -86,7 +86,15 @@ export class RegistrationComponent implements OnInit {
     if (this.itemForm.valid) {
       this.showMessage = false;
       this.showError = false;
-      this.httpService.registerUser(this.itemForm.value).subscribe(
+      
+      // Map 'name' to 'fullName' for backend compatibility
+      const registrationData = {
+        ...this.itemForm.value,
+        fullName: this.itemForm.value.name
+      };
+      delete registrationData.name; // Remove 'name' field as backend expects 'fullName'
+      
+      this.httpService.registerUser(registrationData).subscribe(
         data => {
           this.showMessage = true;
           this.responseMessage = `Welcome ${data.username} you are successfully registered`;
