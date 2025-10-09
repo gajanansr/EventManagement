@@ -32,7 +32,7 @@ export class PaymentService {
       'Authorization': `Bearer ${localStorage.getItem('token')}`
     });
     
-    return this.http.post(`${this.apiUrl}/payment/verify`, paymentData, { headers });
+    return this.http.post(`${this.apiUrl}/api/payment/verify`, paymentData, { headers });
   }
 
   /**
@@ -43,7 +43,7 @@ export class PaymentService {
       'Authorization': `Bearer ${localStorage.getItem('token')}`
     });
     
-    return this.http.get(`${this.apiUrl}/payment/status/${paymentId}`, { headers });
+    return this.http.get(`${this.apiUrl}/api/payment/status/${paymentId}`, { headers });
   }
 
   /**
