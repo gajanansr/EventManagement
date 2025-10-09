@@ -3,6 +3,7 @@ import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators }
 import { Router } from '@angular/router';
 import { HttpService } from '../../services/http.service';
 import { AuthService } from '../../services/auth.service';
+import { PaymentService } from '../../services/payment.service';
 
 
 @Component({
@@ -20,6 +21,7 @@ export class ViewEventsComponent  implements OnInit{
   responseMessage: string = '';
   isUpdate: boolean = false;
   eventList: any[] = [];
+  originalEventList: any[] = [];
   minDate: string;
   message: {type: 'success' | 'error', text: string } | null = null;
   searchPerformed : boolean = false;
@@ -46,6 +48,9 @@ export class ViewEventsComponent  implements OnInit{
   bookingRequirements: string = '';
   bookingMessage: string = '';
   bookingSuccess: boolean = false;
+  bookingAmount: number = 0;
+  isProcessingPayment: boolean = false;
+  userBookings: any[] = []; // Track user's existing bookings
 
   // Planner booking management
   allBookings: any[] = [];
@@ -63,7 +68,8 @@ export class ViewEventsComponent  implements OnInit{
 
   constructor(private httpService: HttpService,
     private formBuilder: FormBuilder,private router: Router,
-    private authService: AuthService){
+    private authService: AuthService,
+    private paymentService: PaymentService){
       this.minDate = this.getTomorrowDate();
       this.roleName = this.authService.getRole || '';
     }
@@ -75,6 +81,11 @@ export class ViewEventsComponent  implements OnInit{
     // Load staff list if user is a planner
     if (this.roleName === 'PLANNER') {
       this.loadStaffList();
+    }
+    
+    // Load user's bookings if user is a client
+    if (this.roleName === 'CLIENT') {
+      this.loadUserBookings();
     }
   }
   initForm() {
@@ -155,6 +166,7 @@ export class ViewEventsComponent  implements OnInit{
     eventsObservable.subscribe(
       (data) => {
         this.eventList = data;
+        this.originalEventList = [...data]
         this.totalPages = Math.ceil(this.eventList.length / this.itemsPerPage);
         this.setPaginatedEvents();
       },
@@ -163,6 +175,28 @@ export class ViewEventsComponent  implements OnInit{
         this.errorMessage = error.message || 'Failed to load events';
       }
     );
+  }
+  
+  // Load user's bookings to check which events are already booked
+  loadUserBookings(): void {
+    this.httpService.getMyBookings().subscribe({
+      next: (bookings: any) => {
+        this.userBookings = bookings;
+      },
+      error: (error) => {
+        console.error('Error loading bookings:', error);
+      }
+    });
+  }
+  
+  // Check if an event is already booked by the user
+  isEventBooked(eventId: number): boolean {
+    return this.userBookings.some(booking => booking.event?.eventID === eventId);
+  }
+  
+  // Get booking details for an event
+  getBookingForEvent(eventId: number): any {
+    return this.userBookings.find(booking => booking.event?.eventID === eventId);
   }
   setPaginatedEvents() {
     const startIndex = (this.currentPage -1) * this.itemsPerPage;
@@ -199,6 +233,7 @@ export class ViewEventsComponent  implements OnInit{
         
         searchObservable.subscribe(
           (response) => {
+            console.log(response);
             this.handleSearchResponse(response);
             if(response && Object.keys(response).length !== 0){
               // Handle array or single object response
@@ -345,18 +380,18 @@ export class ViewEventsComponent  implements OnInit{
   }
   filterPastEvents(): void{
     const currentDate = new Date();
-    this.eventList = this.eventList.filter(event => new Date(event.dateTime) < currentDate);
+    this.eventList = this.originalEventList.filter(event => new Date(event.dateTime) < currentDate);
   }
   filterTodayEvents(): void{
     const currentDate = new Date();
-    this.eventList = this.eventList.filter(event => {
+    this.eventList = this.originalEventList.filter(event => {
       const eventDate = new Date(event.dateTime);
       return eventDate.toDateString() === currentDate.toDateString();
     });
   }
   filterFutureEvents(): void{
     const currentDate = new Date();
-    this.eventList = this.eventList.filter(event => new Date(event.dateTime) > currentDate);
+    this.eventList = this.originalEventList.filter(event => new Date(event.dateTime) > currentDate);
   }
 
   viewAllEvents(): void{
@@ -526,10 +561,20 @@ export class ViewEventsComponent  implements OnInit{
 
     // Booking Methods (for CLIENT)
     openBookingForm(event: any): void {
+      // Check if event is already booked
+      if (this.isEventBooked(event.eventID)) {
+        alert('You have already booked this event!');
+        return;
+      }
+      
       this.selectedEventForBooking = event;
       this.bookingRequirements = '';
       this.bookingMessage = '';
       this.bookingSuccess = false;
+      this.isProcessingPayment = false;
+      // Calculate booking amount in paise (don't divide by 100 here)
+      const amountInPaise = this.paymentService.calculateBookingAmount(event);
+      this.bookingAmount = amountInPaise / 100; // For display only (in rupees)
       this.showBookingModal = true;
     }
 
@@ -538,24 +583,82 @@ export class ViewEventsComponent  implements OnInit{
         return;
       }
 
+      this.isProcessingPayment = true;
+      this.bookingMessage = 'Processing your payment...';
+
+      // Calculate amount in paise (multiply back by 100)
+      const amountInPaise = Math.round(this.bookingAmount * 100);
+
       const bookingData = {
         eventId: this.selectedEventForBooking.eventID,
-        clientRequirements: this.bookingRequirements || 'No specific requirements'
+        clientRequirements: this.bookingRequirements || 'No specific requirements',
+        amount: amountInPaise // Send amount in paise
       };
 
-      this.httpService.createBooking(bookingData).subscribe({
-        next: (response: any) => {
-          this.bookingMessage = response.message || 'Booking created successfully!';
-          this.bookingSuccess = true;
-          
-          setTimeout(() => {
-            this.closeBookingModal();
-            // Optionally refresh the events list or navigate to bookings page
-          }, 2000);
+      // Create payment order first
+      this.paymentService.createPaymentOrder(bookingData).subscribe({
+        next: (orderResponse: any) => {
+          // Initialize Razorpay payment
+          const paymentOptions = {
+            key: orderResponse.razorpayKeyId || 'rzp_test_your_key_id', // Replace with actual key
+            amount: orderResponse.amount,
+            currency: orderResponse.currency || 'INR',
+            name: 'Event.io',
+            description: `Booking for ${this.selectedEventForBooking.title}`,
+            order_id: orderResponse.orderId,
+            prefill: {
+              name: localStorage.getItem('username') || '',
+              email: localStorage.getItem('email') || '',
+              contact: ''
+            },
+            theme: {
+              color: '#6366f1'
+            }
+          };
+
+          // Open Razorpay payment modal
+          this.paymentService.initiateRazorpayPayment(paymentOptions)
+            .then((paymentResponse: any) => {
+              // Payment successful, verify and create booking
+              const verificationData = {
+                orderId: orderResponse.orderId,
+                paymentId: paymentResponse.razorpay_payment_id,
+                signature: paymentResponse.razorpay_signature,
+                eventId: this.selectedEventForBooking.eventID,
+                clientRequirements: this.bookingRequirements
+              };
+
+              this.paymentService.verifyPayment(verificationData).subscribe({
+                next: (verifyResponse: any) => {
+                  this.bookingMessage = 'Payment successful! Booking confirmed.';
+                  this.bookingSuccess = true;
+                  this.isProcessingPayment = false;
+                  
+                  // Reload user bookings to update the list
+                  this.loadUserBookings();
+                  
+                  setTimeout(() => {
+                    this.closeBookingModal();
+                    this.getEvents(); // Refresh events
+                  }, 2500);
+                },
+                error: (error) => {
+                  this.bookingMessage = 'Payment verification failed. Please contact support.';
+                  this.bookingSuccess = false;
+                  this.isProcessingPayment = false;
+                }
+              });
+            })
+            .catch((error) => {
+              this.bookingMessage = error.error || 'Payment cancelled or failed';
+              this.bookingSuccess = false;
+              this.isProcessingPayment = false;
+            });
         },
         error: (error) => {
-          this.bookingMessage = error.error?.message || 'Failed to create booking';
+          this.bookingMessage = error.error?.message || 'Failed to initiate payment';
           this.bookingSuccess = false;
+          this.isProcessingPayment = false;
         }
       });
     }

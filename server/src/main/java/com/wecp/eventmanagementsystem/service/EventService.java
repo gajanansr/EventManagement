@@ -52,7 +52,7 @@ public class EventService {
         return eventRepository.findByTitle(title);
     }
 
-    public Event findEventByTitle(String title){
+    public List<Event> findEventByTitle(String title){
         return eventRepository.findEventByTitle(title);
     }
     

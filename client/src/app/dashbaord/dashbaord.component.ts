@@ -82,6 +82,21 @@ export class DashbaordComponent implements OnInit {
           e.status === 'Scheduled' || e.status === 'Active'
         ).length;
         
+        // Count scheduled and completed events
+        this.scheduledEvents = events.filter((e: any) => e.status === 'Scheduled').length;
+        this.completedEvents = events.filter((e: any) => e.status === 'Completed').length;
+        
+        // Upcoming events (scheduled and within next 30 days)
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Reset to start of day
+        const next30Days = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
+        this.upcomingEvents = events.filter((e: any) => {
+          if (e.status !== 'Scheduled') return false;
+          const eventDate = new Date(e.dateTime);
+          eventDate.setHours(0, 0, 0, 0); // Reset to start of day for comparison
+          return eventDate >= today && eventDate <= next30Days;
+        }).length;
+        
         // Count total allocations
         this.totalAllocations = events.reduce((total: number, event: any) => {
           return total + (event.allocations ? event.allocations.length : 0);
@@ -115,10 +130,12 @@ export class DashbaordComponent implements OnInit {
         
         // Upcoming events (scheduled and within next 30 days)
         const today = new Date();
+        today.setHours(0, 0, 0, 0); // Reset to start of day
         const next30Days = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
         this.upcomingEvents = events.filter((e: any) => {
           if (e.status !== 'Scheduled') return false;
           const eventDate = new Date(e.dateTime);
+          eventDate.setHours(0, 0, 0, 0); // Reset to start of day for comparison
           return eventDate >= today && eventDate <= next30Days;
         }).length;
       },
@@ -140,10 +157,14 @@ export class DashbaordComponent implements OnInit {
         
         // Upcoming bookings (confirmed and event date in future)
         const today = new Date();
+        today.setHours(0, 0, 0, 0); // Reset to start of day
         this.upcomingBookings = bookings.filter((b: any) => {
           if (b.status !== 'CONFIRMED' && b.status !== 'Confirmed') return false;
-          if (!b.event || !b.event.date) return false;
-          const eventDate = new Date(b.event.date);
+          if (!b.event) return false;
+          // Try both dateTime and date fields
+          const eventDate = new Date(b.event.dateTime || b.event.date);
+          if (isNaN(eventDate.getTime())) return false; // Invalid date
+          eventDate.setHours(0, 0, 0, 0); // Reset to start of day for comparison
           return eventDate >= today;
         }).length;
       },

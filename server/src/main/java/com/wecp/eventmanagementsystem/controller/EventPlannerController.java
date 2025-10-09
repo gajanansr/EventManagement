@@ -68,7 +68,7 @@ public class EventPlannerController {
     @GetMapping("/api/planner/event-detail/{title}")
     public ResponseEntity<List<Event>> getAllEventByTitle(@PathVariable String title) {
         System.out.println("Fetching events with title: " + title);
-        return new ResponseEntity<>(eventService.getAllEventByTitle(title), HttpStatus.OK);
+        return new ResponseEntity<>(eventService.findEventByTitle(title), HttpStatus.OK);
     }
 
     @PostMapping("/api/planner/allocate-resources")
