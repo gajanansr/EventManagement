@@ -70,7 +70,7 @@ export class ProfileComponent implements OnInit {
   }
 
   passwordMatchValidator(g: FormGroup) {
-    return g.get('newPassword')?.value === g.get('confirmPassword')?.value
+    return g.get('password')?.value === g.get('confirmPassword')?.value
       ? null : {'mismatch': true};
   }
 

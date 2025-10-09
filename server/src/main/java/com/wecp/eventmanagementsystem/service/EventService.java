@@ -41,6 +41,9 @@ public class EventService {
         e.setLocation(event.getLocation());
         e.setStatus(event.getStatus());
         e.setTitle(event.getTitle());
+        if (event.getAmount() != null) {
+            e.setAmount(event.getAmount());
+        }
         return eventRepository.save(e);
     }
 

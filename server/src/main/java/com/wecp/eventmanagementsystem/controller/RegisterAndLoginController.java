@@ -29,6 +29,7 @@ public class RegisterAndLoginController {
     @PostMapping("/api/user/register")
     public ResponseEntity<User> registerUser(@RequestBody User user) {
        // register user and return the registered user with status code 201 created
+        // The name field from frontend is mapped to fullName
         User registeredUser = userService.registerUser(user);
         if (registeredUser == null){
             throw new ResponseStatusException(HttpStatus.CONFLICT,"Username already exists");
