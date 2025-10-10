@@ -1,7 +1,7 @@
 <div class="container py-4">
     <h1 class="text-center mb-4 text-primary">My Profile</h1>
 
-    <!-- Alert Messages -->
+    
     <div class="alert-container" *ngIf="showSuccess || showError">
         <div class="alert" [ngClass]="{'alert-success': showSuccess, 'alert-danger': showError}">
             {{ showSuccess ? successMessage : errorMessage }}
@@ -11,7 +11,7 @@
 
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <!-- Profile Information Card -->
+            
             <div class="card shadow-sm mb-4">
                 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                     <h4 class="mb-0">Profile Information</h4>
@@ -95,7 +95,7 @@
                 </div>
             </div>
 
-            <!-- Change Password Card -->
+           
             <div class="card shadow-sm">
                 <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
                     <h4 class="mb-0">Security</h4>

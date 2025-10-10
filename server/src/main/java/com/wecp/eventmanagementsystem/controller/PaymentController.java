@@ -21,10 +21,6 @@ public class PaymentController {
     @Autowired
     private PaymentService paymentService;
     
-    /**
-     * Create a payment order
-     * POST /api/payment/create-order
-     */
     @PostMapping("/create-order")
     public ResponseEntity<?> createOrder(@RequestBody PaymentOrderRequest request) {
         try {
@@ -37,10 +33,7 @@ public class PaymentController {
         }
     }
     
-    /**
-     * Verify payment and create booking
-     * POST /api/payment/verify
-     */
+    
     @PostMapping("/verify")
     public ResponseEntity<?> verifyPayment(@RequestBody PaymentVerificationRequest request) {
         try {
@@ -54,10 +47,7 @@ public class PaymentController {
         }
     }
     
-    /**
-     * Get payment status by Razorpay payment ID
-     * GET /api/payment/status/{paymentId}
-     */
+    
     @GetMapping("/status/{paymentId}")
     public ResponseEntity<?> getPaymentStatus(@PathVariable String paymentId) {
         try {
@@ -78,10 +68,7 @@ public class PaymentController {
         }
     }
     
-    /**
-     * Get payment by booking ID
-     * GET /api/payment/booking/{bookingId}
-     */
+    
     @GetMapping("/booking/{bookingId}")
     public ResponseEntity<?> getPaymentByBooking(@PathVariable Long bookingId) {
         try {

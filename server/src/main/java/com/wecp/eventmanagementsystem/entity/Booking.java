@@ -20,7 +20,7 @@ public class Booking {
     private Event event;
     
     private Date bookingDate;
-    private String status; // PENDING, CONFIRMED, CANCELLED
+    private String status; 
     private String clientRequirements;
     private String notes;
     

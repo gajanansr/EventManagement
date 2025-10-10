@@ -59,7 +59,7 @@ export class LandingComponent implements OnInit, OnDestroy {
   ];
 
   constructor(private router: Router) {
-    // Set target date to 30 days from now (you can adjust this)
+    
     this.targetDate = new Date();
     this.targetDate.setDate(this.targetDate.getDate() + 30);
   }

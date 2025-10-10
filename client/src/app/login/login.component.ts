@@ -14,7 +14,7 @@ export class LoginComponent implements OnInit {
   showMessage: boolean = false;
   showError: boolean = false;
   responseMessage: string = '';
-  showPassword: boolean = false; // For show/hide password toggle
+  showPassword: boolean = false; 
   
 
   usernamePattern = '^[a-z]{3,}$';
@@ -89,7 +89,7 @@ export class LoginComponent implements OnInit {
           this.showMessage = true;
           this.responseMessage = 'Login successful! Redirecting to dashboard...';
           
-          // Set a timeout to allow the user to see the success message
+         
           setTimeout(() => {
             this.authService.setRole(data.role);
             this.authService.saveToken(data.token);
@@ -97,7 +97,7 @@ export class LoginComponent implements OnInit {
             this.router.navigateByUrl('dashboard').then(() => {
               window.location.reload();
             });
-          }, 1000); // 1 second delay
+          }, 1000); 
         },
         error => {
           this.showMessage = true;

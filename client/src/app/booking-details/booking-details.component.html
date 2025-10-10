@@ -1,5 +1,4 @@
 <div class="bookings-container">
-  <!-- Search Box -->
   <div class="search-section mb-4">
     <form [formGroup]="itemForm" (ngSubmit)="searchBookings()">
       <div class="input-group">
@@ -22,14 +21,12 @@
     </form>
   </div>
 
-  <!-- Alert Messages -->
   <div *ngIf="message" class="alert" 
        [ngClass]="{'alert-success': message.type === 'success', 'alert-danger': message.type === 'error'}" 
        role="alert">
     {{ message.text }}
   </div>
 
-  <!-- Loading State -->
   <div *ngIf="loadingBookings" class="text-center py-5">
     <div class="spinner-border text-primary" role="status">
       <span class="visually-hidden">Loading...</span>
@@ -37,7 +34,6 @@
     <p class="mt-3 text-muted">Loading your bookings...</p>
   </div>
 
-  <!-- Bookings Table -->
   <div *ngIf="!loadingBookings && displayedBookings.length > 0" class="card shadow-sm">
     <div class="card-body">
       <h5 class="card-title mb-4">
@@ -92,7 +88,6 @@
     </div>
   </div>
 
-  <!-- Empty State -->
   <div *ngIf="!loadingBookings && displayedBookings.length === 0" class="empty-state card shadow-sm">
     <div class="card-body text-center py-5">
       <div class="empty-icon">📅</div>

@@ -28,8 +28,7 @@ public class RegisterAndLoginController {
 
     @PostMapping("/api/user/register")
     public ResponseEntity<User> registerUser(@RequestBody User user) {
-       // register user and return the registered user with status code 201 created
-        // The name field from frontend is mapped to fullName
+       
         User registeredUser = userService.registerUser(user);
         if (registeredUser == null){
             throw new ResponseStatusException(HttpStatus.CONFLICT,"Username already exists");
@@ -39,8 +38,7 @@ public class RegisterAndLoginController {
 
     @PostMapping("/api/user/login")
     public ResponseEntity<LoginResponse> loginUser(@RequestBody LoginRequest loginRequest) {
-         // login user and return the login response with status code 200 ok
-        // if authentication fails, return status code 401 unauthorized
+        
         try{
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
         }catch(Exception e){

@@ -1,6 +1,6 @@
 <div class="registration-container">
   <div class="registration-content">
-    <!-- Left Section - Welcome -->
+    
     <div class="welcome-section">
       <div class="welcome-content">
         <h1 class="brand-title text-gradient">Join Us Today</h1>
@@ -22,7 +22,7 @@
       </div>
     </div>
 
-    <!-- Right Section - Registration Form -->
+    
     <div class="form-section">
       <div class="form-card">
         <div class="form-header">
@@ -30,7 +30,7 @@
           <p>Fill in your details to get started</p>
         </div>
 
-        <!-- Alert Messages -->
+        
         <div *ngIf="showMessage" class="alert alert-success fade-in">
           {{responseMessage}}
         </div>
@@ -38,7 +38,6 @@
           {{errorMessage}}
         </div>
 
-        <!-- Registration Form -->
         <form [formGroup]="itemForm" (ngSubmit)="onRegister()" class="registration-form">
           <div class="form-group">
             <label class="form-label">Username <span class="required-asterisk">*</span></label>
@@ -103,7 +102,7 @@
                      class="error-text">
                 <i class="bi bi-exclamation-circle"></i> Name should contain only letters and spaces 
               </small>
-              <!-- ok -->
+              
           </div>
 
           <div class="form-group">
@@ -153,7 +152,7 @@
             </small>
           </div>
 
-          <!-- Access Key Field (Only for PLANNER) -->
+          
           <div class="form-group" *ngIf="itemForm.get('role')?.value === 'PLANNER'">
             <label class="form-label">Access Key<span class="required-asterisk">*</span></label>
             <div class="password-input-wrapper">
@@ -180,7 +179,7 @@
             </small>
           </div>
 
-          <!-- CAPTCHA Field -->
+          
           <div class="form-group captcha-container">
             <label class="form-label">Security Check<span class="required-asterisk">*</span></label>
             <div class="captcha-box">
@@ -220,7 +219,7 @@
           </button>
         </form>
 
-        <!-- Footer -->
+       
         <div class="form-footer">
           <p>Already have an account? <a [routerLink]="['/login']" class="link-primary">Sign In</a></p>
         </div>

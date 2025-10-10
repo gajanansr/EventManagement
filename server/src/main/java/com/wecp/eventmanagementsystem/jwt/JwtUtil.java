@@ -43,7 +43,7 @@ public class JwtUtil {
         Map<String, Object> claims = new HashMap<>();
         claims.put("sub", username);
 
-        // Assign role based on user type
+
         claims.put("role", user.getRole());
 
         return Jwts.builder()

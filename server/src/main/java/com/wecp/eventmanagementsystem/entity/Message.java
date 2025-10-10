@@ -19,7 +19,7 @@ public class Message {
     @JoinColumn(name = "senderId", referencedColumnName = "userId")
     private User sender;
     
-    private String senderRole; // PLANNER or CLIENT
+    private String senderRole; 
     private String content;
     
     @Temporal(TemporalType.TIMESTAMP)
@@ -37,7 +37,7 @@ public class Message {
         this.sentAt = new Date();
     }
     
-    // Getters and Setters
+ 
     public Long getMessageId() {
         return messageId;
     }

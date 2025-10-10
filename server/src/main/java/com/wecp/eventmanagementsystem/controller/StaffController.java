@@ -28,7 +28,7 @@ public class StaffController {
 
     @GetMapping("/api/staff/allEvents")
     public ResponseEntity<List<Event>> getAssignedEvents(Authentication authentication) {
-        // Get only events assigned to this staff member
+      
         String username = authentication.getName();
         User staff = userRepository.findByUsername(username);
         
@@ -42,7 +42,7 @@ public class StaffController {
 
     @GetMapping("/api/staff/event-details/{eventId}")
     public ResponseEntity<Event> getEventDetails(@PathVariable Long eventId) {
-        // get the event details by eventId and return the event with status code 200 ok
+       
         return ResponseEntity.status(200).body(eventService.getEventsById(eventId));
     }
 
@@ -53,11 +53,11 @@ public class StaffController {
 
     @PutMapping("/api/staff/update-setup/{eventId}")
     public ResponseEntity<Event> updateEventSetup(@RequestBody Event updatedEvent, @PathVariable Long eventId) {
-        // update the event setup and return the updated event with status code 200 ok
+        
         return new ResponseEntity<Event>(eventService.updateEvent(updatedEvent, eventId), HttpStatus.OK);
     }
     
-    // Messaging endpoints for STAFF
+
     @PostMapping("/api/staff/send-message")
     public ResponseEntity<Map<String, Object>> sendMessage(
             @RequestBody Map<String, Object> messageRequest,

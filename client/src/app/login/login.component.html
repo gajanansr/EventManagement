@@ -1,6 +1,6 @@
 <div class="login-container">
   <div class="login-content">
-    <!-- Left Section - Welcome -->
+    
     <div class="welcome-section">
       <div class="welcome-content">
         <h1 class="brand-title text-gradient">Event Management</h1>
@@ -22,7 +22,8 @@
       </div>
     </div>
 
-    <!-- Right Section - Login Form -->
+ 
+    
     <div class="form-section">
       <div class="form-card">
         <div class="form-header">
@@ -30,13 +31,14 @@
           <p>Sign in to continue to your account</p>
         </div>
   
-        <!-- Alert Messages -->
+       
+        
         <div *ngIf="showMessage" class="alert fade-in"
           [ngClass]="{'alert-success': !showError, 'alert-danger': showError}">
           {{responseMessage}}
         </div> 
 
-        <!-- Login Form -->
+        
         <form [formGroup]="itemForm" (ngSubmit)="onLogin()" class="login-form">
           <div class="form-group">
             <label class="form-label">Username<span class="required-asterisk">*</span></label>
@@ -93,7 +95,7 @@
           </button>
         </form>
 
-        <!-- Footer  -->
+       
         <div class="form-footer">
           <p>Don't have an account? <a [routerLink]="['/registration']" class="link-primary">Create Account</a></p>
         </div>

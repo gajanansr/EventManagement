@@ -17,7 +17,7 @@ export class RegistrationComponent implements OnInit {
   usernamePattern = '^[a-z]{3,}$';
   passwordPattern = '^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,27}$';
   
-  // CAPTCHA variables
+ 
   captchaNum1: number = 0;
   captchaNum2: number = 0;
   captchaAnswer: number = 0;
@@ -39,8 +39,8 @@ export class RegistrationComponent implements OnInit {
   users$: Observable<any> = of([]);
   showError: boolean = false;
   errorMessage: any;
-  showPassword: boolean = false; // For show/hide password toggle
-  showAccessKey: boolean = false; // For show/hide access key toggle
+  showPassword: boolean = false; 
+  showAccessKey: boolean = false; 
 
   constructor(
     private formBuilder: FormBuilder,
@@ -53,7 +53,7 @@ export class RegistrationComponent implements OnInit {
       email: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9_+-.%]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)]],
       password: ['', [Validators.required, Validators.pattern(this.passwordPattern)]],
       role: ['', [Validators.required]],
-      accessKey: [''], // For PLANNER role only
+      accessKey: [''], 
       captchaAnswer: ['', [Validators.required, Validators.pattern(/^\d+$/)]]
     });
   }
@@ -69,7 +69,7 @@ export class RegistrationComponent implements OnInit {
       this.checkPasswordRules(value || '')
     })
     
-    // Add/remove accessKey validator based on role
+   
     this.itemForm.get('role')?.valueChanges.subscribe(role => {
       if (role === 'PLANNER') {
         this.itemForm.get('accessKey')?.setValidators([Validators.required]);
@@ -81,8 +81,8 @@ export class RegistrationComponent implements OnInit {
   }
   
   generateCaptcha() {
-    this.captchaNum1 = Math.floor(Math.random() * 20) + 1; // Random number 1-20
-    this.captchaNum2 = Math.floor(Math.random() * 20) + 1; // Random number 1-20
+    this.captchaNum1 = Math.floor(Math.random() * 20) + 1; 
+    this.captchaNum2 = Math.floor(Math.random() * 20) + 1; 
     this.captchaAnswer = this.captchaNum1 + this.captchaNum2;
   }
   
@@ -116,7 +116,7 @@ export class RegistrationComponent implements OnInit {
 
   onRegister(): void {
     if (this.itemForm.valid) {
-      // Validate CAPTCHA
+      
       const userAnswer = parseInt(this.itemForm.get('captchaAnswer')?.value);
       if (userAnswer !== this.captchaAnswer) {
         this.showError = true;
@@ -125,7 +125,7 @@ export class RegistrationComponent implements OnInit {
         return;
       }
       
-      // Validate access key for PLANNER role
+      
       if (this.itemForm.value.role === 'PLANNER') {
         const accessKey = this.itemForm.get('accessKey')?.value;
         if (accessKey !== '1234') {
@@ -138,14 +138,14 @@ export class RegistrationComponent implements OnInit {
       this.showMessage = false;
       this.showError = false;
       
-      // Map 'name' to 'fullName' for backend compatibility
+      
       const registrationData = {
         ...this.itemForm.value,
         fullName: this.itemForm.value.name
       };
-      delete registrationData.name; // Remove 'name' field as backend expects 'fullName'
-      delete registrationData.captchaAnswer; // Remove CAPTCHA from request
-      delete registrationData.accessKey; // Remove access key from request
+      delete registrationData.name; 
+      delete registrationData.captchaAnswer; 
+      delete registrationData.accessKey; 
       
       this.httpService.registerUser(registrationData).subscribe(
         data => {
@@ -158,7 +158,7 @@ export class RegistrationComponent implements OnInit {
         error => {
           this.showError = true;
           this.errorMessage = error.error.message;
-          this.refreshCaptcha(); // Refresh CAPTCHA on error
+          this.refreshCaptcha(); 
         }
       );
     } else {

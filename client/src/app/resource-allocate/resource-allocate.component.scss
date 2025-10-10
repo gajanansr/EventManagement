@@ -1,4 +1,4 @@
-// Clean, modern styling for resource allocation component
+
 
 .resource-allocate-container {
   min-height: 100vh;
@@ -232,7 +232,7 @@ h1 {
   color: #6b7280 !important;
 }
 
-// Responsive adjustments
+
 @media (max-width: 768px) {
   .col-md-5 {
     max-width: 100%;
@@ -245,7 +245,7 @@ h1 {
   .table-responsive {
     font-size: 0.875rem;
   }
-}// Responsive adjustments
+}
 @media (max-width: 768px) {
   .row {
     flex-direction: column;

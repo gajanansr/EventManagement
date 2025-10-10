@@ -54,26 +54,22 @@ public class PaymentService {
     @Value("${razorpay.currency}")
     private String currency;
     
-    /**
-     * Create a Razorpay order for payment
-     */
+    
     @Transactional
     public PaymentOrderResponse createOrder(PaymentOrderRequest request) throws Exception {
         try {
-            // Initialize Razorpay client
+            
             RazorpayClient razorpayClient = new RazorpayClient(razorpayKeyId, razorpayKeySecret);
             
-            // Create order request
             JSONObject orderRequest = new JSONObject();
-            orderRequest.put("amount", request.getAmount()); // amount in paise
+            orderRequest.put("amount", request.getAmount()); 
             orderRequest.put("currency", currency);
             orderRequest.put("receipt", "txn_" + System.currentTimeMillis());
-            orderRequest.put("payment_capture", 1); // Auto capture payment
+            orderRequest.put("payment_capture", 1); 
             
-            // Create order in Razorpay
             Order razorpayOrder = razorpayClient.orders.create(orderRequest);
             
-            // Create payment record in database
+            
             Payment payment = new Payment();
             payment.setRazorpayOrderId(razorpayOrder.get("id"));
             payment.setAmount(request.getAmount());
@@ -83,7 +79,7 @@ public class PaymentService {
             
             paymentRepository.save(payment);
             
-            // Return response
+            
             return new PaymentOrderResponse(
                 razorpayOrder.get("id"),
                 request.getAmount(),
@@ -96,28 +92,25 @@ public class PaymentService {
         }
     }
     
-    /**
-     * Verify payment signature and create booking
-     */
     @Transactional
     public Map<String, Object> verifyPaymentAndCreateBooking(PaymentVerificationRequest request) throws Exception {
         try {
-            // Verify signature
+            
             if (!verifySignature(request.getOrderId(), request.getPaymentId(), request.getSignature())) {
                 throw new Exception("Invalid payment signature");
             }
             
-            // Get payment record
+            
             Payment payment = paymentRepository.findByRazorpayOrderId(request.getOrderId())
                 .orElseThrow(() -> new Exception("Payment record not found"));
             
-            // Update payment record
+            
             payment.setRazorpayPaymentId(request.getPaymentId());
             payment.setRazorpaySignature(request.getSignature());
             payment.setStatus("SUCCESS");
             paymentRepository.save(payment);
             
-            // Get current user
+            
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String username = authentication.getName();
             User client = userRepository.findByUsername(username);
@@ -125,11 +118,11 @@ public class PaymentService {
                 throw new Exception("User not found");
             }
             
-            // Get event
+           
             Event event = eventRepository.findById(request.getEventId())
                 .orElseThrow(() -> new Exception("Event not found"));
             
-            // Create booking
+           
             Booking booking = new Booking();
             booking.setClient(client);
             booking.setEvent(event);
@@ -140,11 +133,11 @@ public class PaymentService {
             
             booking = bookingRepository.save(booking);
             
-            // Link payment to booking
+           
             payment.setBooking(booking);
             paymentRepository.save(payment);
             
-            // Prepare response
+          
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Payment verified and booking created successfully");
             response.put("bookingId", booking.getBookingId());
@@ -154,7 +147,7 @@ public class PaymentService {
             return response;
             
         } catch (Exception e) {
-            // Update payment status to failed
+            
             paymentRepository.findByRazorpayOrderId(request.getOrderId())
                 .ifPresent(payment -> {
                     payment.setStatus("FAILED");
@@ -164,9 +157,7 @@ public class PaymentService {
         }
     }
     
-    /**
-     * Verify Razorpay payment signature
-     */
+   
     private boolean verifySignature(String orderId, String paymentId, String signature) {
         try {
             String payload = orderId + "|" + paymentId;
@@ -177,9 +168,7 @@ public class PaymentService {
         }
     }
     
-    /**
-     * Calculate HMAC SHA256 signature
-     */
+    
     private String calculateHmacSHA256(String data, String key) throws SignatureException {
         try {
             SecretKeySpec signingKey = new SecretKeySpec(key.getBytes(), "HmacSHA256");
@@ -199,17 +188,13 @@ public class PaymentService {
         }
     }
     
-    /**
-     * Get payment status by payment ID
-     */
+   
     public Payment getPaymentStatus(String paymentId) throws Exception {
         return paymentRepository.findByRazorpayPaymentId(paymentId)
             .orElseThrow(() -> new Exception("Payment not found"));
     }
     
-    /**
-     * Get payment by booking ID
-     */
+    
     public Payment getPaymentByBookingId(Long bookingId) throws Exception {
         return paymentRepository.findByBooking_BookingId(bookingId)
             .orElseThrow(() -> new Exception("Payment not found for this booking"));

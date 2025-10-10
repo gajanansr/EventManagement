@@ -4,7 +4,7 @@ package com.wecp.eventmanagementsystem.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "resources") // do not change table name
+@Table(name = "resources") 
 public class Resource {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
